@@ -16,7 +16,7 @@
  ****************************************************************************/
 #include <malloc.h>
 #include <string.h>
-#include <video/shaders/ColorShader.h>
+#include <gui/video/shaders/ColorShader.h>
 
 static const uint32_t cpVertexShaderProgram[] = {
     0x00000000,0x00008009,0x20000000,0x000078a0,

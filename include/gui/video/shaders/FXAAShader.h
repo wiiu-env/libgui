@@ -17,9 +17,9 @@
 #ifndef __FXAA_SHADER_H_
 #define __FXAA_SHADER_H_
 
-#include <video/shaders/VertexShader.h>
-#include <video/shaders/PixelShader.h>
-#include <video/shaders/FetchShader.h>
+#include <gui/video/shaders/VertexShader.h>
+#include <gui/video/shaders/PixelShader.h>
+#include <gui/video/shaders/FetchShader.h>
 
 class FXAAShader : public Shader {
 public:

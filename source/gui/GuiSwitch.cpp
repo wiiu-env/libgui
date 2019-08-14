@@ -17,7 +17,6 @@
 #include <gui/GuiSwitch.h>
 #include <gui/GuiImage.h>
 #include <gui/GuiImageData.h>
-#include <utils/logger.h>
 /**
  * Constructor for the GuiSwitch class.
  */

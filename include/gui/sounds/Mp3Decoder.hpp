@@ -25,7 +25,7 @@
  ***************************************************************************/
 #include <mad.h>
 
-#include <sounds/SoundDecoder.hpp>
+#include <gui/sounds/SoundDecoder.hpp>
 
 class Mp3Decoder : public SoundDecoder {
 public:

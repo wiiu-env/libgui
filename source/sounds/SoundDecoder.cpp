@@ -21,7 +21,8 @@
 #include <coreinit/time.h>
 #include <coreinit/thread.h>
 #include <coreinit/cache.h>
-#include <sounds/SoundDecoder.hpp>
+#include <gui/sounds/SoundDecoder.hpp>
+#include "fs/CFile.hpp"
 
 static const uint32_t FixedPointShift = 15;
 static const uint32_t FixedPointScale = 1 << FixedPointShift;
@@ -56,6 +57,11 @@ SoundDecoder::~SoundDecoder() {
 
     if(ResampleBuffer)
         free(ResampleBuffer);
+}
+
+int32_t SoundDecoder::Seek(int32_t pos) {
+	CurPos = pos;
+	return file_fd->seek(CurPos, SEEK_SET);
 }
 
 void SoundDecoder::Init() {

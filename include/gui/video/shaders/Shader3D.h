@@ -14,24 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef __TEXTURE_2D_SHADER_H_
-#define __TEXTURE_2D_SHADER_H_
+#ifndef SHADER_3D_H_
+#define SHADER_3D_H_
 
-#include <video/shaders/VertexShader.h>
-#include <video/shaders/PixelShader.h>
-#include <video/shaders/FetchShader.h>
+#include <gui/video/shaders/VertexShader.h>
+#include <gui/video/shaders/PixelShader.h>
+#include <gui/video/shaders/FetchShader.h>
 
-
-class Texture2DShader : public Shader {
+class Shader3D : public Shader {
 private:
-    Texture2DShader();
-    virtual ~Texture2DShader();
+    Shader3D();
+    virtual ~Shader3D();
 
-    static const uint32_t cuAttributeCount = 2;
+    static Shader3D * shaderInstance;
+
+    static const unsigned char cuAttributeCount = 2;
     static const uint32_t ciPositionVtxsSize = 4 * cuVertexAttrSize;
     static const uint32_t ciTexCoordsVtxsSize = 4 * cuTexCoordAttrSize;
-
-    static Texture2DShader *shaderInstance;
 
     FetchShader *fetchShader;
     VertexShader vertexShader;
@@ -40,18 +39,20 @@ private:
     float *posVtxs;
     float *texCoords;
 
-    uint32_t angleLocation;
-    uint32_t offsetLocation;
-    uint32_t scaleLocation;
-    uint32_t colorIntensityLocation;
-    uint32_t blurLocation;
-    uint32_t samplerLocation;
+    uint32_t modelMatrixLocation;
+    uint32_t viewMatrixLocation;
+    uint32_t projectionMatrixLocation;
     uint32_t positionLocation;
     uint32_t texCoordLocation;
+
+    uint32_t colorIntensityLocation;
+    uint32_t fadeDistanceLocation;
+    uint32_t fadeOutLocation;
+    uint32_t samplerLocation;
 public:
-    static Texture2DShader *instance() {
+    static Shader3D *instance() {
         if(!shaderInstance) {
-            shaderInstance = new Texture2DShader();
+            shaderInstance = new Shader3D();
         }
         return shaderInstance;
     }
@@ -68,30 +69,34 @@ public:
         pixelShader.setShader();
     }
 
-    void setAttributeBuffer(const float * texCoords_in = NULL, const float * posVtxs_in = NULL, const uint32_t & vtxCount = 0) const {
+    void setAttributeBuffer(const uint32_t & vtxCount = 0, const float * posVtxs_in = NULL, const float * texCoords_in = NULL) const {
         if(posVtxs_in && texCoords_in && vtxCount) {
             VertexShader::setAttributeBuffer(0, vtxCount * cuVertexAttrSize, cuVertexAttrSize, posVtxs_in);
             VertexShader::setAttributeBuffer(1, vtxCount * cuTexCoordAttrSize, cuTexCoordAttrSize, texCoords_in);
         } else {
+            //! use default quad vertex and texture coordinates if nothing is passed
             VertexShader::setAttributeBuffer(0, ciPositionVtxsSize, cuVertexAttrSize, posVtxs);
             VertexShader::setAttributeBuffer(1, ciTexCoordsVtxsSize, cuTexCoordAttrSize, texCoords);
         }
     }
 
-    void setAngle(const float & val) {
-        VertexShader::setUniformReg(angleLocation, 4, &val);
+    void setProjectionMtx(const glm::mat4 & mtx) {
+        VertexShader::setUniformReg(projectionMatrixLocation, 16, &mtx[0][0]);
     }
-    void setOffset(const glm::vec3 & vec) {
-        VertexShader::setUniformReg(offsetLocation, 4, &vec[0]);
+    void setViewMtx(const glm::mat4 & mtx) {
+        VertexShader::setUniformReg(viewMatrixLocation, 16, &mtx[0][0]);
     }
-    void setScale(const glm::vec3 & vec) {
-        VertexShader::setUniformReg(scaleLocation, 4, &vec[0]);
+    void setModelViewMtx(const glm::mat4 & mtx) {
+        VertexShader::setUniformReg(modelMatrixLocation, 16, &mtx[0][0]);
     }
     void setColorIntensity(const glm::vec4 & vec) {
         PixelShader::setUniformReg(colorIntensityLocation, 4, &vec[0]);
     }
-    void setBlurring(const glm::vec3 & vec) {
-        PixelShader::setUniformReg(blurLocation, 4, &vec[0]);
+    void setAlphaFadeOut(const glm::vec4 & vec) {
+        PixelShader::setUniformReg(fadeOutLocation, 4, &vec[0]);
+    }
+    void setDistanceFadeOut(const float & value) {
+        PixelShader::setUniformReg(fadeDistanceLocation, 4, &value);
     }
 
     void setTextureAndSampler(const GX2Texture *texture, const GX2Sampler *sampler) const {
@@ -100,4 +105,4 @@ public:
     }
 };
 
-#endif // __TEXTURE_2D_SHADER_H_
+#endif // SHADER_3D_H_

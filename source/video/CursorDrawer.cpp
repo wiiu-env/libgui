@@ -18,12 +18,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <video/shaders/ColorShader.h>
-#include <video/shaders/FXAAShader.h>
-#include <video/shaders/Shader3D.h>
-#include <video/shaders/ShaderFractalColor.h>
-#include <video/shaders/Texture2DShader.h>
-#include <video/CursorDrawer.h>
+#include <gui/video/shaders/ColorShader.h>
+#include <gui/video/shaders/FXAAShader.h>
+#include <gui/video/shaders/Shader3D.h>
+#include <gui/video/shaders/ShaderFractalColor.h>
+#include <gui/video/shaders/Texture2DShader.h>
+#include <gui/video/CursorDrawer.h>
 
 CursorDrawer *CursorDrawer::instance = NULL;
 

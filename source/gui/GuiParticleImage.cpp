@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include <gui/GuiParticleImage.h>
-#include <video/CVideo.h>
-#include <video/shaders/ColorShader.h>
+#include <gui/video/CVideo.h>
+#include <gui/video/shaders/ColorShader.h>
+#include "utils/utils.h"
 
 #define CIRCLE_VERTEX_COUNT     36
 

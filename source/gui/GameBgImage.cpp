@@ -1,6 +1,6 @@
 #include <gui/GameBgImage.h>
-#include <video/CVideo.h>
-#include <video/shaders/Shader3D.h>
+#include <gui/video/CVideo.h>
+#include <gui/video/shaders/Shader3D.h>
 
 GameBgImage::GameBgImage(const std::string & filename, GuiImageData *preloadImage)
     : GuiImageAsync(filename, preloadImage) {

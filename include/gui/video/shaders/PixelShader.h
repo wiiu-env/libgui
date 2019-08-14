@@ -17,7 +17,7 @@
 #ifndef PIXEL_SHADER_H
 #define PIXEL_SHADER_H
 
-#include <video/shaders/Shader.h>
+#include <gui/video/shaders/Shader.h>
 
 class PixelShader : public Shader {
 public:

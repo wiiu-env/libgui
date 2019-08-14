@@ -17,7 +17,7 @@
 #ifndef GUI_IMAGE_H_
 #define GUI_IMAGE_H_
 
-#include <video/shaders/Shader.h>
+#include <gui/video/shaders/Shader.h>
 #include <gui/GuiElement.h>
 #include <gui/GuiImageData.h>
 #include <gui/gx2_ext.h>

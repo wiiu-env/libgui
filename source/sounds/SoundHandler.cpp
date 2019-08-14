@@ -26,10 +26,10 @@
 #include <unistd.h>
 #include <malloc.h>
 #include <fs/CFile.hpp>
-#include <sounds/SoundHandler.hpp>
-#include <sounds/WavDecoder.hpp>
-#include <sounds/Mp3Decoder.hpp>
-#include <sounds/OggDecoder.hpp>
+#include <gui/sounds/SoundHandler.hpp>
+#include <gui/sounds/WavDecoder.hpp>
+#include <gui/sounds/Mp3Decoder.hpp>
+#include <gui/sounds/OggDecoder.hpp>
 #include <sndcore2/core.h>
 
 SoundHandler * SoundHandler::handlerInstance = NULL;
@@ -86,7 +86,11 @@ void SoundHandler::RemoveDecoder(int32_t voice) {
             if(voiceList[voice]->getState() != Voice::STATE_STOP)
                 voiceList[voice]->setState(Voice::STATE_STOP);
 
-            while(voiceList[voice]->getState() != Voice::STATE_STOPPED)
+			 // it shouldn't take longer than 3 ms actually but we wait up to 20
+            // on application quit the AX frame callback is not called anymore
+            // therefore this would end in endless loop if no timeout is defined
+            int timeOut = 20;
+            while(--timeOut && (voiceList[voice]->getState() != Voice::STATE_STOPPED))
                 OSSleepTicks(OSMicrosecondsToTicks(1000));
         }
         SoundDecoder *decoder = DecoderList[voice];

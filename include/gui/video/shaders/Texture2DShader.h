@@ -14,23 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef SHADER_FRACTAL_COLOR_H_
-#define SHADER_FRACTAL_COLOR_H_
+#ifndef __TEXTURE_2D_SHADER_H_
+#define __TEXTURE_2D_SHADER_H_
 
-#include <video/shaders/VertexShader.h>
-#include <video/shaders/PixelShader.h>
-#include <video/shaders/FetchShader.h>
-class ShaderFractalColor : public Shader {
+#include <gui/video/shaders/VertexShader.h>
+#include <gui/video/shaders/PixelShader.h>
+#include <gui/video/shaders/FetchShader.h>
+
+
+class Texture2DShader : public Shader {
 private:
-    ShaderFractalColor();
-    virtual ~ShaderFractalColor();
+    Texture2DShader();
+    virtual ~Texture2DShader();
 
-    static ShaderFractalColor * shaderInstance;
-
-    static const unsigned char cuAttributeCount = 3;
+    static const uint32_t cuAttributeCount = 2;
     static const uint32_t ciPositionVtxsSize = 4 * cuVertexAttrSize;
     static const uint32_t ciTexCoordsVtxsSize = 4 * cuTexCoordAttrSize;
-    static const uint32_t ciColorVtxsSize = 4 * cuColorAttrSize;
+
+    static Texture2DShader *shaderInstance;
 
     FetchShader *fetchShader;
     VertexShader vertexShader;
@@ -38,23 +39,19 @@ private:
 
     float *posVtxs;
     float *texCoords;
-    uint8_t *colorVtxs;
 
-    uint32_t modelMatrixLocation;
-    uint32_t viewMatrixLocation;
-    uint32_t projectionMatrixLocation;
-    uint32_t positionLocation;
-    uint32_t colorLocation;
-    uint32_t texCoordLocation;
-
-    uint32_t blurLocation;
+    uint32_t angleLocation;
+    uint32_t offsetLocation;
+    uint32_t scaleLocation;
     uint32_t colorIntensityLocation;
-    uint32_t fadeOutLocation;
-    uint32_t fractalLocation;
+    uint32_t blurLocation;
+    uint32_t samplerLocation;
+    uint32_t positionLocation;
+    uint32_t texCoordLocation;
 public:
-    static ShaderFractalColor *instance() {
+    static Texture2DShader *instance() {
         if(!shaderInstance) {
-            shaderInstance = new ShaderFractalColor();
+            shaderInstance = new Texture2DShader();
         }
         return shaderInstance;
     }
@@ -71,41 +68,36 @@ public:
         pixelShader.setShader();
     }
 
-    void setAttributeBuffer(const uint32_t & vtxCount = 0, const float * posVtxs_in = NULL, const float * texCoords_in = NULL, const uint8_t * colorVtxs_in = NULL) const {
+    void setAttributeBuffer(const float * texCoords_in = NULL, const float * posVtxs_in = NULL, const uint32_t & vtxCount = 0) const {
         if(posVtxs_in && texCoords_in && vtxCount) {
             VertexShader::setAttributeBuffer(0, vtxCount * cuVertexAttrSize, cuVertexAttrSize, posVtxs_in);
             VertexShader::setAttributeBuffer(1, vtxCount * cuTexCoordAttrSize, cuTexCoordAttrSize, texCoords_in);
-            VertexShader::setAttributeBuffer(2, vtxCount * cuColorAttrSize, cuColorAttrSize, colorVtxs_in);
         } else {
-            //! use default quad vertex and texture coordinates if nothing is passed
             VertexShader::setAttributeBuffer(0, ciPositionVtxsSize, cuVertexAttrSize, posVtxs);
             VertexShader::setAttributeBuffer(1, ciTexCoordsVtxsSize, cuTexCoordAttrSize, texCoords);
-            VertexShader::setAttributeBuffer(2, ciColorVtxsSize, cuColorAttrSize, colorVtxs);
         }
     }
 
-    void setProjectionMtx(const glm::mat4 & mtx) {
-        VertexShader::setUniformReg(projectionMatrixLocation, 16, &mtx[0][0]);
+    void setAngle(const float & val) {
+        VertexShader::setUniformReg(angleLocation, 4, &val);
     }
-    void setViewMtx(const glm::mat4 & mtx) {
-        VertexShader::setUniformReg(viewMatrixLocation, 16, &mtx[0][0]);
+    void setOffset(const glm::vec3 & vec) {
+        VertexShader::setUniformReg(offsetLocation, 4, &vec[0]);
     }
-    void setModelViewMtx(const glm::mat4 & mtx) {
-        VertexShader::setUniformReg(modelMatrixLocation, 16, &mtx[0][0]);
-    }
-
-    void setBlurBorder(const float & blurBorderSize) {
-        PixelShader::setUniformReg(blurLocation, 4, &blurBorderSize);
+    void setScale(const glm::vec3 & vec) {
+        VertexShader::setUniformReg(scaleLocation, 4, &vec[0]);
     }
     void setColorIntensity(const glm::vec4 & vec) {
         PixelShader::setUniformReg(colorIntensityLocation, 4, &vec[0]);
     }
-    void setAlphaFadeOut(const glm::vec4 & vec) {
-        PixelShader::setUniformReg(fadeOutLocation, 4, &vec[0]);
+    void setBlurring(const glm::vec3 & vec) {
+        PixelShader::setUniformReg(blurLocation, 4, &vec[0]);
     }
-    void setFractalColor(const int & fractalColorEnable) {
-        PixelShader::setUniformReg(fractalLocation, 4, &fractalColorEnable);
+
+    void setTextureAndSampler(const GX2Texture *texture, const GX2Sampler *sampler) const {
+        GX2SetPixelTexture((GX2Texture*)texture, samplerLocation);
+        GX2SetPixelSampler((GX2Sampler*)sampler, samplerLocation);
     }
 };
 
-#endif // SHADER_FRACTAL_COLOR_H_
+#endif // __TEXTURE_2D_SHADER_H_

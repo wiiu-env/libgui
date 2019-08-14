@@ -17,7 +17,7 @@
 #ifndef GUI_SOUND_H_
 #define GUI_SOUND_H_
 
-#include <system/AsyncDeleter.h>
+#include <gui/system/AsyncDeleter.h>
 
 //!Sound conversion and playback. A wrapper for other sound libraries - ASND, libmad, ltremor, etc
 class GuiSound : public AsyncDeleter::Element {

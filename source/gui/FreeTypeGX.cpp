@@ -21,8 +21,8 @@
  */
 
 #include <gui/FreeTypeGX.h>
-#include <video/CVideo.h>
-#include <video/shaders/Texture2DShader.h>
+#include <gui/video/CVideo.h>
+#include <gui/video/shaders/Texture2DShader.h>
 
 using namespace std;
 
@@ -258,7 +258,7 @@ void FreeTypeGX::loadGlyphData(FT_Bitmap *bmp, ftgxCharData *charData) {
 
     uint8_t *src = (uint8_t *)bmp->buffer;
     uint16_t *dst = (uint16_t *)charData->texture->surface.image;
-    int32_t x, y;
+    uint32_t x, y;
 
     for(y = 0; y < bmp->rows; y++) {
         for(x = 0; x < bmp->width; x++) {

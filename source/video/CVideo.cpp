@@ -16,13 +16,15 @@
  ****************************************************************************/
 #include <malloc.h>
 #include <string.h>
-#include <video/CVideo.h>
-#include <system/memory.h>
-#include <video/shaders/Texture2DShader.h>
-#include <video/shaders/ColorShader.h>
-#include <video/shaders/Shader3D.h>
-#include <video/shaders/ShaderFractalColor.h>
-#include <video/shaders/FXAAShader.h>
+#include <gui/video/CVideo.h>
+#include "system/memory.h"
+#include <gui/video/shaders/Texture2DShader.h>
+#include <gui/video/shaders/ColorShader.h>
+#include <gui/video/shaders/Shader3D.h>
+#include <gui/video/shaders/ShaderFractalColor.h>
+#include <gui/video/shaders/FXAAShader.h>
+#include "utils/utils.h"
+
 CVideo::CVideo(int32_t forceTvScanMode, int32_t forceDrcScanMode) {
     tvEnabled = false;
     drcEnabled = false;

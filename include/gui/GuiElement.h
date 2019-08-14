@@ -33,10 +33,9 @@
 #include <gui/sigslot.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <system/AsyncDeleter.h>
-#include <utils/logger.h>
+#include <gui/system/AsyncDeleter.h>
 
-#include <resources/Resources.h>
+#include <gui/resources/Resources.h>
 
 enum {
     EFFECT_NONE             = 0x00,

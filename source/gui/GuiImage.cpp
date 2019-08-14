@@ -15,9 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include <gui/GuiImage.h>
-#include <video/CVideo.h>
-#include <video/shaders/Texture2DShader.h>
-#include <video/shaders/ColorShader.h>
+#include <gui/video/CVideo.h>
+#include <gui/video/shaders/Texture2DShader.h>
+#include <gui/video/shaders/ColorShader.h>
+#include "utils/utils.h"
 
 static const float fPiDiv180 = ((float)M_PI / 180.0f);
 

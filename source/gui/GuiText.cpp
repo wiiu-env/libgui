@@ -16,7 +16,7 @@
  ****************************************************************************/
 #include <gui/GuiText.h>
 #include <gui/FreeTypeGX.h>
-#include <video/CVideo.h>
+#include <gui/video/CVideo.h>
 
 FreeTypeGX * GuiText::presentFont = NULL;
 int32_t GuiText::presetSize = 28;

@@ -31,7 +31,8 @@
 #include <math.h>
 #include <coreinit/time.h>
 #include <coreinit/thread.h>
-#include <sounds/Mp3Decoder.hpp>
+#include <gui/sounds/Mp3Decoder.hpp>
+#include "fs/CFile.hpp"
 
 Mp3Decoder::Mp3Decoder(const char * filepath)
 	: SoundDecoder(filepath)

@@ -1,6 +1,7 @@
 #include <gui/GridBackground.h>
-#include <video/CVideo.h>
-#include <video/shaders/Shader3D.h>
+#include <gui/video/CVideo.h>
+#include <gui/video/shaders/Shader3D.h>
+#include "utils/utils.h"
 
 static const float bgRepeat = 1000.0f;
 static const float bgTexRotate = 39.0f;

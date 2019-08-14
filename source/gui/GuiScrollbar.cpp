@@ -22,7 +22,8 @@
  * distribution.
  ***************************************************************************/
 #include <gui/GuiScrollbar.h>
-#include <resources/Resources.h>
+#include <gui/resources/Resources.h>
+#include "utils/utils.h"
 
 GuiScrollbar::GuiScrollbar(int32_t h)
     : touchTrigger(GuiTrigger::CHANNEL_1, GuiTrigger::VPAD_TOUCH)

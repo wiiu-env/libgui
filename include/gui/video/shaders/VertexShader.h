@@ -18,7 +18,7 @@
 #define VERTEX_SHADER_H
 
 #include <string.h>
-#include <video/shaders/Shader.h>
+#include <gui/video/shaders/Shader.h>
 #include <gui/gx2_ext.h>
 
 class VertexShader : public Shader {

@@ -23,20 +23,45 @@
  *
  * for WiiXplorer 2010
  ***************************************************************************/
-#include <tremor/ivorbiscodec.h>
-#include <tremor/ivorbisfile.h>
+#ifndef WAVDECODER_HPP_
+#define WAVDECODER_HPP_
 
-#include <sounds/SoundDecoder.hpp>
+#include <gui/sounds/SoundDecoder.hpp>
 
-class OggDecoder : public SoundDecoder {
+typedef struct {
+    uint32_t magicRIFF;
+    uint32_t size;
+    uint32_t magicWAVE;
+} SWaveHdr;
+
+typedef struct {
+    uint32_t magicFMT;
+    uint32_t size;
+    uint16_t format;
+    uint16_t channels;
+    uint32_t freq;
+    uint32_t avgBps;
+    uint16_t alignment;
+    uint16_t bps;
+} SWaveFmtChunk;
+
+typedef struct {
+    uint32_t magicDATA;
+    uint32_t size;
+} SWaveChunk;
+
+class WavDecoder : public SoundDecoder {
 public:
-    OggDecoder(const char * filepath);
-    OggDecoder(const uint8_t * snd, int32_t len);
-    virtual ~OggDecoder();
-    int32_t Rewind();
+    WavDecoder(const char * filepath);
+    WavDecoder(const uint8_t * snd, int32_t len);
+    virtual ~WavDecoder();
     int32_t Read(uint8_t * buffer, int32_t buffer_size, int32_t pos);
 protected:
     void OpenFile();
-    OggVorbis_File ogg_file;
-    vorbis_info *ogg_info;
+    void CloseFile();
+    uint32_t DataOffset;
+    uint32_t DataSize;
+    bool Is16Bit;
 };
+
+#endif

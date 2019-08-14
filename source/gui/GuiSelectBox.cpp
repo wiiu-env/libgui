@@ -16,8 +16,6 @@
  ****************************************************************************/
 #include <vector>
 #include <string>
-#include <utils/StringTools.h>
-#include <utils/logger.h>
 
 #include <gui/GuiSelectBox.h>
 #include <gui/GuiImage.h>

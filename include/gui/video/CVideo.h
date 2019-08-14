@@ -28,7 +28,7 @@
 #include <gx2/display.h>
 #include <gui/gx2_ext.h>
 
-#include <video/shaders/Shader.h>
+#include <gui/video/shaders/Shader.h>
 
 class CVideo {
 public:

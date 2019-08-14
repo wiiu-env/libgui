@@ -14,8 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
+#include <string.h>
+#include <string>
+#include <stdio.h>
 #include <gui/GuiSound.h>
-#include <sounds/SoundHandler.hpp>
+#include <gui/sounds/SoundHandler.hpp>
 
 GuiSound::GuiSound(const char * filepath) {
     voice = -1;

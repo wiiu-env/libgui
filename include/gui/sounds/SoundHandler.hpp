@@ -28,9 +28,9 @@
 
 #include <vector>
 
-#include <system/CThread.h>
-#include <sounds/SoundDecoder.hpp>
-#include <sounds/Voice.h>
+#include <gui/system/CThread.h>
+#include <gui/sounds/SoundDecoder.hpp>
+#include <gui/sounds/Voice.h>
 #include <sndcore2/voice.h>
 
 #define MAX_DECODERS	16  // can be increased up to 96

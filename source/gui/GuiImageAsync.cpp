@@ -16,7 +16,7 @@
  ****************************************************************************/
 #include <unistd.h>
 #include <gui/GuiImageAsync.h>
-#include <fs/FSUtils.h>
+#include "fs/FSUtils.h"
 
 std::vector<GuiImageAsync *> GuiImageAsync::imageQueue;
 CThread * GuiImageAsync::pThread = NULL;

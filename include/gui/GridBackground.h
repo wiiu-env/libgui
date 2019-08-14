@@ -2,7 +2,6 @@
 #define _GRID_BACKGROUND_H_
 
 #include <gui/GuiImage.h>
-#include <video/shaders/Shader.h>
 
 class GridBackground : public GuiImage {
 public:

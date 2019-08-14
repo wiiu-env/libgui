@@ -17,7 +17,6 @@
  ****************************************************************************/
 #include <gui/GuiDragListener.h>
 #include <gui/GuiController.h>
-#include <utils/logger.h>
 
 /**
  * Constructor for the GuiDragListener class.

@@ -19,8 +19,8 @@
 
 #include <vector>
 #include <gui/GuiImage.h>
-#include <system/CThread.h>
-#include <system/CMutex.h>
+#include <gui/system/CThread.h>
+#include <gui/system/CMutex.h>
 
 class GuiImageAsync : public GuiImage {
 public:

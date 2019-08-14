@@ -25,7 +25,7 @@
  ***************************************************************************/
 #include <malloc.h>
 #include <utils/utils.h>
-#include <sounds/BufferCircle.hpp>
+#include <gui/sounds/BufferCircle.hpp>
 
 BufferCircle::BufferCircle() {
     which = 0;

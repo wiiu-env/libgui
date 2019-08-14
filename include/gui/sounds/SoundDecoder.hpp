@@ -26,9 +26,11 @@
 #ifndef SOUND_DECODER_HPP
 #define SOUND_DECODER_HPP
 
-#include <fs/CFile.hpp>
-#include <system/CMutex.h>
-#include <sounds/BufferCircle.hpp>
+#include <string>
+#include <gui/system/CMutex.h>
+#include <gui/sounds/BufferCircle.hpp>
+
+class CFile;
 
 class SoundDecoder {
 public:
@@ -46,10 +48,8 @@ public:
     virtual int32_t Tell() {
         return CurPos;
     }
-    virtual int32_t Seek(int32_t pos) {
-        CurPos = pos;
-        return file_fd->seek(CurPos, SEEK_SET);
-    }
+    virtual int32_t Seek(int32_t pos);
+	
     virtual int32_t Rewind();
     virtual uint16_t GetFormat() {
         return Format;

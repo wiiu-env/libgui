@@ -17,7 +17,7 @@
 #ifndef FETCH_SHADER_H
 #define FETCH_SHADER_H
 
-#include <video/shaders/Shader.h>
+#include <gui/video/shaders/Shader.h>
 
 class FetchShader : public Shader {
 public:
