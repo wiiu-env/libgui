@@ -35,7 +35,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <gui/system/AsyncDeleter.h>
 
-#include <gui/resources/Resources.h>
 
 enum {
     EFFECT_NONE             = 0x00,

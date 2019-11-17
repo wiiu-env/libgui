@@ -22,7 +22,6 @@
  * distribution.
  ***************************************************************************/
 #include <gui/GuiScrollbar.h>
-#include <gui/resources/Resources.h>
 #include "utils/utils.h"
 
 GuiScrollbar::GuiScrollbar(int32_t h)
