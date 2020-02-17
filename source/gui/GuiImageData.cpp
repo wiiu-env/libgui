@@ -80,10 +80,10 @@ void GuiImageData::loadImage(const uint8_t *img, int32_t imgSize, GX2TexClampMod
         //! not needed for now therefore comment out to safe ELF size
         //! if needed uncomment, adds 200 kb to the ELF size
         // IMAGE_JPEG
-        //gdImg = gdImageCreateFromJpegPtr(imgSize, (uint8_t*) img);
+        gdImg = gdImageCreateFromJpegPtr(imgSize, (uint8_t*) img);
     } else if (img[0] == 'B' && img[1] == 'M') {
         // IMAGE_BMP
-        //gdImg = gdImageCreateFromBmpPtr(imgSize, (uint8_t*) img);
+        gdImg = gdImageCreateFromBmpPtr(imgSize, (uint8_t*) img);
     } else if (img[0] == 0x89 && img[1] == 'P' && img[2] == 'N' && img[3] == 'G') {
         // IMAGE_PNG
         gdImg = gdImageCreateFromPngPtr(imgSize, (uint8_t*) img);
@@ -91,7 +91,7 @@ void GuiImageData::loadImage(const uint8_t *img, int32_t imgSize, GX2TexClampMod
     //!This must be last since it can also intefere with outher formats
     else if(img[0] == 0x00) {
         // Try loading TGA image
-        //gdImg = gdImageCreateFromTgaPtr(imgSize, (uint8_t*) img);
+        gdImg = gdImageCreateFromTgaPtr(imgSize, (uint8_t*) img);
     }
 
     if(gdImg == 0)
