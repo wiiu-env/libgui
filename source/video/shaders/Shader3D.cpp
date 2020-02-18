@@ -209,6 +209,8 @@ Shader3D::Shader3D()
     pixelShader.addSamplerVar((GX2SamplerVar) {
         "sampl_texture", GX2_SAMPLER_VAR_TYPE_SAMPLER_2D, samplerLocation
     });
+    //! create vertex shader
+    vertexShader.setProgram(cpVertexShaderProgram, sizeof(cpVertexShaderProgram), cpVertexShaderRegs, sizeof(cpVertexShaderRegs));
 
     modelMatrixLocation = 0;
     projectionMatrixLocation = 16;
