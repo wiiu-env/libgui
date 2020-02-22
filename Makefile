@@ -12,7 +12,7 @@ include $(DEVKITPRO)/wut/share/wut_rules
 
 export VER_MAJOR	:=	1
 export VER_MINOR	:=	0
-export VER_PATCH	:=	0
+export VER_PATCH	:=	1
 
 VERSION	:=	$(VER_MAJOR).$(VER_MINOR).$(VER_PATCH)
 
@@ -26,8 +26,10 @@ VERSION	:=	$(VER_MAJOR).$(VER_MINOR).$(VER_PATCH)
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	source \
+				source/fs \
 				source/gui \
 				source/sounds \
+				source/system \
 				source/video \
 				source/video/shaders \
 		
@@ -115,8 +117,8 @@ dist-src:
 dist: dist-src dist-bin
 
 install: dist-bin
-	mkdir -p $(DESTDIR)$(DEVKITPRO)/wut
-	bzip2 -cd libgui-$(VERSION).tar.bz2 | tar -xf - -C $(DESTDIR)$(DEVKITPRO)/wut
+	mkdir -p $(DESTDIR)$(DEVKITPRO)/wut/usr
+	bzip2 -cd libgui-$(VERSION).tar.bz2 | tar -xf - -C $(DESTDIR)$(DEVKITPRO)/wut/usr
 
 lib:
 	@[ -d $@ ] || mkdir -p $@

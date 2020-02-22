@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <gui/GuiImageData.h>
-#include <system/memory.h>
+#include <gui/memory.h>
 /**
  * Constructor for the GuiImageData class.
  */

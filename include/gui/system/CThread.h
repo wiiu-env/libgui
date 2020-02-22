@@ -17,10 +17,8 @@
 #ifndef CTHREAD_H_
 #define CTHREAD_H_
 
-
 #include <malloc.h>
 #include <unistd.h>
-#include <coreinit/systeminfo.h>
 #include <coreinit/thread.h>
 
 class CThread {
@@ -64,30 +62,37 @@ public:
     }
     //! Suspend thread
     virtual void suspendThread(void) {
-        if(isThreadSuspended()) return;
-        if(pThread) OSSuspendThread(pThread);
+        if(isThreadSuspended())
+            return;
+        if(pThread)
+            OSSuspendThread(pThread);
     }
     //! Resume thread
     virtual void resumeThread(void) {
-        if(!isThreadSuspended()) return;
-        if(pThread) OSResumeThread(pThread);
+        if(!isThreadSuspended())
+            return;
+        if(pThread)
+            OSResumeThread(pThread);
     }
     //! Set thread priority
-    virtual void setThreadPriority(int prio) {
-        if(pThread) OSSetThreadPriority(pThread, prio);
+    virtual void setThreadPriority(int32_t prio) {
+        if(pThread)
+            OSSetThreadPriority(pThread, prio);
     }
     //! Check if thread is suspended
-    virtual BOOL isThreadSuspended(void) const {
-        if(pThread) return OSIsThreadSuspended(pThread);
+    virtual bool isThreadSuspended(void) const {
+        if(pThread)
+            return OSIsThreadSuspended(pThread);
         return false;
     }
     //! Check if thread is terminated
-    virtual BOOL isThreadTerminated(void) const {
-        if(pThread) return OSIsThreadTerminated(pThread);
+    virtual bool isThreadTerminated(void) const {
+        if(pThread)
+            return OSIsThreadTerminated(pThread);
         return false;
     }
     //! Check if thread is running
-    virtual BOOL isThreadRunning(void) const {
+    virtual bool isThreadRunning(void) const {
         return !isThreadSuspended() && !isThreadRunning();
     }
     //! Shutdown thread
@@ -118,12 +123,12 @@ public:
         eAttributePinnedAff         = 0x10
     };
 private:
-    static int threadCallback(int argc, const char **argv) {
+    static int32_t threadCallback(int32_t argc, const char **argv) {
         //! After call to start() continue with the internal function
         ((CThread *) argv)->executeThread();
         return 0;
     }
-    int iAttributes;
+    int32_t iAttributes;
     OSThread *pThread;
     uint8_t *pThreadStack;
     Callback pCallback;

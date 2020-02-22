@@ -16,11 +16,11 @@
  ****************************************************************************/
 #include <unistd.h>
 #include <gui/GuiImageAsync.h>
-#include "fs/FSUtils.h"
+#include "../fs/CFile.hpp"
 
 std::vector<GuiImageAsync *> GuiImageAsync::imageQueue;
 CThread * GuiImageAsync::pThread = NULL;
-CMutex * GuiImageAsync::pMutex = NULL;
+std::recursive_mutex * GuiImageAsync::pMutex = NULL;
 uint32_t GuiImageAsync::threadRefCounter = 0;
 bool GuiImageAsync::bExitRequested = false;
 GuiImageAsync * GuiImageAsync::pInUse = NULL;
@@ -98,10 +98,35 @@ void GuiImageAsync::guiImageAsyncThread(CThread *thread, void *arg) {
                 pInUse->imgData = new GuiImageData(pInUse->imgBuffer, pInUse->imgBufferSize);
             } else {
                 uint8_t *buffer = NULL;
-                uint32_t bufferSize = 0;
+                uint64_t bufferSize = 0;
 
-                int32_t iResult = FSUtils::LoadFileToMem(pInUse->filename.c_str(), &buffer, &bufferSize);
-                if(iResult > 0) {
+                CFile file(pInUse->filename, CFile::ReadOnly);
+                if(file.isOpen()) {
+                    uint64_t filesize = file.size();
+                    buffer = (uint8_t *) malloc(filesize);
+                    if (buffer != NULL) {
+                        uint32_t blocksize = 0x4000;
+                        uint32_t done = 0;
+                        int32_t readBytes = 0;
+                        while(done < filesize) {
+                            if(done + blocksize > filesize) {
+                                blocksize = filesize - done;
+                            }
+                            readBytes = file.read(buffer + done, blocksize);
+                            if(readBytes <= 0)
+                                break;
+                            done += readBytes;
+                        }
+                        if(done == filesize){
+                            bufferSize = filesize;
+                        }else{
+                            free(buffer);
+                        }
+                    }
+                    file.close();
+                }
+
+                if(buffer != NULL && bufferSize > 0) {
                     pInUse->imgData = new GuiImageData(buffer, bufferSize, GX2_TEX_CLAMP_MODE_MIRROR);
 
                     //! free original image buffer which is converted to texture now and not needed anymore
@@ -128,7 +153,7 @@ void GuiImageAsync::guiImageAsyncThread(CThread *thread, void *arg) {
 void GuiImageAsync::threadInit() {
     if (pThread == NULL) {
         bExitRequested = false;
-        pMutex = new CMutex();
+        pMutex = new std::recursive_mutex();
         pThread = CThread::create(GuiImageAsync::guiImageAsyncThread, NULL, CThread::eAttributeAffCore1 | CThread::eAttributePinnedAff, 10);
         pThread->resumeThread();
     }

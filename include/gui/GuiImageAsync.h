@@ -17,10 +17,10 @@
 #ifndef _GUIIMAGEASYNC_H_
 #define _GUIIMAGEASYNC_H_
 
+#include <mutex>
 #include <vector>
 #include <gui/GuiImage.h>
 #include <gui/system/CThread.h>
-#include <gui/system/CMutex.h>
 
 class GuiImageAsync : public GuiImage {
 public:
@@ -51,7 +51,7 @@ private:
 
     static std::vector<GuiImageAsync *> imageQueue;
     static CThread *pThread;
-    static CMutex * pMutex;
+    static std::recursive_mutex * pMutex;
     static uint32_t threadRefCounter;
     static GuiImageAsync * pInUse;
     static bool bExitRequested;

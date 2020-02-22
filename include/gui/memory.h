@@ -23,8 +23,8 @@ extern "C" {
 
 #include <malloc.h>
 
-void memoryInitialize(void);
-void memoryRelease(void);
+void libgui_memoryInitialize(void);
+void libgui_memoryRelease(void);
 
 void * MEM2_alloc(uint32_t size, uint32_t align);
 void MEM2_free(void *ptr);

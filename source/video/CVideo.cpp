@@ -17,7 +17,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <gui/video/CVideo.h>
-#include "system/memory.h"
+#include <gui/memory.h>
 #include <gui/video/shaders/Texture2DShader.h>
 #include <gui/video/shaders/ColorShader.h>
 #include <gui/video/shaders/Shader3D.h>
@@ -239,6 +239,7 @@ CVideo::~CVideo() {
     ColorShader::destroyInstance();
     FXAAShader::destroyInstance();
     Shader3D::destroyInstance();
+    ShaderFractalColor::destroyInstance();
     Texture2DShader::destroyInstance();
 }
 

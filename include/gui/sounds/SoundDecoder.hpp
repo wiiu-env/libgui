@@ -27,7 +27,7 @@
 #define SOUND_DECODER_HPP
 
 #include <string>
-#include <gui/system/CMutex.h>
+#include <mutex>
 #include <gui/sounds/BufferCircle.hpp>
 
 class CFile;
@@ -49,7 +49,7 @@ public:
         return CurPos;
     }
     virtual int32_t Seek(int32_t pos);
-	
+
     virtual int32_t Rewind();
     virtual uint16_t GetFormat() {
         return Format;
@@ -131,7 +131,7 @@ protected:
     uint16_t SampleRate;
     uint8_t *ResampleBuffer;
     uint32_t ResampleRatio;
-    CMutex mutex;
+    std::recursive_mutex mutex;
 };
 
 

@@ -33,7 +33,6 @@
 #include <gui/sigslot.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <gui/system/AsyncDeleter.h>
 
 
 enum {
@@ -68,7 +67,7 @@ class GuiController;
 class CVideo;
 
 //!Primary GUI class. Most other classes inherit from this class.
-class GuiElement : public AsyncDeleter::Element {
+class GuiElement {
 public:
     //!Constructor
     GuiElement();

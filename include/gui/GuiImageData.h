@@ -18,11 +18,11 @@
 #define GUI_IMAGEDATA_H_
 
 #include <gd.h>
-#include <gui/system/AsyncDeleter.h>
+#include <gui/GuiElement.h>
 #include <gui/gx2_ext.h>
 #include <gx2/texture.h>
 
-class GuiImageData : public AsyncDeleter::Element {
+class GuiImageData : public GuiElement {
 public:
     //!Constructor
     GuiImageData();

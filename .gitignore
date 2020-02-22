@@ -4,3 +4,4 @@ libgui.cbp
 lib/
 *.bz2
 libgui.layout
+obj/
