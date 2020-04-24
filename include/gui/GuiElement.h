@@ -241,30 +241,30 @@ public:
     //!\param s State (STATE_DEFAULT, STATE_SELECTED, STATE_CLICKED, STATE_DISABLED)
     //!\param c Controller channel (0-3, -1 = none)
     virtual void setState(int32_t s, int32_t c = -1) {
-        if(c >= 0 && c < 4) {
+        if(c >= 0 && c < 5) {
             state[c] |= s;
         } else {
-            for(int32_t i = 0; i < 4; i++)
+            for(int32_t i = 0; i < 5; i++)
                 state[i] |= s;
         }
         stateChan = c;
         stateChanged(this, s, c);
     }
     virtual void clearState(int32_t s, int32_t c = -1) {
-        if(c >= 0 && c < 4) {
+        if(c >= 0 && c < 5) {
             state[c] &= ~s;
         } else {
-            for(int32_t i = 0; i < 4; i++)
+            for(int32_t i = 0; i < 5; i++)
                 state[i] &= ~s;
         }
         stateChan = c;
         stateChanged(this, s, c);
     }
     virtual bool isStateSet(int32_t s, int32_t c = -1) const {
-        if(c >= 0 && c < 4) {
+        if(c >= 0 && c < 5) {
             return (state[c] & s) != 0;
         } else {
-            for(int32_t i = 0; i < 4; i++)
+            for(int32_t i = 0; i < 5; i++)
                 if((state[i] & s) != 0)
                     return true;
 
@@ -283,7 +283,7 @@ public:
     };
     //!Resets the element's state to STATE_DEFAULT
     virtual void resetState() {
-        for(int32_t i = 0; i < 4; i++)
+        for(int32_t i = 0; i < 5; i++)
             state[i] = STATE_DEFAULT;
         stateChan = -1;
     }
@@ -519,7 +519,7 @@ protected:
     float scaleY; //!< Element scale (1 = 100%)
     float scaleZ; //!< Element scale (1 = 100%)
     int32_t alignment; //!< Horizontal element alignment, respective to parent element
-    int32_t state[4]; //!< Element state (DEFAULT, SELECTED, CLICKED, DISABLED)
+    int32_t state[5]; //!< Element state (DEFAULT, SELECTED, CLICKED, DISABLED)
     int32_t stateChan; //!< Which controller channel is responsible for the last change in state
     GuiElement * parentElement; //!< Parent element
 
