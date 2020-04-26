@@ -78,14 +78,8 @@ wchar_t* FreeTypeGX::charToWideChar(const char* strChar) {
     if (bt == (size_t)-1)
         return NULL;
 
-    if (bt < --len) {
+    if (bt < --len)
         strWChar[bt] = 0;
-        return strWChar;
-    }
-
-    wchar_t *tempDest = strWChar;
-    while ((*tempDest++ = *strChar++))
-        ;
 
     return strWChar;
 }
