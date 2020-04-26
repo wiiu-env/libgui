@@ -70,11 +70,15 @@ FreeTypeGX::~FreeTypeGX() {
 wchar_t* FreeTypeGX::charToWideChar(const char* strChar) {
     if (!strChar) return NULL;
 
-    wchar_t *strWChar = new (std::nothrow) wchar_t[strlen(strChar) + 1];
+    size_t len = strlen(strChar) + 1;
+    wchar_t *strWChar = new (std::nothrow) wchar_t[len];
     if (!strWChar) return NULL;
 
-    int32_t bt = mbstowcs(strWChar, strChar, strlen(strChar));
-    if (bt > 0) {
+    size_t bt = mbstowcs(strWChar, strChar, len);
+    if (bt == (size_t)-1)
+        return NULL;
+
+    if (bt < --len) {
         strWChar[bt] = 0;
         return strWChar;
     }
@@ -130,6 +134,7 @@ char *FreeTypeGX::wideCharToUTF8(const wchar_t* strChar) {
             pOut[n++] = (char)((wc & 0x3F) | 0x80);
         }
     }
+    pOut[n] = '\0';
     return pOut;
 }
 
