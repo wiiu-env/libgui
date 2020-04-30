@@ -20,7 +20,7 @@
 
 FreeTypeGX * GuiText::presentFont = NULL;
 int32_t GuiText::presetSize = 28;
-float GuiText::presetInternalRenderingScale = 2.0f; //Lets render the font at the doubled size. This make it even smoother!
+float GuiText::presetInternalRenderingScale = 1.0f;
 int32_t GuiText::presetMaxWidth = 0xFFFF;
 int32_t GuiText::presetAlignment = ALIGN_CENTER | ALIGN_MIDDLE;
 GX2ColorF32 GuiText::presetColor = (GX2ColorF32) {
