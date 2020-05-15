@@ -20,7 +20,7 @@
 
 FreeTypeGX * GuiText::presentFont = NULL;
 int32_t GuiText::presetSize = 28;
-int32_t GuiText::presetInternalRenderingScale = 1;
+int32_t GuiText::presetSSAA = 0;
 int32_t GuiText::presetMaxWidth = 0xFFFF;
 int32_t GuiText::presetAlignment = ALIGN_CENTER | ALIGN_MIDDLE;
 GX2ColorF32 GuiText::presetColor = (GX2ColorF32) {
@@ -54,7 +54,7 @@ GuiText::GuiText() {
     blurGlowIntensity = 0.0f;
     blurAlpha = 0.0f;
     blurGlowColor = glm::vec4(0.0f);
-    internalRenderingScale = presetInternalRenderingScale;
+    internalSSAA = presetSSAA;
 }
 
 GuiText::GuiText(const char * t, int32_t s, const glm::vec4 & c, int32_t SSAA) {
@@ -76,7 +76,7 @@ GuiText::GuiText(const char * t, int32_t s, const glm::vec4 & c, int32_t SSAA) {
     blurGlowIntensity = 0.0f;
     blurAlpha = 0.0f;
     blurGlowColor = glm::vec4(0.0f);
-    internalRenderingScale = SSAA;
+    internalSSAA = SSAA;
 
     if(t) {
         text = FreeTypeGX::charToWideChar(t);
@@ -106,7 +106,7 @@ GuiText::GuiText(const wchar_t * t, int32_t s, const glm::vec4 & c, int32_t SSAA
     blurGlowIntensity = 0.0f;
     blurAlpha = 0.0f;
     blurGlowColor = glm::vec4(0.0f);
-    internalRenderingScale = SSAA;
+    internalSSAA = SSAA;
 
     if(t) {
         text = new (std::nothrow) wchar_t[wcslen(t)+1];
@@ -141,7 +141,7 @@ GuiText::GuiText(const char * t) {
     blurGlowIntensity = 0.0f;
     blurAlpha = 0.0f;
     blurGlowColor = glm::vec4(0.0f);
-    internalRenderingScale = presetInternalRenderingScale;
+    internalSSAA = presetSSAA;
 
     if(t) {
         text = FreeTypeGX::charToWideChar(t);
@@ -240,7 +240,7 @@ void GuiText::setPresets(int32_t sz, const glm::vec4 & c, int32_t w, int32_t a, 
     };
     presetMaxWidth = w;
     presetAlignment = a;
-    presetInternalRenderingScale = SSAA;
+    presetSSAA = SSAA;
 }
 
 void GuiText::setPresetFont(FreeTypeGX *f) {
@@ -248,7 +248,7 @@ void GuiText::setPresetFont(FreeTypeGX *f) {
 }
 
 void GuiText::setSSAA(int32_t SSAA) {
-    internalRenderingScale = SSAA;
+    internalSSAA = SSAA;
 }
 
 void GuiText::setFontSize(int32_t s) {
@@ -496,10 +496,10 @@ void GuiText::draw(CVideo *pVideo) {
     color[3] = getAlpha();
     blurGlowColor[3] = blurAlpha * getAlpha();
 
-    float finalRenderingScale = internalRenderingScale << 1;
+    int32_t finalRenderingScale = internalSSAA == 0 ? 1 : internalSSAA << 1;
 
-    int32_t newSize = size * getScale() * finalRenderingScale;
     int32_t normal_size = size * getScale();
+    int32_t newSize = normalSize * finalRenderingScale;
 
     if(newSize != currentSize) {
         currentSize = normal_size;
