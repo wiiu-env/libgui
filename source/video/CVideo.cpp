@@ -105,7 +105,6 @@ CVideo::CVideo(int32_t forceTvScanMode, int32_t forceDrcScanMode) {
     //! this should be ok for our purpose i guess
 
     //! Setup TV depth buffer (can be the same for both if rendered one after another)
-    uint32_t size, align;
     GX2InitDepthBuffer(&tvDepthBuffer, GX2_SURFACE_DIM_TEXTURE_2D, tvColorBuffer.surface.width, tvColorBuffer.surface.height, 1, GX2_SURFACE_FORMAT_FLOAT_R32, (GX2AAMode)tvAAMode);
     tvDepthBuffer.surface.image = MEM1_alloc(tvDepthBuffer.surface.imageSize, tvDepthBuffer.surface.alignment);
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU, tvDepthBuffer.surface.image, tvDepthBuffer.surface.imageSize);
