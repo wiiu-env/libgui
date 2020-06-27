@@ -5,3 +5,4 @@ lib/
 *.bz2
 libgui.layout
 obj/
+CMakeLists.txt
