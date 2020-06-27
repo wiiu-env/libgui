@@ -1,6 +1,14 @@
 # libgui
 [![Build Status](https://travis-ci.org/Maschell/libgui.svg?branch=wut)](https://travis-ci.org/Maschell/libgui/tree/wut)  
 
+# build
+
+```
+pacman -Syu ppc-portlibs
+pacman -Syu ppc-glm ppc-libmad
+
+```
+
 ## Usage
 Following steps are required for initialization:
 ```C
