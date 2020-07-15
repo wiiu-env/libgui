@@ -105,16 +105,12 @@ CVideo::CVideo(int32_t forceTvScanMode, int32_t forceDrcScanMode) {
     //! this should be ok for our purpose i guess
 
     //! Setup TV depth buffer (can be the same for both if rendered one after another)
-    uint32_t size, align;
     GX2InitDepthBuffer(&tvDepthBuffer, GX2_SURFACE_DIM_TEXTURE_2D, tvColorBuffer.surface.width, tvColorBuffer.surface.height, 1, GX2_SURFACE_FORMAT_FLOAT_R32, (GX2AAMode)tvAAMode);
     tvDepthBuffer.surface.image = MEM1_alloc(tvDepthBuffer.surface.imageSize, tvDepthBuffer.surface.alignment);
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU, tvDepthBuffer.surface.image, tvDepthBuffer.surface.imageSize);
 
     //! Setup TV HiZ buffer
-    GX2CalcDepthBufferHiZInfo(&tvDepthBuffer, &size, &align);
-    tvDepthBuffer.hiZPtr = MEM1_alloc(size, align);
-    GX2Invalidate(GX2_INVALIDATE_MODE_CPU, tvDepthBuffer.hiZPtr, size);
-    GX2InitDepthBufferHiZEnable(&tvDepthBuffer, GX2_ENABLE);
+    GX2InitDepthBufferHiZEnable(&tvDepthBuffer, GX2_DISABLE);
 
     //! Setup color buffer for DRC rendering
     GX2InitColorBuffer(&drcColorBuffer, GX2_SURFACE_DIM_TEXTURE_2D, 854, 480, 1, GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8, (GX2AAMode)drcAAMode);
@@ -127,10 +123,7 @@ CVideo::CVideo(int32_t forceTvScanMode, int32_t forceDrcScanMode) {
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU, drcDepthBuffer.surface.image, drcDepthBuffer.surface.imageSize);
 
     //! Setup DRC HiZ buffer
-    GX2CalcDepthBufferHiZInfo(&drcDepthBuffer, &size, &align);
-    drcDepthBuffer.hiZPtr = MEM1_alloc(size, align);
-    GX2Invalidate(GX2_INVALIDATE_MODE_CPU, drcDepthBuffer.hiZPtr, size);
-    GX2InitDepthBufferHiZEnable(&drcDepthBuffer, GX2_ENABLE);
+    GX2InitDepthBufferHiZEnable(&drcDepthBuffer, GX2_DISABLE);
 
 
     //! allocate auxilary buffer last as there might not be enough MEM1 left for other stuff after that
@@ -216,9 +209,7 @@ CVideo::~CVideo() {
     MEM1_free(drcColorBuffer.surface.image);
     //! free depth buffers
     MEM1_free(tvDepthBuffer.surface.image);
-    MEM1_free(tvDepthBuffer.hiZPtr);
     MEM1_free(drcDepthBuffer.surface.image);
-    MEM1_free(drcDepthBuffer.hiZPtr);
     //! free context buffers
     MEM2_free(tvContextState);
     MEM2_free(drcContextState);
