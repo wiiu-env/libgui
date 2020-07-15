@@ -160,7 +160,7 @@ void GuiSelectBox::Init(std::map<std::string,std::string> values, int32_t valueI
         valueButtons[i].valueButtonHighlightedImg = new GuiImage(valueHighlightedImageData);
 
         valueButtons[i].valueButton = new GuiButton(valueButtons[i].valueButtonImg->getWidth() * imgScale, valueButtons[i].valueButtonImg->getHeight() * imgScale);
-        valueButtons[i].valueButtonText = new GuiText(itr->first.c_str(),32,glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        valueButtons[i].valueButtonText = new GuiText(itr->first.c_str(),32,glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 0);
 
         valueButtons[i].valueButtonText->setMaxWidth(valueButtons[i].valueButtonImg->getWidth() * imgScale - 20.0f, GuiText::WRAP);
         valueButtons[i].valueButtonText->setPosition(0, 0);

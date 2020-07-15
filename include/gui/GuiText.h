@@ -29,12 +29,12 @@ public:
     //!\param t Text
     //!\param s Font size
     //!\param c Font color
-    GuiText(const char * t, int32_t s, const glm::vec4 & c);
+    GuiText(const char * t, int32_t s, const glm::vec4 & c, int32_t SSAA);
     //!\overload
     //!\param t Text
     //!\param s Font size
     //!\param c Font color
-    GuiText(const wchar_t * t, int32_t s, const glm::vec4 & c);
+    GuiText(const wchar_t * t, int32_t s, const glm::vec4 & c, int32_t SSAA);
     //!\overload
     //!\Assumes SetPresets() has been called to setup preferred text attributes
     //!\param t Text
@@ -53,8 +53,11 @@ public:
     //!\param w Maximum width of texture image (for text wrapping)
     //!\param wrap Wrapmode when w>0
     //!\param a Text alignment
-    static void setPresets(int32_t sz, const glm::vec4 & c, int32_t w, int32_t a);
+    static void setPresets(int32_t sz, const glm::vec4 & c, int32_t w, int32_t a, int32_t SSAA);
     static void setPresetFont(FreeTypeGX *font);
+    //!Sets Supersampling Anti-Aliasing
+    //!\param SSAA Valid values are: 1, 2, 4, 8, 16, 32
+    void setSSAA(int32_t SSAA);
     //!Sets the font size
     //!\param s Font size
     void setFontSize(int32_t s);
@@ -118,7 +121,7 @@ protected:
     static FreeTypeGX * presentFont;
     static int32_t presetSize;
     static int32_t presetMaxWidth;
-    static float presetInternalRenderingScale;
+    static int32_t presetSSAA;
     static int32_t presetAlignment;
     static GX2ColorF32 presetColor;
 
@@ -149,7 +152,7 @@ protected:
     float blurGlowIntensity;
     float blurAlpha;
     glm::vec4 blurGlowColor;
-    float internalRenderingScale;
+    int32_t internalSSAA;
 };
 
 #endif

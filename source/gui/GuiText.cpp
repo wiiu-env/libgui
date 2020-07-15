@@ -20,7 +20,7 @@
 
 FreeTypeGX * GuiText::presentFont = NULL;
 int32_t GuiText::presetSize = 28;
-float GuiText::presetInternalRenderingScale = 2.0f; //Lets render the font at the doubled size. This make it even smoother!
+int32_t GuiText::presetSSAA = 0;
 int32_t GuiText::presetMaxWidth = 0xFFFF;
 int32_t GuiText::presetAlignment = ALIGN_CENTER | ALIGN_MIDDLE;
 GX2ColorF32 GuiText::presetColor = (GX2ColorF32) {
@@ -54,10 +54,10 @@ GuiText::GuiText() {
     blurGlowIntensity = 0.0f;
     blurAlpha = 0.0f;
     blurGlowColor = glm::vec4(0.0f);
-    internalRenderingScale = presetInternalRenderingScale;
+    internalSSAA = presetSSAA;
 }
 
-GuiText::GuiText(const char * t, int32_t s, const glm::vec4 & c) {
+GuiText::GuiText(const char * t, int32_t s, const glm::vec4 & c, int32_t SSAA) {
     text = NULL;
     size = s;
     currentSize = size;
@@ -76,7 +76,7 @@ GuiText::GuiText(const char * t, int32_t s, const glm::vec4 & c) {
     blurGlowIntensity = 0.0f;
     blurAlpha = 0.0f;
     blurGlowColor = glm::vec4(0.0f);
-    internalRenderingScale = presetInternalRenderingScale;
+    internalSSAA = SSAA;
 
     if(t) {
         text = FreeTypeGX::charToWideChar(t);
@@ -87,7 +87,7 @@ GuiText::GuiText(const char * t, int32_t s, const glm::vec4 & c) {
     }
 }
 
-GuiText::GuiText(const wchar_t * t, int32_t s, const glm::vec4 & c) {
+GuiText::GuiText(const wchar_t * t, int32_t s, const glm::vec4 & c, int32_t SSAA) {
     text = NULL;
     size = s;
     currentSize = size;
@@ -106,7 +106,7 @@ GuiText::GuiText(const wchar_t * t, int32_t s, const glm::vec4 & c) {
     blurGlowIntensity = 0.0f;
     blurAlpha = 0.0f;
     blurGlowColor = glm::vec4(0.0f);
-    internalRenderingScale = presetInternalRenderingScale;
+    internalSSAA = SSAA;
 
     if(t) {
         text = new (std::nothrow) wchar_t[wcslen(t)+1];
@@ -141,7 +141,7 @@ GuiText::GuiText(const char * t) {
     blurGlowIntensity = 0.0f;
     blurAlpha = 0.0f;
     blurGlowColor = glm::vec4(0.0f);
-    internalRenderingScale = presetInternalRenderingScale;
+    internalSSAA = presetSSAA;
 
     if(t) {
         text = FreeTypeGX::charToWideChar(t);
@@ -233,17 +233,22 @@ void GuiText::clearDynamicText() {
     textDynWidth.clear();
 }
 
-void GuiText::setPresets(int32_t sz, const glm::vec4 & c, int32_t w, int32_t a) {
+void GuiText::setPresets(int32_t sz, const glm::vec4 & c, int32_t w, int32_t a, int32_t SSAA) {
     presetSize = sz;
     presetColor = (GX2ColorF32) {
         (float)c.r / 255.0f, (float)c.g / 255.0f, (float)c.b / 255.0f, (float)c.a / 255.0f
     };
     presetMaxWidth = w;
     presetAlignment = a;
+    presetSSAA = SSAA;
 }
 
 void GuiText::setPresetFont(FreeTypeGX *f) {
     presentFont = f;
+}
+
+void GuiText::setSSAA(int32_t SSAA) {
+    internalSSAA = SSAA;
 }
 
 void GuiText::setFontSize(int32_t s) {
@@ -491,10 +496,10 @@ void GuiText::draw(CVideo *pVideo) {
     color[3] = getAlpha();
     blurGlowColor[3] = blurAlpha * getAlpha();
 
-    float finalRenderingScale = 2.0f * internalRenderingScale;
+    int32_t finalRenderingScale = internalSSAA == 0 ? 1 : internalSSAA << 1;
 
-    int32_t newSize = size * getScale() * finalRenderingScale;
     int32_t normal_size = size * getScale();
+    int32_t newSize = normalSize * finalRenderingScale;
 
     if(newSize != currentSize) {
         currentSize = normal_size;
