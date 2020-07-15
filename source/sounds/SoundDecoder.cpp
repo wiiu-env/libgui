@@ -186,12 +186,15 @@ void SoundDecoder::Decode() {
         }
 
         //! TODO: remove this later and add STEREO support with two voices, for now we convert to MONO
+        done >>= 1;
         if(IsStereo()) {
             int16_t* monoBuf = (int16_t*)write_buf;
-            done = done >> 1;
+            done >>= 1;
 
             for(int32_t i = 0; i < done; i++)
                 monoBuf[i] = monoBuf[i << 1];
+
+            done <<= 1;
         }
 
         DCFlushRange(write_buf, done);
