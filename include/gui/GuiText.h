@@ -120,7 +120,7 @@ protected:
     static int32_t presetMaxWidth;
     static float presetInternalRenderingScale;
     static int32_t presetAlignment;
-    static GX2ColorF32 presetColor;
+    static glm::vec4 presetColor;
 
     //!Clear the dynamic text
     void clearDynamicText();
