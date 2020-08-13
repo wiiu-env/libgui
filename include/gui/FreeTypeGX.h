@@ -139,7 +139,7 @@ private:
     void loadGlyphData(FT_Bitmap *bmp, ftgxCharData *charData);
 
     void copyTextureToFramebuffer(CVideo *pVideo, GX2Texture *tex, int16_t screenX, int16_t screenY, int16_t screenZ, const glm::vec4 &color, const float &textBlur, const float &colorBlurIntensity, const glm::vec4 &blurColor,
-                                  const float &internalRenderingScale);
+                                  const float &superSamplingScale);
 
 public:
     FreeTypeGX(const uint8_t *fontBuffer, FT_Long bufferSize, bool lastFace = false);
@@ -147,7 +147,8 @@ public:
     ~FreeTypeGX();
 
     uint16_t drawText(CVideo *pVideo, int16_t x, int16_t y, int16_t z, const wchar_t *text, int16_t pixelSize, const glm::vec4 &color,
-                      uint16_t textStyling, uint16_t textWidth, const float &textBlur, const float &colorBlurIntensity, const glm::vec4 &blurColor, const float &internalRenderingScale);
+                      uint16_t textStyling, uint16_t textWidth, const float &textBlur, const float &colorBlurIntensity, const glm::vec4 &blurColor, const float &superSamplingScale);
+
 
     uint16_t getWidth(const wchar_t *text, int16_t pixelSize);
 

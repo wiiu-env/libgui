@@ -106,6 +106,11 @@ public:
     }
 
     //!Get fontsize
+
+    void setSSAA(int32_t ssaa) {
+        this->internalSSAA = ssaa;
+    };
+
     int32_t getFontSize() {
         return size;
     };
@@ -142,6 +147,7 @@ public:
     };
 protected:
     static FreeTypeGX *presentFont;
+    static int32_t presetSSAA;
     static int32_t presetSize;
     static int32_t presetMaxWidth;
     static float presetInternalRenderingScale;
@@ -178,7 +184,7 @@ protected:
     float blurGlowIntensity;
     float blurAlpha;
     glm::vec4 blurGlowColor;
-    float internalRenderingScale;
+    int32_t internalSSAA;
 };
 
 #endif

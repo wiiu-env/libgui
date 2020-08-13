@@ -344,10 +344,8 @@ int16_t FreeTypeGX::getStyleOffsetHeight(int16_t format, uint16_t pixelSize) {
  */
 
 uint16_t FreeTypeGX::drawText(CVideo *video, int16_t x, int16_t y, int16_t z, const wchar_t *text, int16_t pixelSize, const glm::vec4 &color, uint16_t textStyle, uint16_t textWidth, const float &textBlur, const float &colorBlurIntensity,
-                              const glm::vec4 &blurColor, const float &internalRenderingScale) {
-    if (!text) {
-        return 0;
-    }
+                              const glm::vec4 &blurColor, const float &superSamplingScale) {
+    if (!text) { return 0; }
 
     uint16_t fullTextWidth = (textWidth > 0) ? textWidth : getWidth(text, pixelSize);
     uint16_t x_pos = x, printed = 0;
@@ -371,7 +369,7 @@ uint16_t FreeTypeGX::drawText(CVideo *video, int16_t x, int16_t y, int16_t z, co
                 x_pos += (pairDelta.x >> 6);
 
             }
-            copyTextureToFramebuffer(video, glyphData->texture, x_pos + glyphData->renderOffsetX + x_offset, y + glyphData->renderOffsetY - y_offset, z, color, textBlur, colorBlurIntensity, blurColor, internalRenderingScale);
+            copyTextureToFramebuffer(video, glyphData->texture, x_pos + glyphData->renderOffsetX + x_offset, y + glyphData->renderOffsetY - y_offset, z, color, textBlur, colorBlurIntensity, blurColor, superSamplingScale);
 
             x_pos += glyphData->glyphAdvanceX;
             ++printed;
@@ -506,15 +504,15 @@ void FreeTypeGX::getOffset(const wchar_t *text, int16_t pixelSize, uint16_t widt
  * @param color Color to apply to the texture.
  */
 void FreeTypeGX::copyTextureToFramebuffer(CVideo *pVideo, GX2Texture *texture, int16_t x, int16_t y, int16_t z, const glm::vec4 &color, const float &defaultBlur, const float &blurIntensity, const glm::vec4 &blurColor,
-                                          const float &internalRenderingScale) {
+                                          const float &superSamplingScale) {
     static const float imageAngle = 0.0f;
-    static const float blurScale = (2.0f / (internalRenderingScale));
+    static const float blurScale = (2.0f);
 
-    float offsetLeft = blurScale * ((float) x + 0.5f * (float) texture->surface.width) * (float) pVideo->getWidthScaleFactor();
-    float offsetTop = blurScale * ((float) y - 0.5f * (float) texture->surface.height) * (float) pVideo->getHeightScaleFactor();
+    float offsetLeft = blurScale * (1.0f / superSamplingScale) * ((float) x + 0.5f * (float) texture->surface.width) * (float) pVideo->getWidthScaleFactor();
+    float offsetTop = blurScale * (1.0f / superSamplingScale) * ((float) y - 0.5f * (float) texture->surface.height) * (float) pVideo->getHeightScaleFactor();
 
-    float widthScale = blurScale * (float) texture->surface.width * pVideo->getWidthScaleFactor();
-    float heightScale = blurScale * (float) texture->surface.height * pVideo->getHeightScaleFactor();
+    float widthScale = blurScale * (1.0f / superSamplingScale) * (float) texture->surface.width * pVideo->getWidthScaleFactor();
+    float heightScale = blurScale * (1.0f / superSamplingScale) * (float) texture->surface.height * pVideo->getHeightScaleFactor();
 
     glm::vec3 positionOffsets(offsetLeft, offsetTop, (float) z);
 
