@@ -75,10 +75,9 @@ GuiText::GuiText(const char *t, int32_t s, const glm::vec4 &c) {
     blurGlowColor = glm::vec4(0.0f);
 
     if (t) {
+        textMutex.lock();
         text = FreeTypeGX::charToWideChar(t);
-        if (!text) {
-            return;
-        }
+        textMutex.unlock();
     }
 }
 
@@ -102,12 +101,15 @@ GuiText::GuiText(const wchar_t *t, int32_t s, const glm::vec4 &c) {
     blurGlowColor = glm::vec4(0.0f);
 
     if (t) {
+        textMutex.lock();
         text = new(std::nothrow) wchar_t[wcslen(t) + 1];
         if (!text) {
+            textMutex.unlock();
             return;
         }
 
         wcscpy(text, t);
+        textMutex.unlock();
     }
 }
 
@@ -134,10 +136,9 @@ GuiText::GuiText(const char *t) {
     blurGlowColor = glm::vec4(0.0f);
 
     if (t) {
+        textMutex.lock();
         text = FreeTypeGX::charToWideChar(t);
-        if (!text) {
-            return;
-        }
+        textMutex.unlock();
     }
 }
 
@@ -146,15 +147,18 @@ GuiText::GuiText(const char *t) {
  * Destructor for the GuiText class.
  */
 GuiText::~GuiText() {
+    textMutex.lock();
     if (text) {
         delete[] text;
     }
     text = NULL;
+    textMutex.unlock();
 
     clearDynamicText();
 }
 
 void GuiText::setText(const char *t) {
+    textMutex.lock();
     if (text) {
         delete[] text;
     }
@@ -167,10 +171,8 @@ void GuiText::setText(const char *t) {
 
     if (t) {
         text = FreeTypeGX::charToWideChar(t);
-        if (!text) {
-            return;
-        }
     }
+    textMutex.unlock();
 }
 
 void GuiText::setTextf(const char *format, ...) {
@@ -195,6 +197,7 @@ void GuiText::setTextf(const char *format, ...) {
 
 
 void GuiText::setText(const wchar_t *t) {
+    textMutex.lock();
     if (text) {
         delete[] text;
     }
@@ -208,14 +211,17 @@ void GuiText::setText(const wchar_t *t) {
     if (t) {
         text = new(std::nothrow) wchar_t[wcslen(t) + 1];
         if (!text) {
+            textMutex.unlock();
             return;
         }
 
         wcscpy(text, t);
     }
+    textMutex.unlock();
 }
 
 void GuiText::clearDynamicText() {
+    textMutex.lock();
     for (uint32_t i = 0; i < textDyn.size(); i++) {
         if (textDyn[i]) {
             delete[] textDyn[i];
@@ -223,6 +229,7 @@ void GuiText::clearDynamicText() {
     }
     textDyn.clear();
     textDynWidth.clear();
+    textMutex.unlock();
 }
 
 void GuiText::setPresets(int32_t sz, const glm::vec4 &c, int32_t w, int32_t a) {
@@ -267,25 +274,37 @@ void GuiText::setBlurGlowColor(float blur, const glm::vec4 &c) {
 }
 
 int32_t GuiText::getTextWidth(int32_t ind) {
+    textMutex.lock();
+    int32_t res;
     if (ind < 0 || ind >= (int32_t) textDyn.size()) {
-        return this->getTextWidth();
+        res = this->getTextWidth();
+    } else {
+        res = font->getWidth(textDyn[ind], currentSize);
     }
-    return font->getWidth(textDyn[ind], currentSize);
+    textMutex.unlock();
+    return res;
 }
 
 //!Get the Horizontal Size of Text
 int32_t GuiText::getTextWidth() {
+    textMutex.lock();
     auto res = font->getWidth(text, currentSize);
     res = res > maxWidth && maxWidth > 0 ? maxWidth : res;
+    textMutex.unlock();
+    return res;
     return res;
 }
 
 const wchar_t *GuiText::getDynText(int32_t ind) {
+    textMutex.lock();
+    const wchar_t *result;
     if (ind < 0 || ind >= (int32_t) textDyn.size()) {
-        return text;
+        result = text;
+    } else {
+        result = textDyn[ind];
     }
-
-    return textDyn[ind];
+    textMutex.unlock();
+    return result;
 }
 
 /**
@@ -301,11 +320,14 @@ bool GuiText::setFont(FreeTypeGX *f) {
 }
 
 std::string GuiText::toUTF8(void) const {
+    textMutex.lock();
     if (!text) {
+        textMutex.unlock();
         return std::string();
     }
 
     char *pUtf8 = FreeTypeGX::wideCharToUTF8(text);
+    textMutex.unlock();
     if (!pUtf8) {
         return std::string();
     }
@@ -318,6 +340,7 @@ std::string GuiText::toUTF8(void) const {
 }
 
 void GuiText::makeDottedText() {
+    textMutex.lock();
     int32_t pos = textDyn.size();
     textDyn.resize(pos + 1);
 
@@ -325,6 +348,7 @@ void GuiText::makeDottedText() {
     textDyn[pos] = new(std::nothrow) wchar_t[maxWidth];
     if (!textDyn[pos]) {
         textDyn.resize(pos);
+        textMutex.unlock();
         return;
     }
 
@@ -343,9 +367,11 @@ void GuiText::makeDottedText() {
         i++;
     }
     textDyn[pos][i] = 0;
+    textMutex.unlock();
 }
 
 void GuiText::scrollText(uint32_t frameCount) {
+    textMutex.lock();
     if (textDyn.size() == 0) {
         int32_t pos = textDyn.size();
         int32_t i = 0, currentWidth = 0;
@@ -354,6 +380,7 @@ void GuiText::scrollText(uint32_t frameCount) {
         textDyn[pos] = new(std::nothrow) wchar_t[maxWidth];
         if (!textDyn[pos]) {
             textDyn.resize(pos);
+            textMutex.unlock();
             return;
         }
 
@@ -365,16 +392,18 @@ void GuiText::scrollText(uint32_t frameCount) {
             ++i;
         }
         textDyn[pos][i] = 0;
-
+        textMutex.unlock();
         return;
     }
 
     if (frameCount % textScrollDelay != 0) {
+        textMutex.unlock();
         return;
     }
 
     if (textScrollInitialDelay) {
         --textScrollInitialDelay;
+        textMutex.unlock();
         return;
     }
 
@@ -395,6 +424,7 @@ void GuiText::scrollText(uint32_t frameCount) {
 
     if (!textDyn[pos]) {
         textDyn.resize(pos);
+        textMutex.unlock();
         return;
     }
 
@@ -421,10 +451,15 @@ void GuiText::scrollText(uint32_t frameCount) {
         ++i;
     }
     textDyn[pos][i] = 0;
+    textMutex.unlock();
 }
 
 void GuiText::wrapText() {
-    if (textDyn.size() > 0) { return; }
+    textMutex.lock();
+    if (textDyn.size() > 0) {
+        textMutex.unlock();
+        return;
+    }
 
     int32_t i = 0;
     int32_t ch = 0;
@@ -481,17 +516,21 @@ void GuiText::wrapText() {
         ++ch;
         ++i;
     }
+    textMutex.unlock();
 }
 
 /**
  * Draw the text on screen
  */
 void GuiText::draw(CVideo *pVideo) {
+    textMutex.lock();
     if (!text) {
+        textMutex.unlock();
         return;
     }
 
     if (!isVisible()) {
+        textMutex.unlock();
         return;
     }
 
@@ -527,6 +566,7 @@ void GuiText::draw(CVideo *pVideo) {
             if (textDyn.size() > 0) {
                 font->drawText(pVideo, x_pos, y_pos, getDepth(), textDyn[textDyn.size() - 1], internalRenderingSize, color, alignment, textDynWidth[textDyn.size() - 1], defaultBlur, blurGlowIntensity, blurGlowColor, internalRenderingScale);
             }
+            textMutex.unlock();
             return;
         } else if (wrapMode == SCROLL_HORIZONTAL) {
             scrollText(pVideo->getFrameCount());
@@ -535,7 +575,7 @@ void GuiText::draw(CVideo *pVideo) {
                 font->drawText(pVideo, x_pos, y_pos, getDepth(), textDyn[textDyn.size() - 1], internalRenderingSize, color, alignment, maxWidth * internalRenderingScale * getScale(), defaultBlur, blurGlowIntensity, blurGlowColor,
                                internalRenderingScale);
             }
-
+            textMutex.unlock();
             return;
         } else if (wrapMode == WRAP) {
             int32_t lineheight = internalRenderingSize + 6;
@@ -562,6 +602,7 @@ void GuiText::draw(CVideo *pVideo) {
                 font->drawText(pVideo, x_pos, y_pos + y_offset + voffset, getDepth(), textDyn[i], internalRenderingSize, color, alignment, textDynWidth[i], defaultBlur, blurGlowIntensity, blurGlowColor, internalRenderingScale);
                 yoffset -= lineheight;
             }
+            textMutex.unlock();
             return;
         }
     }

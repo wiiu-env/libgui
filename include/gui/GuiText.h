@@ -18,6 +18,7 @@
 #define GUI_TEXT_H_
 
 #include <gui/GuiElement.h>
+#include <mutex>
 
 //!Forward declaration
 class FreeTypeGX;
@@ -163,6 +164,8 @@ protected:
 
     //!Wrap the text to several lines
     void wrapText();
+
+    mutable std::recursive_mutex textMutex;
 
     wchar_t *text;
     std::vector<wchar_t *> textDyn;
