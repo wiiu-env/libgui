@@ -29,11 +29,10 @@ using namespace std;
 #define ALIGN4(x) (((x) + 3) & ~3)
 
 /**
- * Default constructor for the FreeTypeGX class for WiiXplorer.
+ * Default constructor for the FreeTypeGX class.
  */
 FreeTypeGX::FreeTypeGX(const uint8_t *fontBuffer, FT_Long bufferSize, bool lastFace) {
     int32_t faceIndex = 0;
-    ftPointSize = 0;
     GX2InitSampler(&ftSampler, GX2_TEX_CLAMP_MODE_CLAMP_BORDER, GX2_TEX_XY_FILTER_MODE_LINEAR);
 
     FT_Init_FreeType(&ftLibrary);
@@ -174,6 +173,7 @@ void FreeTypeGX::unloadFont() {
 ftgxCharData *FreeTypeGX::cacheGlyphData(wchar_t charCode, int16_t pixelSize) {
     fontDataMutex.lock();
     auto itr = fontData.find(pixelSize);
+    bool updateAlign = false;
     if (itr != fontData.end()) {
         auto itr2 = itr->second.ftgxCharMap.find(charCode);
         if (itr2 != itr->second.ftgxCharMap.end()) {
@@ -181,21 +181,23 @@ ftgxCharData *FreeTypeGX::cacheGlyphData(wchar_t charCode, int16_t pixelSize) {
             fontDataMutex.unlock();
             return &itr2->second;
         }
+    } else {
+        updateAlign = true;
     }
-    //!Cache ascender and decender as well
+
     ftGX2Data *ftData = &fontData[pixelSize];
 
     faceMutex.lock();
-    FT_UInt gIndex;
-    uint16_t textureWidth = 0, textureHeight = 0;
-    if (ftPointSize != pixelSize) {
-        ftPointSize = pixelSize;
-        FT_Set_Pixel_Sizes(ftFace, 0, ftPointSize);
+
+    if (updateAlign) {
+        FT_Set_Pixel_Sizes(ftFace, 0, pixelSize);
+
         ftData->ftgxAlign.ascender = (int16_t) ftFace->size->metrics.ascender >> 6;
         ftData->ftgxAlign.descender = (int16_t) ftFace->size->metrics.descender >> 6;
-        ftData->ftgxAlign.max = 0;
-        ftData->ftgxAlign.min = 0;
     }
+
+    FT_UInt gIndex;
+    uint16_t textureWidth = 0, textureHeight = 0;
 
     gIndex = FT_Get_Char_Index(ftFace, (FT_ULong) charCode);
     if (gIndex != 0 && FT_Load_Glyph(ftFace, gIndex, FT_LOAD_DEFAULT | FT_LOAD_RENDER) == 0) {
@@ -219,6 +221,12 @@ ftgxCharData *FreeTypeGX::cacheGlyphData(wchar_t charCode, int16_t pixelSize) {
             charData->renderOffsetY = (int16_t) ftFace->glyph->bitmap_top;
             charData->renderOffsetMax = (int16_t) ftFace->glyph->bitmap_top;
             charData->renderOffsetMin = (int16_t) glyphBitmap->rows - ftFace->glyph->bitmap_top;
+
+            int16_t oldMax = ftData->ftgxAlign.max;
+            ftData->ftgxAlign.max = charData->renderOffsetMax > oldMax ? charData->renderOffsetMax : oldMax;
+
+            int16_t oldMin = ftData->ftgxAlign.min;
+            ftData->ftgxAlign.min = charData->renderOffsetMin > oldMin ? charData->renderOffsetMin : oldMin;
 
             //! Initialize texture
             charData->texture = new GX2Texture;
