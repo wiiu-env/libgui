@@ -74,8 +74,9 @@ GuiParticleImage::~GuiParticleImage() {
 }
 
 void GuiParticleImage::draw(CVideo *pVideo) {
-    if (!this->isVisible())
+    if (!this->isVisible()) {
         return;
+    }
 
 
     float currScaleX = getScaleX();

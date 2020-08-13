@@ -54,10 +54,11 @@ void GuiDragListener::setTrigger(GuiTrigger *t, int32_t idx) {
 }
 
 void GuiDragListener::update(GuiController *c) {
-    if (!c || isStateSet(STATE_DISABLED | STATE_HIDDEN | STATE_DISABLE_INPUT, c->chanIdx))
+    if (!c || isStateSet(STATE_DISABLED | STATE_HIDDEN | STATE_DISABLE_INPUT, c->chanIdx)) {
         return;
-    else if (parentElement && (parentElement->isStateSet(STATE_DISABLED | STATE_HIDDEN | STATE_DISABLE_INPUT, c->chanIdx)))
+    } else if (parentElement && (parentElement->isStateSet(STATE_DISABLED | STATE_HIDDEN | STATE_DISABLE_INPUT, c->chanIdx))) {
         return;
+    }
 
     for (int32_t i = 0; i < iMaxGuiTriggers; i++) {
         if (!trigger[i]) {
@@ -71,7 +72,7 @@ void GuiDragListener::update(GuiController *c) {
             int32_t dx = c->data.x - c->lastData.x;
             int32_t dy = c->data.y - c->lastData.y;
 
-            if (dx == 0 && dy == 0) continue;
+            if (dx == 0 && dy == 0) { continue; }
 
             dragged(this, c, trigger[i], dx, dy);
         }

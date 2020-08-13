@@ -47,7 +47,7 @@ CursorDrawer::~CursorDrawer() {
 void CursorDrawer::init_colorVtxs() {
     if (!this->colorVtxs) {
         this->colorVtxs = (uint8_t *) memalign(0x40, sizeof(uint8_t) * 16);
-        if (this->colorVtxs == NULL) return;
+        if (this->colorVtxs == NULL) { return; }
 
     }
     memset(this->colorVtxs, 0xFF, 16 * sizeof(uint8_t));

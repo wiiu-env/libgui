@@ -38,8 +38,9 @@
 class SoundHandler : public CThread {
 public:
     static SoundHandler *instance() {
-        if (!handlerInstance)
+        if (!handlerInstance) {
             handlerInstance = new SoundHandler();
+        }
         return handlerInstance;
     }
 

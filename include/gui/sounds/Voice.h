@@ -68,8 +68,9 @@ public:
     }
 
     void play(const uint8_t *buffer, uint32_t bufferSize, const uint8_t *nextBuffer, uint32_t nextBufSize, uint16_t format, uint32_t sampleRate) {
-        if (!voice)
+        if (!voice) {
             return;
+        }
 
         memset(&voiceBuffer, 0, sizeof(voiceBuffer));
 
@@ -95,8 +96,9 @@ public:
     }
 
     void stop() {
-        if (voice)
+        if (voice) {
             AXSetVoiceState(voice, 0);
+        }
     }
 
     void setVolume(uint32_t vol) {
@@ -127,8 +129,9 @@ public:
     }
 
     uint32_t getInternState() const {
-        if (voice)
+        if (voice) {
             return ((uint32_t *) voice)[1];
+        }
         return 0;
     }
 

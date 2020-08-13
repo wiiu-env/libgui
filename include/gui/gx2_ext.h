@@ -96,15 +96,17 @@ static inline void GX2InitColorBuffer(GX2ColorBuffer *colorBuffer, GX2SurfaceDim
     colorBuffer->surface.alignment = 0;
     colorBuffer->surface.pitch = 0;
     uint32_t i;
-    for (i = 0; i < 13; i++)
+    for (i = 0; i < 13; i++) {
         colorBuffer->surface.mipLevelOffset[i] = 0;
+    }
     colorBuffer->viewMip = 0;
     colorBuffer->viewFirstSlice = 0;
     colorBuffer->viewNumSlices = depth;
     colorBuffer->aaBuffer = NULL;
     colorBuffer->aaSize = 0;
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < 5; i++) {
         colorBuffer->regs[i] = 0;
+    }
 
     GX2CalcSurfaceSizeAndAlignment(&colorBuffer->surface);
     GX2InitColorBufferRegs(colorBuffer);
@@ -139,15 +141,17 @@ static inline void GX2InitTexture(GX2Texture *tex, uint32_t width, uint32_t heig
     tex->surface.alignment = 0;
     tex->surface.pitch = 0;
     uint32_t i;
-    for (i = 0; i < 13; i++)
+    for (i = 0; i < 13; i++) {
         tex->surface.mipLevelOffset[i] = 0;
+    }
     tex->viewFirstMip = 0;
     tex->viewNumMips = mipLevels;
     tex->viewFirstSlice = 0;
     tex->viewNumSlices = depth;
     tex->compMap = texture_comp_selector[format & 0x3f];
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < 5; i++) {
         tex->regs[i] = 0;
+    }
 
     GX2CalcSurfaceSizeAndAlignment(&tex->surface);
     GX2InitTextureRegs(tex);

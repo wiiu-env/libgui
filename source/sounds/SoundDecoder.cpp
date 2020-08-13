@@ -51,12 +51,14 @@ SoundDecoder::~SoundDecoder() {
     Lock();
     Unlock();
 
-    if (file_fd)
+    if (file_fd) {
         delete file_fd;
+    }
     file_fd = NULL;
 
-    if (ResampleBuffer)
+    if (ResampleBuffer) {
         free(ResampleBuffer);
+    }
 }
 
 int32_t SoundDecoder::Seek(int32_t pos) {
@@ -133,8 +135,9 @@ void SoundDecoder::Upsample(int16_t *src, int16_t *dst, uint32_t nr_src_samples,
 }
 
 void SoundDecoder::Decode() {
-    if (!file_fd || ExitRequested || EndOfFile)
+    if (!file_fd || ExitRequested || EndOfFile) {
         return;
+    }
 
     // check if we are not at the pre-last buffer (last buffer is playing)
     uint16_t whichPlaying = SoundBuffer.Which();
@@ -154,8 +157,9 @@ void SoundDecoder::Decode() {
         return;
     }
 
-    if (ResampleTo48kHz && !ResampleBuffer)
+    if (ResampleTo48kHz && !ResampleBuffer) {
         EnableUpsample();
+    }
 
     while (done < SoundBlockSize) {
         int32_t ret = Read(&write_buf[done], SoundBlockSize - done, Tell());
@@ -190,20 +194,23 @@ void SoundDecoder::Decode() {
             int16_t *monoBuf = (int16_t *) write_buf;
             done = done >> 1;
 
-            for (int32_t i = 0; i < done; i++)
+            for (int32_t i = 0; i < done; i++) {
                 monoBuf[i] = monoBuf[i << 1];
+            }
         }
 
         DCFlushRange(write_buf, done);
         SoundBuffer.SetBufferSize(whichLoad, done);
         SoundBuffer.SetBufferReady(whichLoad, true);
-        if (++whichLoad >= SoundBuffer.Size())
+        if (++whichLoad >= SoundBuffer.Size()) {
             whichLoad = 0;
+        }
     }
 
     // check if next in queue needs to be filled as well and do so
-    if (!SoundBuffer.IsBufferReady(whichLoad))
+    if (!SoundBuffer.IsBufferReady(whichLoad)) {
         Decode();
+    }
 
     Decoding = false;
 }

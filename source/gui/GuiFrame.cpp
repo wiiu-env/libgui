@@ -22,8 +22,9 @@ GuiFrame::GuiFrame(GuiFrame *p) {
     height = 0;
     dim = false;
 
-    if (parent)
+    if (parent) {
         parent->append(this);
+    }
 }
 
 GuiFrame::GuiFrame(float w, float h, GuiFrame *p) {
@@ -32,20 +33,23 @@ GuiFrame::GuiFrame(float w, float h, GuiFrame *p) {
     height = h;
     dim = false;
 
-    if (parent)
+    if (parent) {
         parent->append(this);
+    }
 }
 
 GuiFrame::~GuiFrame() {
     closing(this);
 
-    if (parent)
+    if (parent) {
         parent->remove(this);
+    }
 }
 
 void GuiFrame::append(GuiElement *e) {
-    if (e == NULL)
+    if (e == NULL) {
         return;
+    }
 
     remove(e);
     elements.push_back(e);
@@ -53,8 +57,9 @@ void GuiFrame::append(GuiElement *e) {
 }
 
 void GuiFrame::insert(GuiElement *e, uint32_t index) {
-    if (e == NULL || (index >= elements.size()))
+    if (e == NULL || (index >= elements.size())) {
         return;
+    }
 
     remove(e);
     elements.insert(elements.begin() + index, e);
@@ -62,8 +67,9 @@ void GuiFrame::insert(GuiElement *e, uint32_t index) {
 }
 
 void GuiFrame::remove(GuiElement *e) {
-    if (e == NULL)
+    if (e == NULL) {
         return;
+    }
 
     for (uint32_t i = 0; i < elements.size(); ++i) {
         if (e == elements[i]) {
@@ -86,8 +92,9 @@ void GuiFrame::dimBackground(bool d) {
 }
 
 GuiElement *GuiFrame::getGuiElementAt(uint32_t index) const {
-    if (index >= elements.size())
+    if (index >= elements.size()) {
         return NULL;
+    }
     return elements[index];
 }
 
@@ -140,8 +147,9 @@ int32_t GuiFrame::getSelected() {
 }
 
 void GuiFrame::draw(CVideo *v) {
-    if (!this->isVisible() && parentElement)
+    if (!this->isVisible() && parentElement) {
         return;
+    }
 
     if (parentElement && dim == true) {
         //GXColor dimColor = (GXColor){0, 0, 0, 0x70};
@@ -157,8 +165,9 @@ void GuiFrame::draw(CVideo *v) {
 }
 
 void GuiFrame::updateEffects() {
-    if (!this->isVisible() && parentElement)
+    if (!this->isVisible() && parentElement) {
         return;
+    }
 
     GuiElement::updateEffects();
 
@@ -171,8 +180,9 @@ void GuiFrame::updateEffects() {
 }
 
 void GuiFrame::process() {
-    if (!this->isVisible() && parentElement)
+    if (!this->isVisible() && parentElement) {
         return;
+    }
 
     GuiElement::process();
 
@@ -185,8 +195,9 @@ void GuiFrame::process() {
 }
 
 void GuiFrame::update(GuiController *c) {
-    if (isStateSet(STATE_DISABLED) && parentElement)
+    if (isStateSet(STATE_DISABLED) && parentElement) {
         return;
+    }
 
     //! update appended items next frame
     uint32_t size = elements.size();

@@ -51,15 +51,15 @@ public:
     //!Gets the image width
     //!\return image width
     int32_t getWidth() const {
-        if (texture) return texture->surface.width;
-        else return 0;
+        if (texture) { return texture->surface.width; }
+        else { return 0; }
     };
 
     //!Gets the image height
     //!\return image height
     int32_t getHeight() const {
-        if (texture) return texture->surface.height;
-        else return 0;
+        if (texture) { return texture->surface.height; }
+        else { return 0; }
     };
 
     //! release memory of the image data

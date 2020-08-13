@@ -43,8 +43,9 @@ Mp3Decoder::Mp3Decoder(const char *filepath)
     mad_frame_init(&Frame);
     mad_synth_init(&Synth);
 
-    if (!file_fd)
+    if (!file_fd) {
         return;
+    }
 
     OpenFile();
 }
@@ -58,8 +59,9 @@ Mp3Decoder::Mp3Decoder(const uint8_t *snd, int32_t len)
     mad_frame_init(&Frame);
     mad_synth_init(&Synth);
 
-    if (!file_fd)
+    if (!file_fd) {
         return;
+    }
 
     OpenFile();
 }
@@ -73,8 +75,9 @@ Mp3Decoder::~Mp3Decoder() {
     mad_frame_finish(&Frame);
     mad_stream_finish(&Stream);
 
-    if (ReadBuffer)
+    if (ReadBuffer) {
         free(ReadBuffer);
+    }
     ReadBuffer = NULL;
 }
 
@@ -82,8 +85,9 @@ void Mp3Decoder::OpenFile() {
     GuardPtr = NULL;
     ReadBuffer = (uint8_t *) memalign(32, SoundBlockSize * SoundBlocks);
     if (!ReadBuffer) {
-        if (file_fd)
+        if (file_fd) {
             delete file_fd;
+        }
         file_fd = NULL;
         return;
     }
@@ -91,8 +95,9 @@ void Mp3Decoder::OpenFile() {
     uint8_t dummybuff[4096];
     int32_t ret = Read(dummybuff, 4096, 0);
     if (ret <= 0) {
-        if (file_fd)
+        if (file_fd) {
             delete file_fd;
+        }
         file_fd = NULL;
         return;
     }
@@ -113,39 +118,45 @@ int32_t Mp3Decoder::Rewind() {
     SynthPos = 0;
     GuardPtr = NULL;
 
-    if (!file_fd)
+    if (!file_fd) {
         return -1;
+    }
 
     return SoundDecoder::Rewind();
 }
 
 static inline int16_t FixedToShort(mad_fixed_t Fixed) {
     /* Clipping */
-    if (Fixed >= MAD_F_ONE)
+    if (Fixed >= MAD_F_ONE) {
         return (SHRT_MAX);
-    if (Fixed <= -MAD_F_ONE)
+    }
+    if (Fixed <= -MAD_F_ONE) {
         return (-SHRT_MAX);
+    }
 
     Fixed = Fixed >> (MAD_F_FRACBITS - 15);
     return ((int16_t) Fixed);
 }
 
 int32_t Mp3Decoder::Read(uint8_t *buffer, int32_t buffer_size, int32_t pos) {
-    if (!file_fd)
+    if (!file_fd) {
         return -1;
+    }
 
-    if (Format == (FORMAT_PCM_16_BIT | CHANNELS_STEREO))
+    if (Format == (FORMAT_PCM_16_BIT | CHANNELS_STEREO)) {
         buffer_size &= ~0x0003;
-    else
+    } else {
         buffer_size &= ~0x0001;
+    }
 
     uint8_t *write_pos = buffer;
     uint8_t *write_end = buffer + buffer_size;
 
     while (1) {
         while (SynthPos < Synth.pcm.length) {
-            if (write_pos >= write_end)
+            if (write_pos >= write_end) {
                 return write_pos - buffer;
+            }
 
             *((int16_t *) write_pos) = FixedToShort(Synth.pcm.samples[0][SynthPos]);
             write_pos += 2;
@@ -182,13 +193,15 @@ int32_t Mp3Decoder::Read(uint8_t *buffer, int32_t buffer_size, int32_t pos) {
 
         if (mad_frame_decode(&Frame, &Stream)) {
             if (MAD_RECOVERABLE(Stream.error)) {
-                if (Stream.error != MAD_ERROR_LOSTSYNC || !GuardPtr)
+                if (Stream.error != MAD_ERROR_LOSTSYNC || !GuardPtr) {
                     continue;
+                }
             } else {
-                if (Stream.error != MAD_ERROR_BUFLEN)
+                if (Stream.error != MAD_ERROR_BUFLEN) {
                     return -1;
-                else if (Stream.error == MAD_ERROR_BUFLEN && GuardPtr)
+                } else if (Stream.error == MAD_ERROR_BUFLEN && GuardPtr) {
                     return -1;
+                }
             }
         }
 

@@ -138,8 +138,9 @@ CVideo::CVideo(int32_t forceTvScanMode, int32_t forceDrcScanMode) {
         uint32_t auxSize, auxAlign;
         GX2CalcColorBufferAuxInfo(&tvColorBuffer, &auxSize, &auxAlign);
         tvColorBuffer.aaBuffer = MEM1_alloc(auxSize, auxAlign);
-        if (!tvColorBuffer.aaBuffer)
+        if (!tvColorBuffer.aaBuffer) {
             tvColorBuffer.aaBuffer = MEM2_alloc(auxSize, auxAlign);
+        }
 
         tvColorBuffer.aaSize = auxSize;
         memset(tvColorBuffer.aaBuffer, GX2_AA_BUFFER_CLEAR_VALUE, auxSize);
@@ -150,8 +151,9 @@ CVideo::CVideo(int32_t forceTvScanMode, int32_t forceDrcScanMode) {
         uint32_t auxSize, auxAlign;
         GX2CalcColorBufferAuxInfo(&drcColorBuffer, &auxSize, &auxAlign);
         drcColorBuffer.aaBuffer = MEM1_alloc(auxSize, auxAlign);
-        if (!drcColorBuffer.aaBuffer)
+        if (!drcColorBuffer.aaBuffer) {
             drcColorBuffer.aaBuffer = MEM2_alloc(auxSize, auxAlign);
+        }
         drcColorBuffer.aaSize = auxSize;
         memset(drcColorBuffer.aaBuffer, GX2_AA_BUFFER_CLEAR_VALUE, auxSize);
         GX2Invalidate(GX2_INVALIDATE_MODE_CPU, drcColorBuffer.aaBuffer, auxSize);
@@ -224,16 +226,18 @@ CVideo::~CVideo() {
     MEM2_free(drcContextState);
     //! free aux buffer
     if (tvColorBuffer.aaBuffer) {
-        if (((uint32_t) tvColorBuffer.aaBuffer & 0xF0000000) == 0xF0000000)
+        if (((uint32_t) tvColorBuffer.aaBuffer & 0xF0000000) == 0xF0000000) {
             MEM1_free(tvColorBuffer.aaBuffer);
-        else
+        } else {
             MEM2_free(tvColorBuffer.aaBuffer);
+        }
     }
     if (drcColorBuffer.aaBuffer) {
-        if (((uint32_t) drcColorBuffer.aaBuffer & 0xF0000000) == 0xF0000000)
+        if (((uint32_t) drcColorBuffer.aaBuffer & 0xF0000000) == 0xF0000000) {
             MEM1_free(drcColorBuffer.aaBuffer);
-        else
+        } else {
             MEM2_free(drcColorBuffer.aaBuffer);
+        }
     }
     //! destroy shaders
     ColorShader::destroyInstance();

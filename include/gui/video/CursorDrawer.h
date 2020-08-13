@@ -26,8 +26,9 @@ class CursorDrawer {
 
 public:
     static CursorDrawer *getInstance() {
-        if (!instance)
+        if (!instance) {
             instance = new CursorDrawer();
+        }
         return instance;
     }
 
@@ -40,7 +41,7 @@ public:
 
     static void draw(float x, float y) {
         CursorDrawer *cur_instance = getInstance();
-        if (cur_instance == NULL) return;
+        if (cur_instance == NULL) { return; }
         cur_instance->draw_Cursor(x, y);
     }
 

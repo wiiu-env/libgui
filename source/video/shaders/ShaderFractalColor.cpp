@@ -372,8 +372,9 @@ ShaderFractalColor::ShaderFractalColor()
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU_ATTRIBUTE_BUFFER, texCoords, ciTexCoordsVtxsSize);
 
 
-    for (i = 0; i < (int32_t) ciColorVtxsSize; i++)
+    for (i = 0; i < (int32_t) ciColorVtxsSize; i++) {
         colorVtxs[i] = 0xff;
+    }
 
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU_ATTRIBUTE_BUFFER, colorVtxs, ciColorVtxsSize);
 }

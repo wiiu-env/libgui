@@ -35,8 +35,9 @@ public:
         //! allocate the stack
         pThreadStack = (uint8_t *) memalign(0x20, iStackSize);
         //! create the thread
-        if (pThread && pThreadStack)
+        if (pThread && pThreadStack) {
             OSCreateThread(pThread, &CThread::threadCallback, 1, (char *) this, pThreadStack + iStackSize, iStackSize, iPriority, iAttributes);
+        }
     }
 
     //! destructor
@@ -55,43 +56,51 @@ public:
 
     //! Thread entry function
     virtual void executeThread(void) {
-        if (pCallback)
+        if (pCallback) {
             pCallback(this, pCallbackArg);
+        }
     }
 
     //! Suspend thread
     virtual void suspendThread(void) {
-        if (isThreadSuspended())
+        if (isThreadSuspended()) {
             return;
-        if (pThread)
+        }
+        if (pThread) {
             OSSuspendThread(pThread);
+        }
     }
 
     //! Resume thread
     virtual void resumeThread(void) {
-        if (!isThreadSuspended())
+        if (!isThreadSuspended()) {
             return;
-        if (pThread)
+        }
+        if (pThread) {
             OSResumeThread(pThread);
+        }
     }
 
     //! Set thread priority
     virtual void setThreadPriority(int32_t prio) {
-        if (pThread)
+        if (pThread) {
             OSSetThreadPriority(pThread, prio);
+        }
     }
 
     //! Check if thread is suspended
     virtual bool isThreadSuspended(void) const {
-        if (pThread)
+        if (pThread) {
             return OSIsThreadSuspended(pThread);
+        }
         return false;
     }
 
     //! Check if thread is terminated
     virtual bool isThreadTerminated(void) const {
-        if (pThread)
+        if (pThread) {
             return OSIsThreadTerminated(pThread);
+        }
         return false;
     }
 
@@ -104,16 +113,19 @@ public:
     virtual void shutdownThread(void) {
         //! wait for thread to finish
         if (pThread && !(iAttributes & eAttributeDetach)) {
-            if (isThreadSuspended())
+            if (isThreadSuspended()) {
                 resumeThread();
+            }
 
             OSJoinThread(pThread, NULL);
         }
         //! free the thread stack buffer
-        if (pThreadStack)
+        if (pThreadStack) {
             free(pThreadStack);
-        if (pThread)
+        }
+        if (pThread) {
             free(pThread);
+        }
 
         pThread = NULL;
         pThreadStack = NULL;

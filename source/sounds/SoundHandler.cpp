@@ -58,33 +58,39 @@ SoundHandler::~SoundHandler() {
 }
 
 void SoundHandler::AddDecoder(int32_t voice, const char *filepath) {
-    if (voice < 0 || voice >= MAX_DECODERS)
+    if (voice < 0 || voice >= MAX_DECODERS) {
         return;
+    }
 
-    if (DecoderList[voice] != NULL)
+    if (DecoderList[voice] != NULL) {
         RemoveDecoder(voice);
+    }
 
     DecoderList[voice] = GetSoundDecoder(filepath);
 }
 
 void SoundHandler::AddDecoder(int32_t voice, const uint8_t *snd, int32_t len) {
-    if (voice < 0 || voice >= MAX_DECODERS)
+    if (voice < 0 || voice >= MAX_DECODERS) {
         return;
+    }
 
-    if (DecoderList[voice] != NULL)
+    if (DecoderList[voice] != NULL) {
         RemoveDecoder(voice);
+    }
 
     DecoderList[voice] = GetSoundDecoder(snd, len);
 }
 
 void SoundHandler::RemoveDecoder(int32_t voice) {
-    if (voice < 0 || voice >= MAX_DECODERS)
+    if (voice < 0 || voice >= MAX_DECODERS) {
         return;
+    }
 
     if (DecoderList[voice] != NULL) {
         if (voiceList[voice] && voiceList[voice]->getState() != Voice::STATE_STOPPED) {
-            if (voiceList[voice]->getState() != Voice::STATE_STOP)
+            if (voiceList[voice]->getState() != Voice::STATE_STOP) {
                 voiceList[voice]->setState(Voice::STATE_STOP);
+            }
 
             // it shouldn't take longer than 3 ms actually but we wait up to 20
             // on application quit the AX frame callback is not called anymore
@@ -102,8 +108,9 @@ void SoundHandler::RemoveDecoder(int32_t voice) {
 }
 
 void SoundHandler::ClearDecoderList() {
-    for (uint32_t i = 0; i < MAX_DECODERS; ++i)
+    for (uint32_t i = 0; i < MAX_DECODERS; ++i) {
         RemoveDecoder(i);
+    }
 }
 
 static inline bool CheckMP3Signature(const uint8_t *buffer) {
@@ -129,8 +136,9 @@ static inline bool CheckMP3Signature(const uint8_t *buffer) {
     }
 
     for (int32_t i = 1; i < 13; i++) {
-        if (buffer[0] == MP3_Magic[i][0] && buffer[1] == MP3_Magic[i][1])
+        if (buffer[0] == MP3_Magic[i][0] && buffer[1] == MP3_Magic[i][1]) {
             return true;
+        }
     }
 
     return false;
@@ -139,15 +147,17 @@ static inline bool CheckMP3Signature(const uint8_t *buffer) {
 SoundDecoder *SoundHandler::GetSoundDecoder(const char *filepath) {
     uint32_t magic;
     CFile f(filepath, CFile::ReadOnly);
-    if (f.size() == 0)
+    if (f.size() == 0) {
         return NULL;
+    }
 
     do {
         f.read((uint8_t *) &magic, 1);
     } while (((uint8_t *) &magic)[0] == 0 && f.tell() < f.size());
 
-    if (f.tell() == f.size())
+    if (f.tell() == f.size()) {
         return NULL;
+    }
 
     f.seek(f.tell() - 1, SEEK_SET);
     f.read((uint8_t *) &magic, 4);
@@ -173,8 +183,9 @@ SoundDecoder *SoundHandler::GetSoundDecoder(const uint8_t *sound, int32_t length
         counter++;
     }
 
-    if (counter >= length)
+    if (counter >= length) {
         return NULL;
+    }
 
     uint32_t *magic = (uint32_t *) check;
 
@@ -224,22 +235,27 @@ void SoundHandler::executeThread() {
         suspendThread();
 
         for (i = 0; i < MAX_DECODERS; ++i) {
-            if (DecoderList[i] == NULL)
+            if (DecoderList[i] == NULL) {
                 continue;
+            }
 
             Decoding = true;
-            if (DecoderList[i])
+            if (DecoderList[i]) {
                 DecoderList[i]->Lock();
-            if (DecoderList[i])
+            }
+            if (DecoderList[i]) {
                 DecoderList[i]->Decode();
-            if (DecoderList[i])
+            }
+            if (DecoderList[i]) {
                 DecoderList[i]->Unlock();
+            }
         }
         Decoding = false;
     }
 
-    for (uint32_t i = 0; i < MAX_DECODERS; ++i)
+    for (uint32_t i = 0; i < MAX_DECODERS; ++i) {
         voiceList[i]->stop();
+    }
 
     AXRegisterAppFrameCallback(NULL);
     AXQuit();
@@ -304,8 +320,9 @@ void SoundHandler::axFrameCallback(void) {
                 }
                 break;
             case Voice::STATE_STOP:
-                if (voice->getInternState() != 0)
+                if (voice->getInternState() != 0) {
                     voice->stop();
+                }
                 voice->setState(Voice::STATE_STOPPED);
                 break;
         }

@@ -103,8 +103,9 @@ public:
     virtual float getDepth() {
         float zParent = 0.0f;
 
-        if (parentElement)
+        if (parentElement) {
             zParent = parentElement->getDepth();
+        }
 
         return zParent + zoffset;
     }
@@ -112,8 +113,9 @@ public:
     virtual float getCenterX(void) {
         float pCenterX = 0.0f;
 
-        if (parentElement)
+        if (parentElement) {
             pCenterX = parentElement->getCenterX();
+        }
 
         pCenterX += xoffset + xoffsetDyn;
 
@@ -144,8 +146,9 @@ public:
     virtual float getCenterY(void) {
         float pCenterY = 0.0f;
 
-        if (parentElement)
+        if (parentElement) {
             pCenterY = parentElement->getCenterY();
+        }
 
         pCenterY += yoffset + yoffsetDyn;
 
@@ -267,8 +270,9 @@ public:
         if (c >= 0 && c < 5) {
             state[c] |= s;
         } else {
-            for (int32_t i = 0; i < 5; i++)
+            for (int32_t i = 0; i < 5; i++) {
                 state[i] |= s;
+            }
         }
         stateChan = c;
         stateChanged(this, s, c);
@@ -278,8 +282,9 @@ public:
         if (c >= 0 && c < 5) {
             state[c] &= ~s;
         } else {
-            for (int32_t i = 0; i < 5; i++)
+            for (int32_t i = 0; i < 5; i++) {
                 state[i] &= ~s;
+            }
         }
         stateChan = c;
         stateChanged(this, s, c);
@@ -289,9 +294,11 @@ public:
         if (c >= 0 && c < 5) {
             return (state[c] & s) != 0;
         } else {
-            for (int32_t i = 0; i < 5; i++)
-                if ((state[i] & s) != 0)
+            for (int32_t i = 0; i < 5; i++) {
+                if ((state[i] & s) != 0) {
                     return true;
+                }
+            }
 
             return false;
         }
@@ -311,8 +318,9 @@ public:
 
     //!Resets the element's state to STATE_DEFAULT
     virtual void resetState() {
-        for (int32_t i = 0; i < 5; i++)
+        for (int32_t i = 0; i < 5; i++) {
             state[i] = STATE_DEFAULT;
+        }
         stateChan = -1;
     }
 
@@ -328,13 +336,15 @@ public:
     virtual float getAlpha() {
         float a;
 
-        if (alphaDyn >= 0)
+        if (alphaDyn >= 0) {
             a = alphaDyn;
-        else
+        } else {
             a = alpha;
+        }
 
-        if (parentElement)
+        if (parentElement) {
             a = (a * parentElement->getAlpha());
+        }
 
         return a;
     }
@@ -370,8 +380,9 @@ public:
     virtual float getScale() {
         float s = 0.5f * (scaleX + scaleY) * scaleDyn;
 
-        if (parentElement)
+        if (parentElement) {
             s *= parentElement->getScale();
+        }
 
         return s;
     }
@@ -381,8 +392,9 @@ public:
     virtual float getScaleX() {
         float s = scaleX * scaleDyn;
 
-        if (parentElement)
+        if (parentElement) {
             s *= parentElement->getScaleX();
+        }
 
         return s;
     }
@@ -392,8 +404,9 @@ public:
     virtual float getScaleY() {
         float s = scaleY * scaleDyn;
 
-        if (parentElement)
+        if (parentElement) {
             s *= parentElement->getScaleY();
+        }
 
         return s;
     }
@@ -403,8 +416,9 @@ public:
     virtual float getScaleZ() {
         float s = scaleZ;
 
-        if (parentElement)
+        if (parentElement) {
             s *= parentElement->getScaleZ();
+        }
 
         return s;
     }
@@ -507,7 +521,7 @@ public:
     //!Angle of the object
     virtual float getAngle() const {
         float r_angle = angle;
-        if (parentElement) r_angle += parentElement->getAngle();
+        if (parentElement) { r_angle += parentElement->getAngle(); }
         return r_angle;
     }
 

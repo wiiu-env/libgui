@@ -70,8 +70,9 @@ bool GuiSound::Load(const uint8_t *snd, int32_t len) {
         voice = -1;
     }
 
-    if (!snd)
+    if (!snd) {
         return false;
+    }
 
     //! find next free decoder
     for (int32_t i = 0; i < MAX_DECODERS; i++) {
@@ -98,8 +99,9 @@ void GuiSound::Play() {
     Stop();
 
     Voice *v = SoundHandler::instance()->getVoice(voice);
-    if (v)
+    if (v) {
         v->setState(Voice::STATE_START);
+    }
 
 
 }
@@ -107,8 +109,9 @@ void GuiSound::Play() {
 void GuiSound::Stop() {
     Voice *v = SoundHandler::instance()->getVoice(voice);
     if (v) {
-        if ((v->getState() != Voice::STATE_STOP) && (v->getState() != Voice::STATE_STOPPED))
+        if ((v->getState() != Voice::STATE_STOP) && (v->getState() != Voice::STATE_STOPPED)) {
             v->setState(Voice::STATE_STOP);
+        }
 
         while (v->getState() != Voice::STATE_STOPPED)
             OSSleepTicks(OSMicrosecondsToTicks(1000));
@@ -125,21 +128,25 @@ void GuiSound::Stop() {
 }
 
 void GuiSound::Pause() {
-    if (!IsPlaying())
+    if (!IsPlaying()) {
         return;
+    }
 
     Voice *v = SoundHandler::instance()->getVoice(voice);
-    if (v)
+    if (v) {
         v->setState(Voice::STATE_STOP);
+    }
 }
 
 void GuiSound::Resume() {
-    if (IsPlaying())
+    if (IsPlaying()) {
         return;
+    }
 
     Voice *v = SoundHandler::instance()->getVoice(voice);
-    if (v)
+    if (v) {
         v->setState(Voice::STATE_START);
+    }
 }
 
 bool GuiSound::IsPlaying() {
@@ -151,20 +158,23 @@ bool GuiSound::IsPlaying() {
 }
 
 void GuiSound::SetVolume(uint32_t vol) {
-    if (vol > 100)
+    if (vol > 100) {
         vol = 100;
+    }
 
     uint32_t volumeConv = ((0x8000 * vol) / 100) << 16;
 
     Voice *v = SoundHandler::instance()->getVoice(voice);
-    if (v)
+    if (v) {
         v->setVolume(volumeConv);
+    }
 }
 
 void GuiSound::SetLoop(bool l) {
     SoundDecoder *decoder = SoundHandler::instance()->getDecoder(voice);
-    if (decoder)
+    if (decoder) {
         decoder->SetLoop(l);
+    }
 }
 
 void GuiSound::Rewind() {

@@ -12,8 +12,9 @@ GameBgImage::~GameBgImage() {
 }
 
 void GameBgImage::draw(CVideo *pVideo) {
-    if (!getImageData() || !getImageData()->getTexture())
+    if (!getImageData() || !getImageData()->getTexture()) {
         return;
+    }
 
     //! first setup 2D GUI positions
     float currPosX = getCenterX();

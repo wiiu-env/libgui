@@ -35,46 +35,58 @@ public:
         delete[] attributes;
 
         if (vertexShader) {
-            if (vertexShader->program)
+            if (vertexShader->program) {
                 free(vertexShader->program);
+            }
 
-            for (uint32_t i = 0; i < vertexShader->uniformBlockCount; i++)
+            for (uint32_t i = 0; i < vertexShader->uniformBlockCount; i++) {
                 free((void *) vertexShader->uniformBlocks[i].name);
+            }
 
-            if (vertexShader->uniformBlocks)
+            if (vertexShader->uniformBlocks) {
                 free((void *) vertexShader->uniformBlocks);
+            }
 
-            for (uint32_t i = 0; i < vertexShader->uniformVarCount; i++)
+            for (uint32_t i = 0; i < vertexShader->uniformVarCount; i++) {
                 free((void *) vertexShader->uniformVars[i].name);
+            }
 
-            if (vertexShader->uniformVars)
+            if (vertexShader->uniformVars) {
                 free((void *) vertexShader->uniformVars);
+            }
 
-            if (vertexShader->initialValues)
+            if (vertexShader->initialValues) {
                 free((void *) vertexShader->initialValues);
+            }
 
-            for (uint32_t i = 0; i < vertexShader->samplerVarCount; i++)
+            for (uint32_t i = 0; i < vertexShader->samplerVarCount; i++) {
                 free((void *) vertexShader->samplerVars[i].name);
+            }
 
-            if (vertexShader->samplerVars)
+            if (vertexShader->samplerVars) {
                 free((void *) vertexShader->samplerVars);
+            }
 
-            for (uint32_t i = 0; i < vertexShader->attribVarCount; i++)
+            for (uint32_t i = 0; i < vertexShader->attribVarCount; i++) {
                 free((void *) vertexShader->attribVars[i].name);
+            }
 
-            if (vertexShader->attribVars)
+            if (vertexShader->attribVars) {
                 free((void *) vertexShader->attribVars);
+            }
 
-            if (vertexShader->loopVars)
+            if (vertexShader->loopVars) {
                 free((void *) vertexShader->loopVars);
+            }
 
             free(vertexShader);
         }
     }
 
     void setProgram(const uint32_t *program, const uint32_t &programSize, const uint32_t *regs, const uint32_t &regsSize) {
-        if (!vertexShader)
+        if (!vertexShader) {
             return;
+        }
 
         //! this must be moved into an area where the graphic engine has access to and must be aligned to 0x100
         vertexShader->size = programSize;
@@ -88,8 +100,9 @@ public:
     }
 
     void addUniformVar(const GX2UniformVar &var) {
-        if (!vertexShader)
+        if (!vertexShader) {
             return;
+        }
 
         uint32_t idx = vertexShader->uniformVarCount;
 
@@ -110,8 +123,9 @@ public:
     }
 
     void addAttribVar(const GX2AttribVar &var) {
-        if (!vertexShader)
+        if (!vertexShader) {
             return;
+        }
 
         uint32_t idx = vertexShader->attribVarCount;
 

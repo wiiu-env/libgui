@@ -93,8 +93,9 @@ void GuiScrollbar::ScrollOneDown() {
 }
 
 void GuiScrollbar::OnUpButtonClick(GuiButton *button, const GuiController *controller, GuiTrigger *trigger) {
-    if (ScrollState < ScrollSpeed)
+    if (ScrollState < ScrollSpeed) {
         return;
+    }
 
     ScrollOneUp();
 
@@ -103,8 +104,9 @@ void GuiScrollbar::OnUpButtonClick(GuiButton *button, const GuiController *contr
 }
 
 void GuiScrollbar::OnDownButtonClick(GuiButton *button, const GuiController *controller, GuiTrigger *trigger) {
-    if (ScrollState < ScrollSpeed)
+    if (ScrollState < ScrollSpeed) {
         return;
+    }
 
     ScrollOneDown();
 
@@ -148,32 +150,36 @@ void GuiScrollbar::OnBoxButtonHold(GuiButton *button, const GuiController *contr
 }
 
 void GuiScrollbar::SetPageSize(int32_t size) {
-    if (PageSize == size)
+    if (PageSize == size) {
         return;
+    }
 
     PageSize = size;
     listChanged(SelItem, SelInd);
 }
 
 void GuiScrollbar::SetSelectedItem(int32_t pos) {
-    if (SelItem == pos)
+    if (SelItem == pos) {
         return;
+    }
 
     SelItem = LIMIT(pos, 0, EntrieCount - 1);
     listChanged(SelItem, SelInd);
 }
 
 void GuiScrollbar::SetSelectedIndex(int32_t pos) {
-    if (SelInd == pos)
+    if (SelInd == pos) {
         return;
+    }
 
     SelInd = pos;
     listChanged(SelItem, SelInd);
 }
 
 void GuiScrollbar::SetEntrieCount(int32_t cnt) {
-    if (EntrieCount == cnt)
+    if (EntrieCount == cnt) {
         return;
+    }
 
     EntrieCount = cnt;
     listChanged(SelItem, SelInd);
@@ -182,10 +188,11 @@ void GuiScrollbar::SetEntrieCount(int32_t cnt) {
 void GuiScrollbar::setScrollboxPosition(int32_t SelItem, int32_t SelInd) {
     int32_t position = MaxHeight - (MaxHeight - MinHeight) * (SelInd + SelItem) / (EntrieCount - 1);
 
-    if (position < MinHeight || (SelInd + SelItem >= EntrieCount - 1))
+    if (position < MinHeight || (SelInd + SelItem >= EntrieCount - 1)) {
         position = MinHeight;
-    else if (position > MaxHeight || (SelInd + SelItem) == 0)
+    } else if (position > MaxHeight || (SelInd + SelItem) == 0) {
         position = MaxHeight;
+    }
 
     scrollbarBoxBtn->setPosition(0, position);
 }
@@ -202,8 +209,9 @@ void GuiScrollbar::draw(CVideo *video) {
 }
 
 void GuiScrollbar::update(GuiController *t) {
-    if (this->isStateSet(STATE_DISABLED))
+    if (this->isStateSet(STATE_DISABLED)) {
         return;
+    }
 
     arrowUpBtn->update(t);
     arrowDownBtn->update(t);

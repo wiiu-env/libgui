@@ -31,40 +31,50 @@ public:
 
     virtual ~PixelShader() {
         if (pixelShader) {
-            if (pixelShader->program)
+            if (pixelShader->program) {
                 free(pixelShader->program);
+            }
 
-            for (uint32_t i = 0; i < pixelShader->uniformBlockCount; i++)
+            for (uint32_t i = 0; i < pixelShader->uniformBlockCount; i++) {
                 free((void *) pixelShader->uniformBlocks[i].name);
+            }
 
-            if (pixelShader->uniformBlocks)
+            if (pixelShader->uniformBlocks) {
                 free((void *) pixelShader->uniformBlocks);
+            }
 
-            for (uint32_t i = 0; i < pixelShader->uniformVarCount; i++)
+            for (uint32_t i = 0; i < pixelShader->uniformVarCount; i++) {
                 free((void *) pixelShader->uniformVars[i].name);
+            }
 
-            if (pixelShader->uniformVars)
+            if (pixelShader->uniformVars) {
                 free((void *) pixelShader->uniformVars);
+            }
 
-            if (pixelShader->initialValues)
+            if (pixelShader->initialValues) {
                 free((void *) pixelShader->initialValues);
+            }
 
-            for (uint32_t i = 0; i < pixelShader->samplerVarCount; i++)
+            for (uint32_t i = 0; i < pixelShader->samplerVarCount; i++) {
                 free((void *) pixelShader->samplerVars[i].name);
+            }
 
-            if (pixelShader->samplerVars)
+            if (pixelShader->samplerVars) {
                 free((void *) pixelShader->samplerVars);
+            }
 
-            if (pixelShader->loopVars)
+            if (pixelShader->loopVars) {
                 free((void *) pixelShader->loopVars);
+            }
 
             free(pixelShader);
         }
     }
 
     void setProgram(const uint32_t *program, const uint32_t &programSize, const uint32_t *regs, const uint32_t &regsSize) {
-        if (!pixelShader)
+        if (!pixelShader) {
             return;
+        }
 
         //! this must be moved into an area where the graphic engine has access to and must be aligned to 0x100
         pixelShader->size = programSize;
@@ -78,8 +88,9 @@ public:
     }
 
     void addUniformVar(const GX2UniformVar &var) {
-        if (!pixelShader)
+        if (!pixelShader) {
             return;
+        }
 
         uint32_t idx = pixelShader->uniformVarCount;
 
@@ -100,8 +111,9 @@ public:
     }
 
     void addSamplerVar(const GX2SamplerVar &var) {
-        if (!pixelShader)
+        if (!pixelShader) {
             return;
+        }
 
         uint32_t idx = pixelShader->samplerVarCount;
 

@@ -125,8 +125,9 @@ bool GuiTrigger::released(const GuiController *controller) const {
         return false;
     }
 
-    if (clicked(controller) || held(controller))
+    if (clicked(controller) || held(controller)) {
         return false;
+    }
 
     bool bResult = false;
 

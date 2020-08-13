@@ -34,8 +34,9 @@ WavDecoder::WavDecoder(const char *filepath)
     SampleRate = 48000;
     Format = CHANNELS_STEREO | FORMAT_PCM_16_BIT;
 
-    if (!file_fd)
+    if (!file_fd) {
         return;
+    }
 
     OpenFile();
 }
@@ -46,8 +47,9 @@ WavDecoder::WavDecoder(const uint8_t *snd, int32_t len)
     SampleRate = 48000;
     Format = CHANNELS_STEREO | FORMAT_PCM_16_BIT;
 
-    if (!file_fd)
+    if (!file_fd) {
         return;
+    }
 
     OpenFile();
 }
@@ -96,42 +98,48 @@ void WavDecoder::OpenFile() {
     Is16Bit = (le16(FmtChunk.bps) == 16);
     SampleRate = le32(FmtChunk.freq);
 
-    if (le16(FmtChunk.channels) == 1 && le16(FmtChunk.bps) == 8 && le16(FmtChunk.alignment) <= 1)
+    if (le16(FmtChunk.channels) == 1 && le16(FmtChunk.bps) == 8 && le16(FmtChunk.alignment) <= 1) {
         Format = CHANNELS_MONO | FORMAT_PCM_8_BIT;
-    else if (le16(FmtChunk.channels) == 1 && le16(FmtChunk.bps) == 16 && le16(FmtChunk.alignment) <= 2)
+    } else if (le16(FmtChunk.channels) == 1 && le16(FmtChunk.bps) == 16 && le16(FmtChunk.alignment) <= 2) {
         Format = CHANNELS_MONO | FORMAT_PCM_16_BIT;
-    else if (le16(FmtChunk.channels) == 2 && le16(FmtChunk.bps) == 8 && le16(FmtChunk.alignment) <= 2)
+    } else if (le16(FmtChunk.channels) == 2 && le16(FmtChunk.bps) == 8 && le16(FmtChunk.alignment) <= 2) {
         Format = CHANNELS_STEREO | FORMAT_PCM_8_BIT;
-    else if (le16(FmtChunk.channels) == 2 && le16(FmtChunk.bps) == 16 && le16(FmtChunk.alignment) <= 4)
+    } else if (le16(FmtChunk.channels) == 2 && le16(FmtChunk.bps) == 16 && le16(FmtChunk.alignment) <= 4) {
         Format = CHANNELS_STEREO | FORMAT_PCM_16_BIT;
+    }
 }
 
 void WavDecoder::CloseFile() {
-    if (file_fd)
+    if (file_fd) {
         delete file_fd;
+    }
 
     file_fd = NULL;
 }
 
 int32_t WavDecoder::Read(uint8_t *buffer, int32_t buffer_size, int32_t pos) {
-    if (!file_fd)
+    if (!file_fd) {
         return -1;
+    }
 
-    if (CurPos >= (int32_t) DataSize)
+    if (CurPos >= (int32_t) DataSize) {
         return 0;
+    }
 
     file_fd->seek(DataOffset + CurPos, SEEK_SET);
 
-    if (buffer_size > (int32_t) DataSize - CurPos)
+    if (buffer_size > (int32_t) DataSize - CurPos) {
         buffer_size = DataSize - CurPos;
+    }
 
     int32_t read = file_fd->read(buffer, buffer_size);
     if (read > 0) {
         if (Is16Bit) {
             read &= ~0x0001;
 
-            for (uint32_t i = 0; i < (uint32_t) (read / sizeof(uint16_t)); ++i)
+            for (uint32_t i = 0; i < (uint32_t) (read / sizeof(uint16_t)); ++i) {
                 ((uint16_t *) buffer)[i] = le16(((uint16_t *) buffer)[i]);
+            }
         }
         CurPos += read;
     }

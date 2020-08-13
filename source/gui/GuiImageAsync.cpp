@@ -42,8 +42,9 @@ GuiImageAsync::~GuiImageAsync() {
     while (pInUse == this)
         OSSleepTicks(OSMicrosecondsToTicks(1000));
 
-    if (imgData)
+    if (imgData) {
         delete imgData;
+    }
 
     //threadExit();
 }
@@ -74,8 +75,9 @@ void GuiImageAsync::clearQueue() {
 
 void GuiImageAsync::guiImageAsyncThread(CThread *thread, void *arg) {
     while (!bExitRequested) {
-        if (imageQueue.empty() && !bExitRequested)
+        if (imageQueue.empty() && !bExitRequested) {
             pThread->suspendThread();
+        }
 
         if (!imageQueue.empty() && !bExitRequested) {
             pMutex->lock();
@@ -83,8 +85,9 @@ void GuiImageAsync::guiImageAsyncThread(CThread *thread, void *arg) {
             imageQueue.erase(imageQueue.begin());
             pMutex->unlock();
 
-            if (!pInUse)
+            if (!pInUse) {
                 continue;
+            }
 
 
             if (pInUse->imgBuffer && pInUse->imgBufferSize) {
@@ -106,8 +109,9 @@ void GuiImageAsync::guiImageAsyncThread(CThread *thread, void *arg) {
                                 blocksize = filesize - done;
                             }
                             readBytes = file.read(buffer + done, blocksize);
-                            if (readBytes <= 0)
+                            if (readBytes <= 0) {
                                 break;
+                            }
                             done += readBytes;
                         }
                         if (done == filesize) {

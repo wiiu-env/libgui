@@ -39,8 +39,9 @@ GuiImage::GuiImage(int32_t w, int32_t h, const GX2Color &c, int32_t type) {
 
     colorVtxs = (uint8_t *) memalign(GX2_VERTEX_BUFFER_ALIGNMENT, colorCount * ColorShader::cuColorAttrSize);
     if (colorVtxs) {
-        for (uint32_t i = 0; i < colorCount; i++)
+        for (uint32_t i = 0; i < colorCount; i++) {
             setImageColor(c, i);
+        }
     }
 }
 
@@ -48,8 +49,9 @@ GuiImage::GuiImage(int32_t w, int32_t h, const GX2Color *c, uint32_t color_count
     internalInit(w, h);
     imgType = type;
     colorCount = ColorShader::cuColorVtxsSize / ColorShader::cuColorAttrSize;
-    if (colorCount < color_count)
+    if (colorCount < color_count) {
         colorCount = color_count;
+    }
 
     colorVtxs = (uint8_t *) memalign(GX2_VERTEX_BUFFER_ALIGNMENT, colorCount * ColorShader::cuColorAttrSize);
     if (colorVtxs) {
@@ -105,10 +107,11 @@ void GuiImage::setImageData(GuiImageData *img) {
 }
 
 GX2Color GuiImage::getPixel(int32_t x, int32_t y) {
-    if (!imageData || this->getWidth() <= 0 || x < 0 || y < 0 || x >= this->getWidth() || y >= this->getHeight())
+    if (!imageData || this->getWidth() <= 0 || x < 0 || y < 0 || x >= this->getWidth() || y >= this->getHeight()) {
         return (GX2Color) {
                 0, 0, 0, 0
         };
+    }
 
     uint32_t pitch = imageData->getTexture()->surface.pitch;
     uint32_t *imagePtr = (uint32_t *) imageData->getTexture()->surface.image;
@@ -123,8 +126,9 @@ GX2Color GuiImage::getPixel(int32_t x, int32_t y) {
 }
 
 void GuiImage::setPixel(int32_t x, int32_t y, const GX2Color &color) {
-    if (!imageData || this->getWidth() <= 0 || x < 0 || y < 0 || x >= this->getWidth() || y >= this->getHeight())
+    if (!imageData || this->getWidth() <= 0 || x < 0 || y < 0 || x >= this->getWidth() || y >= this->getHeight()) {
         return;
+    }
 
 
     uint32_t pitch = imageData->getTexture()->surface.pitch;
@@ -186,8 +190,9 @@ void GuiImage::setPrimitiveVertex(int32_t prim, const float *posVtx, const float
 }
 
 void GuiImage::draw(CVideo *pVideo) {
-    if (!this->isVisible() || tileVertical == 0 || tileHorizontal == 0)
+    if (!this->isVisible() || tileVertical == 0 || tileHorizontal == 0) {
         return;
+    }
 
     float currScaleX = getScaleX();
     float currScaleY = getScaleY();

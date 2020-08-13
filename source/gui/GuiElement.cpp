@@ -33,8 +33,9 @@ GuiElement::GuiElement() {
     scaleX = 1.0f;
     scaleY = 1.0f;
     scaleZ = 1.0f;
-    for (int32_t i = 0; i < 5; i++)
+    for (int32_t i = 0; i < 5; i++) {
         state[i] = STATE_DEFAULT;
+    }
     stateChan = -1;
     parentElement = NULL;
     rumble = true;
@@ -123,25 +124,29 @@ void GuiElement::setEffect(int32_t eff, int32_t amount, int32_t target) {
     if (eff & EFFECT_SLIDE_IN) {
         // these calculations overcompensate a little
         if (eff & EFFECT_SLIDE_TOP) {
-            if (eff & EFFECT_SLIDE_FROM)
+            if (eff & EFFECT_SLIDE_FROM) {
                 yoffsetDyn = (int32_t) -getHeight() * scaleY;
-            else
+            } else {
                 yoffsetDyn = -screenheight;
+            }
         } else if (eff & EFFECT_SLIDE_LEFT) {
-            if (eff & EFFECT_SLIDE_FROM)
+            if (eff & EFFECT_SLIDE_FROM) {
                 xoffsetDyn = (int32_t) -getWidth() * scaleX;
-            else
+            } else {
                 xoffsetDyn = -screenwidth;
+            }
         } else if (eff & EFFECT_SLIDE_BOTTOM) {
-            if (eff & EFFECT_SLIDE_FROM)
+            if (eff & EFFECT_SLIDE_FROM) {
                 yoffsetDyn = (int32_t) getHeight() * scaleY;
-            else
+            } else {
                 yoffsetDyn = screenheight;
+            }
         } else if (eff & EFFECT_SLIDE_RIGHT) {
-            if (eff & EFFECT_SLIDE_FROM)
+            if (eff & EFFECT_SLIDE_FROM) {
                 xoffsetDyn = (int32_t) getWidth() * scaleX;
-            else
+            } else {
                 xoffsetDyn = screenwidth;
+            }
         }
     }
     if ((eff & EFFECT_FADE) && amount > 0) {
@@ -178,8 +183,9 @@ void GuiElement::resetEffects() {
 }
 
 void GuiElement::updateEffects() {
-    if (!this->isVisible() && parentElement)
+    if (!this->isVisible() && parentElement) {
         return;
+    }
 
     if (effects & (EFFECT_SLIDE_IN | EFFECT_SLIDE_OUT | EFFECT_SLIDE_FROM)) {
         if (effects & EFFECT_SLIDE_IN) {

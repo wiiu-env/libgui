@@ -33,10 +33,12 @@ public:
     }
 
     virtual ~FetchShader() {
-        if (fetchShaderProgramm)
+        if (fetchShaderProgramm) {
             free(fetchShaderProgramm);
-        if (fetchShader)
+        }
+        if (fetchShader) {
             delete fetchShader;
+        }
     }
 
     GX2FetchShader *getFetchShader() const {

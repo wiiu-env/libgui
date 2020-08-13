@@ -71,8 +71,9 @@ void GuiImageData::releaseData(void) {
 }
 
 void GuiImageData::loadImage(const uint8_t *img, int32_t imgSize, GX2TexClampMode textureClamp, GX2SurfaceFormat textureFormat) {
-    if (!img || (imgSize < 8))
+    if (!img || (imgSize < 8)) {
         return;
+    }
 
     releaseData();
     gdImagePtr gdImg = 0;
@@ -95,8 +96,9 @@ void GuiImageData::loadImage(const uint8_t *img, int32_t imgSize, GX2TexClampMod
         gdImg = gdImageCreateFromTgaPtr(imgSize, (uint8_t *) img);
     }
 
-    if (gdImg == 0)
+    if (gdImg == 0) {
         return;
+    }
 
     uint32_t width = (gdImageSX(gdImg));
     uint32_t height = (gdImageSY(gdImg));
@@ -162,7 +164,7 @@ void GuiImageData::gdImageToUnormR8G8B8A8(gdImagePtr gdImg, uint32_t *imgBuffer,
             uint32_t pixel = gdImageGetPixel(gdImg, x, y);
 
             uint8_t a = 254 - 2 * ((uint8_t) gdImageAlpha(gdImg, pixel));
-            if (a == 254) a++;
+            if (a == 254) { a++; }
 
             uint8_t r = gdImageRed(gdImg, pixel);
             uint8_t g = gdImageGreen(gdImg, pixel);

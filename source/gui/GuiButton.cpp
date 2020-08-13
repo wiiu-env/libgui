@@ -60,52 +60,52 @@ GuiButton::~GuiButton() {
 
 void GuiButton::setImage(GuiImage *img) {
     image = img;
-    if (img) img->setParent(this);
+    if (img) { img->setParent(this); }
 }
 
 void GuiButton::setImageOver(GuiImage *img) {
     imageOver = img;
-    if (img) img->setParent(this);
+    if (img) { img->setParent(this); }
 }
 
 void GuiButton::setImageHold(GuiImage *img) {
     imageHold = img;
-    if (img) img->setParent(this);
+    if (img) { img->setParent(this); }
 }
 
 void GuiButton::setImageClick(GuiImage *img) {
     imageClick = img;
-    if (img) img->setParent(this);
+    if (img) { img->setParent(this); }
 }
 
 void GuiButton::setIcon(GuiImage *img) {
     icon = img;
-    if (img) img->setParent(this);
+    if (img) { img->setParent(this); }
 }
 
 void GuiButton::setIconOver(GuiImage *img) {
     iconOver = img;
-    if (img) img->setParent(this);
+    if (img) { img->setParent(this); }
 }
 
 void GuiButton::setLabel(GuiText *txt, int32_t n) {
     label[n] = txt;
-    if (txt) txt->setParent(this);
+    if (txt) { txt->setParent(this); }
 }
 
 void GuiButton::setLabelOver(GuiText *txt, int32_t n) {
     labelOver[n] = txt;
-    if (txt) txt->setParent(this);
+    if (txt) { txt->setParent(this); }
 }
 
 void GuiButton::setLabelHold(GuiText *txt, int32_t n) {
     labelHold[n] = txt;
-    if (txt) txt->setParent(this);
+    if (txt) { txt->setParent(this); }
 }
 
 void GuiButton::setLabelClick(GuiText *txt, int32_t n) {
     labelClick[n] = txt;
-    if (txt) txt->setParent(this);
+    if (txt) { txt->setParent(this); }
 }
 
 void GuiButton::setSoundOver(GuiSound *snd) {
@@ -143,36 +143,41 @@ void GuiButton::resetState(void) {
  * Draw the button on screen
  */
 void GuiButton::draw(CVideo *v) {
-    if (!this->isVisible())
+    if (!this->isVisible()) {
         return;
+    }
 
     // draw image
     if ((isDrawOverOnlyWhenSelected() && (isStateSet(STATE_SELECTED) && imageOver)) ||
-        (!isDrawOverOnlyWhenSelected() && (isStateSet(STATE_OVER | STATE_SELECTED | STATE_CLICKED | STATE_HELD) && imageOver)))
+        (!isDrawOverOnlyWhenSelected() && (isStateSet(STATE_OVER | STATE_SELECTED | STATE_CLICKED | STATE_HELD) && imageOver))) {
         imageOver->draw(v);
-    else if (image)
+    } else if (image) {
         image->draw(v);
+    }
 
     if ((isDrawOverOnlyWhenSelected() && (isStateSet(STATE_SELECTED) && iconOver)) ||
-        (!isDrawOverOnlyWhenSelected() && (isStateSet(STATE_OVER | STATE_SELECTED | STATE_CLICKED | STATE_HELD) && iconOver)))
+        (!isDrawOverOnlyWhenSelected() && (isStateSet(STATE_OVER | STATE_SELECTED | STATE_CLICKED | STATE_HELD) && iconOver))) {
         iconOver->draw(v);
-    else if (icon)
+    } else if (icon) {
         icon->draw(v);
+    }
 
     // draw text
     for (int32_t i = 0; i < 4; i++) {
-        if (isStateSet(STATE_OVER | STATE_SELECTED | STATE_CLICKED | STATE_HELD) && labelOver[i])
+        if (isStateSet(STATE_OVER | STATE_SELECTED | STATE_CLICKED | STATE_HELD) && labelOver[i]) {
             labelOver[i]->draw(v);
-        else if (label[i])
+        } else if (label[i]) {
             label[i]->draw(v);
+        }
     }
 }
 
 void GuiButton::update(GuiController *c) {
-    if (!c || isStateSet(STATE_DISABLED | STATE_HIDDEN | STATE_DISABLE_INPUT, c->chanIdx))
+    if (!c || isStateSet(STATE_DISABLED | STATE_HIDDEN | STATE_DISABLE_INPUT, c->chanIdx)) {
         return;
-    else if (parentElement && (parentElement->isStateSet(STATE_DISABLED | STATE_HIDDEN | STATE_DISABLE_INPUT, c->chanIdx)))
+    } else if (parentElement && (parentElement->isStateSet(STATE_DISABLED | STATE_HIDDEN | STATE_DISABLE_INPUT, c->chanIdx))) {
         return;
+    }
 
     if (selectable) {
         if (c->data.validPointer && this->isInside(c->data.x, c->data.y)) {
@@ -182,8 +187,9 @@ void GuiButton::update(GuiController *c) {
                 //if(this->isRumbleActive())
                 //	this->rumble(t->chan);
 
-                if (soundOver)
+                if (soundOver) {
                     soundOver->Play();
+                }
 
                 if (effectsOver && !effects) {
                     // initiate effects
@@ -208,8 +214,9 @@ void GuiButton::update(GuiController *c) {
     }
 
     for (int32_t i = 0; i < iMaxGuiTriggers; i++) {
-        if (!trigger[i])
+        if (!trigger[i]) {
             continue;
+        }
 
         // button triggers
         if (clickable) {
@@ -218,8 +225,9 @@ void GuiButton::update(GuiController *c) {
 
             if (!clickedTrigger && (isClicked != GuiTrigger::CLICKED_NONE)
                 && (trigger[i]->isClickEverywhere() || (isStateSet(STATE_SELECTED | STATE_OVER, c->chanIdx) && trigger[i]->isSelectionClickEverywhere()) || this->isInside(c->data.x, c->data.y))) {
-                if (soundClick)
+                if (soundClick) {
                     soundClick->Play();
+                }
 
                 clickedTrigger = trigger[i];
 
@@ -249,8 +257,9 @@ void GuiButton::update(GuiController *c) {
                 && (trigger[i]->isHoldEverywhere() || (isStateSet(STATE_SELECTED | STATE_OVER, c->chanIdx) && trigger[i]->isSelectionClickEverywhere()) || this->isInside(c->data.x, c->data.y))) {
                 heldTrigger = trigger[i];
 
-                if (!isStateSet(STATE_HELD, c->chanIdx))
+                if (!isStateSet(STATE_HELD, c->chanIdx)) {
                     setState(STATE_HELD, c->chanIdx);
+                }
 
                 held(this, c, trigger[i]);
             } else if (isStateSet(STATE_HELD, c->chanIdx) && (heldTrigger == trigger[i]) && (!isHeld || trigger[i]->released(c))) {

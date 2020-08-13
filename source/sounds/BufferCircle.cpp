@@ -40,14 +40,16 @@ BufferCircle::~BufferCircle() {
 }
 
 void BufferCircle::SetBufferBlockSize(int32_t size) {
-    if (size < 0)
+    if (size < 0) {
         return;
+    }
 
     BufferBlockSize = size;
 
     for (int32_t i = 0; i < Size(); i++) {
-        if (SoundBuffer[i] != NULL)
+        if (SoundBuffer[i] != NULL) {
             free(SoundBuffer[i]);
+        }
 
         SoundBuffer[i] = (uint8_t *) memalign(32, ALIGN32(BufferBlockSize));
         BufferSize[i] = 0;
@@ -66,21 +68,24 @@ void BufferCircle::Resize(int32_t size) {
     BufferReady.resize(size);
 
     for (int32_t i = oldSize; i < Size(); i++) {
-        if (BufferBlockSize > 0)
+        if (BufferBlockSize > 0) {
             SoundBuffer[i] = (uint8_t *) memalign(32, ALIGN32(BufferBlockSize));
-        else
+        } else {
             SoundBuffer[i] = NULL;
+        }
         BufferSize[i] = 0;
         BufferReady[i] = false;
     }
 }
 
 void BufferCircle::RemoveBuffer(int32_t pos) {
-    if (!Valid(pos))
+    if (!Valid(pos)) {
         return;
+    }
 
-    if (SoundBuffer[pos] != NULL)
+    if (SoundBuffer[pos] != NULL) {
         free(SoundBuffer[pos]);
+    }
 
     SoundBuffer.erase(SoundBuffer.begin() + pos);
     BufferSize.erase(BufferSize.begin() + pos);
@@ -97,8 +102,9 @@ void BufferCircle::ClearBuffer() {
 
 void BufferCircle::FreeBuffer() {
     for (int32_t i = 0; i < Size(); i++) {
-        if (SoundBuffer[i] != NULL)
+        if (SoundBuffer[i] != NULL) {
             free(SoundBuffer[i]);
+        }
 
         SoundBuffer[i] = NULL;
         BufferSize[i] = 0;
@@ -114,15 +120,17 @@ void BufferCircle::LoadNext() {
 }
 
 void BufferCircle::SetBufferReady(int32_t pos, bool state) {
-    if (!Valid(pos))
+    if (!Valid(pos)) {
         return;
+    }
 
     BufferReady[pos] = state;
 }
 
 void BufferCircle::SetBufferSize(int32_t pos, int32_t size) {
-    if (!Valid(pos))
+    if (!Valid(pos)) {
         return;
+    }
 
     BufferSize[pos] = size;
 }

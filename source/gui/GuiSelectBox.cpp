@@ -84,7 +84,7 @@ void GuiSelectBox::SelectValue(uint32_t value) {
         topValueText.setText(text.c_str());
 
         std::string real_value = buttonToValue[valueButtons[value].valueButton];
-        if (real_value.compare(std::string()) == 0) real_value = "<error>";
+        if (real_value.compare(std::string()) == 0) { real_value = "<error>"; }
 
         valueChanged(this, real_value);
         ShowHideValues(false);
@@ -114,11 +114,11 @@ void GuiSelectBox::OnDPADClick(GuiButton *button, const GuiController *controlle
             } else {
             }
         } else if (trigger == &buttonUpTrigger) {
-            if (selected > 0) selected--;
+            if (selected > 0) { selected--; }
             bSelectedChanged = true;
         } else if (trigger == &buttonDownTrigger) {
             selected++;
-            if (selected >= valueButtons.size()) selected = valueButtons.size() - 1;
+            if (selected >= valueButtons.size()) { selected = valueButtons.size() - 1; }
             bSelectedChanged = true;
         }
     }

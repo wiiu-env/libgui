@@ -35,44 +35,57 @@ public:
     uint32_t remapWiiMoteButtons(uint32_t buttons) {
         uint32_t conv_buttons = 0;
 
-        if (buttons & WPAD_BUTTON_LEFT)
+        if (buttons & WPAD_BUTTON_LEFT) {
             conv_buttons |= GuiTrigger::BUTTON_LEFT;
+        }
 
-        if (buttons & WPAD_BUTTON_RIGHT)
+        if (buttons & WPAD_BUTTON_RIGHT) {
             conv_buttons |= GuiTrigger::BUTTON_RIGHT;
+        }
 
-        if (buttons & WPAD_BUTTON_DOWN)
+        if (buttons & WPAD_BUTTON_DOWN) {
             conv_buttons |= GuiTrigger::BUTTON_DOWN;
+        }
 
-        if (buttons & WPAD_BUTTON_UP)
+        if (buttons & WPAD_BUTTON_UP) {
             conv_buttons |= GuiTrigger::BUTTON_UP;
+        }
 
-        if (buttons & WPAD_BUTTON_PLUS)
+        if (buttons & WPAD_BUTTON_PLUS) {
             conv_buttons |= GuiTrigger::BUTTON_PLUS;
+        }
 
-        if (buttons & WPAD_BUTTON_2)
+        if (buttons & WPAD_BUTTON_2) {
             conv_buttons |= GuiTrigger::BUTTON_2;
+        }
 
-        if (buttons & WPAD_BUTTON_1)
+        if (buttons & WPAD_BUTTON_1) {
             conv_buttons |= GuiTrigger::BUTTON_1;
+        }
 
-        if (buttons & WPAD_BUTTON_B)
+        if (buttons & WPAD_BUTTON_B) {
             conv_buttons |= GuiTrigger::BUTTON_B;
+        }
 
-        if (buttons & WPAD_BUTTON_A)
+        if (buttons & WPAD_BUTTON_A) {
             conv_buttons |= GuiTrigger::BUTTON_A;
+        }
 
-        if (buttons & WPAD_BUTTON_MINUS)
+        if (buttons & WPAD_BUTTON_MINUS) {
             conv_buttons |= GuiTrigger::BUTTON_MINUS;
+        }
 
-        if (buttons & WPAD_BUTTON_Z)
+        if (buttons & WPAD_BUTTON_Z) {
             conv_buttons |= GuiTrigger::BUTTON_Z;
+        }
 
-        if (buttons & WPAD_BUTTON_C)
+        if (buttons & WPAD_BUTTON_C) {
             conv_buttons |= GuiTrigger::BUTTON_C;
+        }
 
-        if (buttons & WPAD_BUTTON_HOME)
+        if (buttons & WPAD_BUTTON_HOME) {
             conv_buttons |= GuiTrigger::BUTTON_HOME;
+        }
 
         return conv_buttons;
     }
@@ -80,50 +93,65 @@ public:
     uint32_t remapClassicButtons(uint32_t buttons) {
         uint32_t conv_buttons = 0;
 
-        if (buttons & WPAD_CLASSIC_BUTTON_LEFT)
+        if (buttons & WPAD_CLASSIC_BUTTON_LEFT) {
             conv_buttons |= GuiTrigger::BUTTON_LEFT;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_RIGHT)
+        if (buttons & WPAD_CLASSIC_BUTTON_RIGHT) {
             conv_buttons |= GuiTrigger::BUTTON_RIGHT;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_DOWN)
+        if (buttons & WPAD_CLASSIC_BUTTON_DOWN) {
             conv_buttons |= GuiTrigger::BUTTON_DOWN;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_UP)
+        if (buttons & WPAD_CLASSIC_BUTTON_UP) {
             conv_buttons |= GuiTrigger::BUTTON_UP;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_PLUS)
+        if (buttons & WPAD_CLASSIC_BUTTON_PLUS) {
             conv_buttons |= GuiTrigger::BUTTON_PLUS;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_X)
+        if (buttons & WPAD_CLASSIC_BUTTON_X) {
             conv_buttons |= GuiTrigger::BUTTON_X;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_Y)
+        if (buttons & WPAD_CLASSIC_BUTTON_Y) {
             conv_buttons |= GuiTrigger::BUTTON_Y;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_B)
+        if (buttons & WPAD_CLASSIC_BUTTON_B) {
             conv_buttons |= GuiTrigger::BUTTON_B;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_A)
+        if (buttons & WPAD_CLASSIC_BUTTON_A) {
             conv_buttons |= GuiTrigger::BUTTON_A;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_MINUS)
+        if (buttons & WPAD_CLASSIC_BUTTON_MINUS) {
             conv_buttons |= GuiTrigger::BUTTON_MINUS;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_HOME)
+        if (buttons & WPAD_CLASSIC_BUTTON_HOME) {
             conv_buttons |= GuiTrigger::BUTTON_HOME;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_ZR)
+        if (buttons & WPAD_CLASSIC_BUTTON_ZR) {
             conv_buttons |= GuiTrigger::BUTTON_ZR;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_ZL)
+        if (buttons & WPAD_CLASSIC_BUTTON_ZL) {
             conv_buttons |= GuiTrigger::BUTTON_ZL;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_R)
+        if (buttons & WPAD_CLASSIC_BUTTON_R) {
             conv_buttons |= GuiTrigger::BUTTON_R;
+        }
 
-        if (buttons & WPAD_CLASSIC_BUTTON_L)
+        if (buttons & WPAD_CLASSIC_BUTTON_L) {
             conv_buttons |= GuiTrigger::BUTTON_L;
+        }
 
         return conv_buttons;
     }
@@ -149,8 +177,9 @@ public:
         WPADExtensionType controller_type;
 
         //! check if the controller is connected
-        if (WPADProbe(getChanByInt(chanIdx - 1), &controller_type) != 0)
+        if (WPADProbe(getChanByInt(chanIdx - 1), &controller_type) != 0) {
             return false;
+        }
 
         KPADRead(getChanByInt(chanIdx - 1), &kpadData, 1);
 
@@ -170,10 +199,11 @@ public:
             data.x = (width >> 1) * kpadData.pos.x;
             data.y = (height >> 1) * (-kpadData.pos.y);
 
-            if (kpadData.angle.y > 0.0f)
+            if (kpadData.angle.y > 0.0f) {
                 data.pointerAngle = (-kpadData.angle.x + 1.0f) * 0.5f * 180.0f;
-            else
+            } else {
                 data.pointerAngle = (kpadData.angle.x + 1.0f) * 0.5f * 180.0f - 180.0f;
+            }
         }
 
         return true;

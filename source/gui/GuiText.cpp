@@ -80,8 +80,9 @@ GuiText::GuiText(const char *t, int32_t s, const glm::vec4 &c) {
 
     if (t) {
         text = FreeTypeGX::charToWideChar(t);
-        if (!text)
+        if (!text) {
             return;
+        }
 
         textWidth = font->getWidth(text, currentSize);
     }
@@ -110,8 +111,9 @@ GuiText::GuiText(const wchar_t *t, int32_t s, const glm::vec4 &c) {
 
     if (t) {
         text = new(std::nothrow) wchar_t[wcslen(t) + 1];
-        if (!text)
+        if (!text) {
             return;
+        }
 
         wcscpy(text, t);
 
@@ -145,8 +147,9 @@ GuiText::GuiText(const char *t) {
 
     if (t) {
         text = FreeTypeGX::charToWideChar(t);
-        if (!text)
+        if (!text) {
             return;
+        }
 
         textWidth = font->getWidth(text, currentSize);
     }
@@ -157,16 +160,18 @@ GuiText::GuiText(const char *t) {
  * Destructor for the GuiText class.
  */
 GuiText::~GuiText() {
-    if (text)
+    if (text) {
         delete[] text;
+    }
     text = NULL;
 
     clearDynamicText();
 }
 
 void GuiText::setText(const char *t) {
-    if (text)
+    if (text) {
         delete[] text;
+    }
     text = NULL;
 
     clearDynamicText();
@@ -176,8 +181,9 @@ void GuiText::setText(const char *t) {
 
     if (t) {
         text = FreeTypeGX::charToWideChar(t);
-        if (!text)
+        if (!text) {
             return;
+        }
 
         textWidth = font->getWidth(text, currentSize);
     }
@@ -198,14 +204,16 @@ void GuiText::setTextf(const char *format, ...) {
     }
     va_end(va);
 
-    if (tmp)
+    if (tmp) {
         delete[] tmp;
+    }
 }
 
 
 void GuiText::setText(const wchar_t *t) {
-    if (text)
+    if (text) {
         delete[] text;
+    }
     text = NULL;
 
     clearDynamicText();
@@ -215,8 +223,9 @@ void GuiText::setText(const wchar_t *t) {
 
     if (t) {
         text = new(std::nothrow) wchar_t[wcslen(t) + 1];
-        if (!text)
+        if (!text) {
             return;
+        }
 
         wcscpy(text, t);
 
@@ -226,8 +235,9 @@ void GuiText::setText(const wchar_t *t) {
 
 void GuiText::clearDynamicText() {
     for (uint32_t i = 0; i < textDyn.size(); i++) {
-        if (textDyn[i])
+        if (textDyn[i]) {
             delete[] textDyn[i];
+        }
     }
     textDyn.clear();
     textDynWidth.clear();
@@ -275,15 +285,17 @@ void GuiText::setBlurGlowColor(float blur, const glm::vec4 &c) {
 }
 
 int32_t GuiText::getTextWidth(int32_t ind) {
-    if (ind < 0 || ind >= (int32_t) textDyn.size())
+    if (ind < 0 || ind >= (int32_t) textDyn.size()) {
         return this->getTextWidth();
+    }
 
     return font->getWidth(textDyn[ind], currentSize);
 }
 
 const wchar_t *GuiText::getDynText(int32_t ind) {
-    if (ind < 0 || ind >= (int32_t) textDyn.size())
+    if (ind < 0 || ind >= (int32_t) textDyn.size()) {
         return text;
+    }
 
     return textDyn[ind];
 }
@@ -292,8 +304,9 @@ const wchar_t *GuiText::getDynText(int32_t ind) {
  * Change font
  */
 bool GuiText::setFont(FreeTypeGX *f) {
-    if (!f)
+    if (!f) {
         return false;
+    }
 
     font = f;
     textWidth = font->getWidth(text, currentSize);
@@ -301,12 +314,14 @@ bool GuiText::setFont(FreeTypeGX *f) {
 }
 
 std::string GuiText::toUTF8(void) const {
-    if (!text)
+    if (!text) {
         return std::string();
+    }
 
     char *pUtf8 = FreeTypeGX::wideCharToUTF8(text);
-    if (!pUtf8)
+    if (!pUtf8) {
         return std::string();
+    }
 
     std::string strOutput(pUtf8);
 
@@ -387,8 +402,9 @@ void GuiText::scrollText(uint32_t frameCount) {
     int32_t ch = textScrollPos;
     int32_t pos = textDyn.size() - 1;
 
-    if (!textDyn[pos])
+    if (!textDyn[pos]) {
         textDyn[pos] = new(std::nothrow) wchar_t[maxWidth];
+    }
 
     if (!textDyn[pos]) {
         textDyn.resize(pos);
@@ -407,8 +423,9 @@ void GuiText::scrollText(uint32_t frameCount) {
             currentWidth += font->getCharWidth(L' ', currentSize, L' ');
             ch = 0;
 
-            if (currentWidth >= maxWidth)
+            if (currentWidth >= maxWidth) {
                 break;
+            }
         }
 
         textDyn[pos][i] = text[ch];
@@ -420,7 +437,7 @@ void GuiText::scrollText(uint32_t frameCount) {
 }
 
 void GuiText::wrapText() {
-    if (textDyn.size() > 0) return;
+    if (textDyn.size() > 0) { return; }
 
     int32_t i = 0;
     int32_t ch = 0;
@@ -456,8 +473,9 @@ void GuiText::wrapText() {
             }
 
             if (linenum + 1 == linestodraw && text[ch + 1] != 0x0000) {
-                if (i < 2)
+                if (i < 2) {
                     i = 2;
+                }
 
                 textDyn[linenum][i - 2] = '.';
                 textDyn[linenum][i - 1] = '.';
@@ -482,11 +500,13 @@ void GuiText::wrapText() {
  * Draw the text on screen
  */
 void GuiText::draw(CVideo *pVideo) {
-    if (!text)
+    if (!text) {
         return;
+    }
 
-    if (!isVisible())
+    if (!isVisible()) {
         return;
+    }
 
     color[3] = getAlpha();
     blurGlowColor[3] = blurAlpha * getAlpha();
@@ -499,8 +519,9 @@ void GuiText::draw(CVideo *pVideo) {
     if (newSize != currentSize) {
         currentSize = normal_size;
 
-        if (text)
+        if (text) {
             textWidth = font->getWidth(text, normal_size);
+        }
     }
 
     float x_pos = getCenterX() * finalRenderingScale;
@@ -508,42 +529,49 @@ void GuiText::draw(CVideo *pVideo) {
 
     if (maxWidth > 0 && maxWidth <= textWidth) {
         if (wrapMode == DOTTED) { // text dotted
-            if (textDyn.size() == 0)
+            if (textDyn.size() == 0) {
                 makeDottedText();
+            }
 
             if (textDynWidth.size() != textDyn.size()) {
                 textDynWidth.resize(textDyn.size());
 
-                for (uint32_t i = 0; i < textDynWidth.size(); i++)
+                for (uint32_t i = 0; i < textDynWidth.size(); i++) {
                     textDynWidth[i] = font->getWidth(textDyn[i], newSize);
+                }
             }
 
 
-            if (textDyn.size() > 0)
+            if (textDyn.size() > 0) {
                 font->drawText(pVideo, x_pos, y_pos, getDepth(), textDyn[textDyn.size() - 1], newSize, color, alignment, textDynWidth[textDyn.size() - 1], defaultBlur, blurGlowIntensity, blurGlowColor, finalRenderingScale);
+            }
         } else if (wrapMode == SCROLL_HORIZONTAL) {
             scrollText(pVideo->getFrameCount());
 
-            if (textDyn.size() > 0)
+            if (textDyn.size() > 0) {
                 font->drawText(pVideo, x_pos, y_pos, getDepth(), textDyn[textDyn.size() - 1], newSize, color, alignment, maxWidth * finalRenderingScale, defaultBlur, blurGlowIntensity, blurGlowColor, finalRenderingScale);
+            }
 
         } else if (wrapMode == WRAP) {
             int32_t lineheight = newSize + 6;
             int32_t yoffset = 0;
             int32_t voffset = 0;
 
-            if (textDyn.size() == 0)
+            if (textDyn.size() == 0) {
                 wrapText();
+            }
 
             if (textDynWidth.size() != textDyn.size()) {
                 textDynWidth.resize(textDyn.size());
 
-                for (uint32_t i = 0; i < textDynWidth.size(); i++)
+                for (uint32_t i = 0; i < textDynWidth.size(); i++) {
                     textDynWidth[i] = font->getWidth(textDyn[i], newSize);
+                }
             }
 
-            if (alignment & ALIGN_MIDDLE)
+            if (alignment & ALIGN_MIDDLE) {
                 voffset = (lineheight * (textDyn.size() - 1)) >> 1;
+            }
 
             for (uint32_t i = 0; i < textDyn.size(); i++) {
                 font->drawText(pVideo, x_pos, y_pos + voffset + yoffset, getDepth(), textDyn[i], newSize, color, alignment, textDynWidth[i], defaultBlur, blurGlowIntensity, blurGlowColor, finalRenderingScale);
