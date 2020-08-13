@@ -53,6 +53,8 @@ GuiText::GuiText() {
     blurGlowIntensity = 0.0f;
     blurAlpha = 0.0f;
     blurGlowColor = glm::vec4(0.0f);
+    width = 0;
+    height = 0;
 }
 
 GuiText::GuiText(const char *t, int32_t s, const glm::vec4 &c) {
@@ -73,6 +75,8 @@ GuiText::GuiText(const char *t, int32_t s, const glm::vec4 &c) {
     blurGlowIntensity = 0.0f;
     blurAlpha = 0.0f;
     blurGlowColor = glm::vec4(0.0f);
+    width = 0;
+    height = 0;
 
     if (t) {
         textMutex.lock();
@@ -99,6 +103,8 @@ GuiText::GuiText(const wchar_t *t, int32_t s, const glm::vec4 &c) {
     blurGlowIntensity = 0.0f;
     blurAlpha = 0.0f;
     blurGlowColor = glm::vec4(0.0f);
+    width = 0;
+    height = 0;
 
     if (t) {
         textMutex.lock();
@@ -134,6 +140,8 @@ GuiText::GuiText(const char *t) {
     blurGlowIntensity = 0.0f;
     blurAlpha = 0.0f;
     blurGlowColor = glm::vec4(0.0f);
+    width = 0;
+    height = 0;
 
     if (t) {
         textMutex.lock();
@@ -529,6 +537,78 @@ void GuiText::wrapText() {
         ++i;
     }
     textMutex.unlock();
+}
+
+/**
+ * We need to redefine this, because we don't want to use our width.
+ */
+float GuiText::getCenterX(void) {
+    float pCenterX = 0.0f;
+
+    if (parentElement) {
+        pCenterX = parentElement->getCenterX();
+    }
+
+    pCenterX += xoffset + xoffsetDyn;
+
+    if (alignment & ALIGN_LEFT) {
+        float pWidth = 0.0f;
+        float pScale = 0.0f;
+
+        if (parentElement) {
+            pWidth = parentElement->getWidth();
+            pScale = parentElement->getScaleX();
+        }
+
+        pCenterX -= pWidth * 0.5f * pScale;
+    } else if (alignment & ALIGN_RIGHT) {
+        float pWidth = 0.0f;
+        float pScale = 0.0f;
+
+        if (parentElement) {
+            pWidth = parentElement->getWidth();
+            pScale = parentElement->getScaleX();
+        }
+
+        pCenterX += pWidth * 0.5f * pScale;
+    }
+    return pCenterX;
+}
+
+/**
+ * We need to redefine this, because we don't want to use our height.
+ */
+float GuiText::getCenterY(void) {
+    float pCenterY = 0.0f;
+
+    if (parentElement) {
+        pCenterY = parentElement->getCenterY();
+    }
+
+    pCenterY += yoffset + yoffsetDyn;
+
+    if (alignment & ALIGN_TOP) {
+        float pHeight = 0.0f;
+        float pScale = 0.0f;
+
+        if (parentElement) {
+            pHeight = parentElement->getHeight();
+            pScale = parentElement->getScaleY();
+        }
+
+        pCenterY += pHeight * 0.5f * pScale;
+    } else if (alignment & ALIGN_BOTTOM) {
+        float pHeight = 0.0f;
+        float pScale = 0.0f;
+
+        if (parentElement) {
+            pHeight = parentElement->getHeight();
+            pScale = parentElement->getScaleY();
+        }
+
+        pCenterY -= pHeight * 0.5f * pScale;
+    }
+    return pCenterY;
 }
 
 /**

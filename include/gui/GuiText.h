@@ -142,6 +142,24 @@ public:
     //!Constantly called to draw the text
     void draw(CVideo *pVideo);
 
+    virtual float getWidth() {
+        return getTextWidth();
+    }
+
+    virtual float getHeight() {
+        return getTextHeight();
+    }
+
+    virtual void setSize(float w, float h) {
+        //! We calculate the size based on the text.
+        this->width = 0;
+        this->height = 0;
+    }
+
+    virtual float getCenterY(void);
+
+    virtual float getCenterX(void);
+
     //! text enums
     enum {
         WRAP,
