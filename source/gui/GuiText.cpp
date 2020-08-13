@@ -639,6 +639,11 @@ void GuiText::draw(CVideo *pVideo) {
     float x_pos = getCenterX() * internalRenderingScale;
     float y_pos = getCenterY() * internalRenderingScale;
 
+    if (alignment & ALIGN_TOP) {
+        y_pos -= getLineHeight() * getScale() * internalRenderingScale;
+    } else if (alignment & ALIGN_BOTTOM) {
+        y_pos += getLineHeight() * getScale() * internalRenderingScale;
+    }
 
     if (maxWidth > 0 && maxWidth <= textWidth) {
         if (wrapMode == DOTTED) { // text dotted
