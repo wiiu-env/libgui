@@ -114,7 +114,6 @@ class FreeTypeGX {
 private:
     FT_Library ftLibrary; /**< FreeType FT_Library instance. */
     FT_Face ftFace; /**< FreeType reusable FT_Face typographic object. */
-    int16_t ftPointSize; /**< Current set size of the rendered font. */
     bool ftKerningEnabled; /**< Flag indicating the availability of font kerning data. */
     uint8_t vertexIndex; /**< Vertex format descriptor index. */
     GX2Sampler ftSampler;
@@ -155,8 +154,6 @@ public:
     uint16_t getCharWidth(const wchar_t wChar, int16_t pixelSize, const wchar_t prevChar = 0x0000);
 
     uint16_t getHeight(const wchar_t *text, int16_t pixelSize);
-
-    void getOffset(const wchar_t *text, int16_t pixelSize, uint16_t widthLimit = 0);
 
     static wchar_t *charToWideChar(const char *p);
 

@@ -463,51 +463,6 @@ uint16_t FreeTypeGX::getHeight(const wchar_t *text, int16_t pixelSize) {
 }
 
 /**
- * Get the maximum offset above and minimum offset below the font origin line.
- *
- * This function calculates the maximum pixel height above the font origin line and the minimum
- * pixel height below the font origin line and returns the values in an addressible structure.
- *
- * @param text  NULL terminated string to calculate.
- * @param offset returns the max and min values above and below the font origin line
- *
- */
-void FreeTypeGX::getOffset(const wchar_t *text, int16_t pixelSize, uint16_t widthLimit) {
-    if (fontData.find(pixelSize) != fontData.end()) {
-        return;
-    }
-
-    int16_t strMax = 0, strMin = 9999;
-    uint16_t currWidth = 0;
-
-    int32_t i = 0;
-
-    while (text[i]) {
-        if (widthLimit > 0 && currWidth >= widthLimit) { break; }
-
-        ftgxCharData *glyphData = cacheGlyphData(text[i], pixelSize);
-
-        if (glyphData != NULL) {
-            strMax = glyphData->renderOffsetMax > strMax ? glyphData->renderOffsetMax : strMax;
-            strMin = glyphData->renderOffsetMin < strMin ? glyphData->renderOffsetMin : strMin;
-            currWidth += glyphData->glyphAdvanceX;
-        }
-
-        ++i;
-    }
-
-    if (ftPointSize != pixelSize) {
-        ftPointSize = pixelSize;
-        FT_Set_Pixel_Sizes(ftFace, 0, ftPointSize);
-    }
-
-    fontData[pixelSize].ftgxAlign.ascender = ftFace->size->metrics.ascender >> 6;
-    fontData[pixelSize].ftgxAlign.descender = ftFace->size->metrics.descender >> 6;
-    fontData[pixelSize].ftgxAlign.max = strMax;
-    fontData[pixelSize].ftgxAlign.min = strMin;
-}
-
-/**
  * Copies the supplied texture quad to the EFB.
  *
  * This routine uses the in-built GX quad builder functions to define the texture bounds and location on the EFB target.
