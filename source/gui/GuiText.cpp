@@ -45,7 +45,6 @@ GuiText::GuiText() {
     maxWidth = presetMaxWidth;
     internalSSAA = presetSSAA;
     wrapMode = 0;
-    textWidth = 0;
     font = presentFont;
     linestodraw = MAX_LINES_TO_DRAW;
     textScrollPos = 0;
@@ -67,7 +66,6 @@ GuiText::GuiText(const char *t, int32_t s, const glm::vec4 &c) {
     maxWidth = presetMaxWidth;
     internalSSAA = presetSSAA;
     wrapMode = 0;
-    textWidth = 0;
     font = presentFont;
     linestodraw = MAX_LINES_TO_DRAW;
     textScrollPos = 0;
@@ -83,8 +81,6 @@ GuiText::GuiText(const char *t, int32_t s, const glm::vec4 &c) {
         if (!text) {
             return;
         }
-
-        textWidth = font->getWidth(text, currentSize);
     }
 }
 
@@ -98,7 +94,6 @@ GuiText::GuiText(const wchar_t *t, int32_t s, const glm::vec4 &c) {
     maxWidth = presetMaxWidth;
     internalSSAA = presetSSAA;
     wrapMode = 0;
-    textWidth = 0;
     font = presentFont;
     linestodraw = MAX_LINES_TO_DRAW;
     textScrollPos = 0;
@@ -116,8 +111,6 @@ GuiText::GuiText(const wchar_t *t, int32_t s, const glm::vec4 &c) {
         }
 
         wcscpy(text, t);
-
-        textWidth = font->getWidth(text, currentSize);
     }
 }
 
@@ -134,7 +127,6 @@ GuiText::GuiText(const char *t) {
     maxWidth = presetMaxWidth;
     internalSSAA = presetSSAA;
     wrapMode = 0;
-    textWidth = 0;
     font = presentFont;
     linestodraw = MAX_LINES_TO_DRAW;
     textScrollPos = 0;
@@ -150,8 +142,6 @@ GuiText::GuiText(const char *t) {
         if (!text) {
             return;
         }
-
-        textWidth = font->getWidth(text, currentSize);
     }
 }
 
@@ -184,8 +174,6 @@ void GuiText::setText(const char *t) {
         if (!text) {
             return;
         }
-
-        textWidth = font->getWidth(text, currentSize);
     }
 }
 
@@ -228,8 +216,6 @@ void GuiText::setText(const wchar_t *t) {
         }
 
         wcscpy(text, t);
-
-        textWidth = font->getWidth(text, currentSize);
     }
 }
 
@@ -288,8 +274,14 @@ int32_t GuiText::getTextWidth(int32_t ind) {
     if (ind < 0 || ind >= (int32_t) textDyn.size()) {
         return this->getTextWidth();
     }
-
     return font->getWidth(textDyn[ind], currentSize);
+}
+
+//!Get the Horizontal Size of Text
+int32_t GuiText::getTextWidth() {
+    auto res = font->getWidth(text, currentSize);
+    res = res > maxWidth && maxWidth > 0 ? maxWidth : res;
+    return res;
 }
 
 const wchar_t *GuiText::getDynText(int32_t ind) {
@@ -309,7 +301,6 @@ bool GuiText::setFont(FreeTypeGX *f) {
     }
 
     font = f;
-    textWidth = font->getWidth(text, currentSize);
     return true;
 }
 

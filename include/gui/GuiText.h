@@ -94,9 +94,7 @@ public:
     virtual std::string toUTF8(void) const;
 
     //!Get the Horizontal Size of Text
-    int32_t getTextWidth() {
-        return textWidth;
-    }
+    int32_t getTextWidth();
 
     int32_t getTextWidth(int32_t ind);
 
@@ -173,10 +171,8 @@ protected:
     int32_t textScrollPos; //!< Current starting index of text string for scrolling
     int32_t textScrollInitialDelay; //!< Delay to wait before starting to scroll
     int32_t textScrollDelay; //!< Scrolling speed
-    int32_t size; //!< Font size
     int32_t maxWidth; //!< Maximum width of the generated text object (for text wrapping)
     FreeTypeGX *font;
-    int32_t textWidth;
     int32_t currentSize;
     int32_t linestodraw;
     glm::vec4 color;
