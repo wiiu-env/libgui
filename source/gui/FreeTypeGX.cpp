@@ -132,6 +132,7 @@ char *FreeTypeGX::wideCharToUTF8(const wchar_t *strChar) {
             pOut[n++] = (char) ((wc & 0x3F) | 0x80);
         }
     }
+    pOut[n] = '\0';
     return pOut;
 }
 
