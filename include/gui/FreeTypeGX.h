@@ -31,6 +31,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <map>
+#include <mutex>
 
 
 #include <gui/gx2_ext.h>
@@ -117,6 +118,8 @@ private:
     bool ftKerningEnabled; /**< Flag indicating the availability of font kerning data. */
     uint8_t vertexIndex; /**< Vertex format descriptor index. */
     GX2Sampler ftSampler;
+    std::recursive_mutex faceMutex;
+    std::recursive_mutex fontDataMutex;
 
     typedef struct _ftGX2Data {
         ftgxDataOffset ftgxAlign;

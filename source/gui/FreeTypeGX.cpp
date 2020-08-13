@@ -145,13 +145,13 @@ void FreeTypeGX::unloadFont() {
     map<int16_t, ftGX2Data>::iterator itr;
     map<wchar_t, ftgxCharData>::iterator itr2;
 
+    fontDataMutex.lock();
     for (itr = fontData.begin(); itr != fontData.end(); itr++) {
         for (itr2 = itr->second.ftgxCharMap.begin(); itr2 != itr->second.ftgxCharMap.end(); itr2++) {
             if (itr2->second.texture) {
                 if (itr2->second.texture->surface.image) {
                     free(itr2->second.texture->surface.image);
                 }
-
                 delete itr2->second.texture;
                 itr2->second.texture = NULL;
             }
@@ -159,6 +159,7 @@ void FreeTypeGX::unloadFont() {
     }
 
     fontData.clear();
+    fontDataMutex.unlock();
 }
 
 /**
@@ -171,16 +172,20 @@ void FreeTypeGX::unloadFont() {
  * @return A pointer to the allocated font structure.
  */
 ftgxCharData *FreeTypeGX::cacheGlyphData(wchar_t charCode, int16_t pixelSize) {
-    map<int16_t, ftGX2Data>::iterator itr = fontData.find(pixelSize);
+    fontDataMutex.lock();
+    auto itr = fontData.find(pixelSize);
     if (itr != fontData.end()) {
-        map<wchar_t, ftgxCharData>::iterator itr2 = itr->second.ftgxCharMap.find(charCode);
+        auto itr2 = itr->second.ftgxCharMap.find(charCode);
         if (itr2 != itr->second.ftgxCharMap.end()) {
+            // Used cached value;
+            fontDataMutex.unlock();
             return &itr2->second;
         }
     }
     //!Cache ascender and decender as well
     ftGX2Data *ftData = &fontData[pixelSize];
 
+    faceMutex.lock();
     FT_UInt gIndex;
     uint16_t textureWidth = 0, textureHeight = 0;
     if (ftPointSize != pixelSize) {
@@ -220,10 +225,13 @@ ftgxCharData *FreeTypeGX::cacheGlyphData(wchar_t charCode, int16_t pixelSize) {
             GX2InitTexture(charData->texture, textureWidth, textureHeight, 1, 0, GX2_SURFACE_FORMAT_UNORM_R5_G5_B5_A1, GX2_SURFACE_DIM_TEXTURE_2D, GX2_TILE_MODE_LINEAR_ALIGNED);
 
             loadGlyphData(glyphBitmap, charData);
-
+            faceMutex.unlock();
+            fontDataMutex.unlock();
             return charData;
         }
     }
+    faceMutex.unlock();
+    fontDataMutex.unlock();
     return NULL;
 }
 
@@ -237,11 +245,13 @@ uint16_t FreeTypeGX::cacheGlyphDataComplete(int16_t pixelSize) {
     uint32_t i = 0;
     FT_UInt gIndex;
 
+    faceMutex.lock();
     FT_ULong charCode = FT_Get_First_Char(ftFace, &gIndex);
     while (gIndex != 0) {
         if (cacheGlyphData(charCode, pixelSize) != NULL) { ++i; }
         charCode = FT_Get_Next_Char(ftFace, charCode, &gIndex);
     }
+    faceMutex.unlock();
     return (uint16_t) (i);
 }
 
@@ -302,33 +312,40 @@ int16_t FreeTypeGX::getStyleOffsetWidth(uint16_t width, uint16_t format) {
  * @param format	Positional format of the string.
  */
 int16_t FreeTypeGX::getStyleOffsetHeight(int16_t format, uint16_t pixelSize) {
-    std::map<int16_t, ftGX2Data>::iterator itr = fontData.find(pixelSize);
-    if (itr == fontData.end()) { return 0; }
-
+    fontDataMutex.lock();
+    auto itr = fontData.find(pixelSize);
+    if (itr == fontData.end()) {
+        fontDataMutex.unlock();
+        return 0;
+    }
+    int16_t res = 0;
     switch (format & FTGX_ALIGN_MASK) {
         case FTGX_ALIGN_TOP:
-            return itr->second.ftgxAlign.descender;
-
+            res = itr->second.ftgxAlign.descender;
+            break;
         case FTGX_ALIGN_MIDDLE:
         default:
-            return (itr->second.ftgxAlign.ascender + itr->second.ftgxAlign.descender + 1) >> 1;
-
+            res = (itr->second.ftgxAlign.ascender + itr->second.ftgxAlign.descender + 1) >> 1;
+            break;
         case FTGX_ALIGN_BOTTOM:
-            return itr->second.ftgxAlign.ascender;
-
+            res = itr->second.ftgxAlign.ascender;
+            break;
         case FTGX_ALIGN_BASELINE:
-            return 0;
-
+            res = 0;
+            break;
         case FTGX_ALIGN_GLYPH_TOP:
-            return itr->second.ftgxAlign.max;
-
+            res = itr->second.ftgxAlign.max;
+            break;
         case FTGX_ALIGN_GLYPH_MIDDLE:
-            return (itr->second.ftgxAlign.max + itr->second.ftgxAlign.min + 1) >> 1;
-
+            res = (itr->second.ftgxAlign.max + itr->second.ftgxAlign.min + 1) >> 1;
+            break;
         case FTGX_ALIGN_GLYPH_BOTTOM:
-            return itr->second.ftgxAlign.min;
+            res = itr->second.ftgxAlign.min;
+            break;
     }
-    return 0;
+
+    fontDataMutex.unlock();
+    return res;
 }
 
 /**
@@ -414,7 +431,11 @@ uint16_t FreeTypeGX::getCharWidth(const wchar_t wChar, int16_t pixelSize, const 
     if (glyphData != NULL) {
         if (ftKerningEnabled && prevChar != 0x0000) {
             FT_Vector pairDelta;
+            faceMutex.lock();
+            fontDataMutex.lock();
             FT_Get_Kerning(ftFace, fontData[pixelSize].ftgxCharMap[prevChar].glyphIndex, glyphData->glyphIndex, FT_KERNING_DEFAULT, &pairDelta);
+            fontDataMutex.unlock();
+            faceMutex.unlock();
             strWidth += pairDelta.x >> 6;
         }
         strWidth += glyphData->glyphAdvanceX;
