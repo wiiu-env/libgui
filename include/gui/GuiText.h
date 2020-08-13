@@ -104,6 +104,10 @@ public:
         return maxWidth;
     }
 
+    float getLineHeight() {
+        return (float) currentSize;
+    }
+
     float getTextHeight();
 
     void setSSAA(int32_t ssaa) {

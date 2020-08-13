@@ -590,10 +590,6 @@ void GuiText::draw(CVideo *pVideo) {
             textMutex.unlock();
             return;
         } else if (wrapMode == WRAP) {
-            int32_t lineheight = internalRenderingSize + 6;
-            int32_t yoffset = 0;
-            int32_t voffset = 0;
-
             if (textDyn.size() == 0) {
                 wrapText();
             }
@@ -606,13 +602,14 @@ void GuiText::draw(CVideo *pVideo) {
                 }
             }
 
+            float voffset = 0.0f;
             if (alignment & ALIGN_MIDDLE) {
-                voffset = (lineheight * (textDyn.size() - 1)) >> 1;
+                voffset = (float) (((int32_t) getLineHeight() * (textDyn.size() - 1)) >> 1) * internalRenderingScale;
             }
-
+            float y_offset = 0.0f;
             for (uint32_t i = 0; i < textDyn.size(); i++) {
                 font->drawText(pVideo, x_pos, y_pos + y_offset + voffset, getDepth(), textDyn[i], internalRenderingSize, color, alignment, textDynWidth[i], defaultBlur, blurGlowIntensity, blurGlowColor, internalRenderingScale);
-                yoffset -= lineheight;
+                y_offset -= getLineHeight() * getScale() * internalRenderingScale;
             }
             textMutex.unlock();
             return;
