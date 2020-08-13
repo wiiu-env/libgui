@@ -20,10 +20,10 @@
 #include <gui/video/shaders/ColorShader.h>
 #include "utils/utils.h"
 
-static const float fPiDiv180 = ((float)M_PI / 180.0f);
+static const float fPiDiv180 = ((float) M_PI / 180.0f);
 
-GuiImage::GuiImage(GuiImageData * img) {
-    if(img && img->getTexture()) {
+GuiImage::GuiImage(GuiImageData *img) {
+    if (img && img->getTexture()) {
         width = img->getWidth();
         height = img->getHeight();
     }
@@ -32,14 +32,14 @@ GuiImage::GuiImage(GuiImageData * img) {
     imageData = img;
 }
 
-GuiImage::GuiImage(int32_t w, int32_t h, const GX2Color & c, int32_t type) {
+GuiImage::GuiImage(int32_t w, int32_t h, const GX2Color &c, int32_t type) {
     internalInit(w, h);
     imgType = type;
     colorCount = ColorShader::cuColorVtxsSize / ColorShader::cuColorAttrSize;
 
     colorVtxs = (uint8_t *) memalign(GX2_VERTEX_BUFFER_ALIGNMENT, colorCount * ColorShader::cuColorAttrSize);
-    if(colorVtxs) {
-        for(uint32_t i = 0; i < colorCount; i++)
+    if (colorVtxs) {
+        for (uint32_t i = 0; i < colorCount; i++)
             setImageColor(c, i);
     }
 }
@@ -48,12 +48,12 @@ GuiImage::GuiImage(int32_t w, int32_t h, const GX2Color *c, uint32_t color_count
     internalInit(w, h);
     imgType = type;
     colorCount = ColorShader::cuColorVtxsSize / ColorShader::cuColorAttrSize;
-    if(colorCount < color_count)
+    if (colorCount < color_count)
         colorCount = color_count;
 
     colorVtxs = (uint8_t *) memalign(GX2_VERTEX_BUFFER_ALIGNMENT, colorCount * ColorShader::cuColorAttrSize);
-    if(colorVtxs) {
-        for(uint32_t i = 0; i < colorCount; i++) {
+    if (colorVtxs) {
+        for (uint32_t i = 0; i < colorCount; i++) {
             // take the last as reference if not enough colors defined
             int32_t idx = (i < color_count) ? i : (color_count - 1);
             setImageColor(c[idx], i);
@@ -65,7 +65,7 @@ GuiImage::GuiImage(int32_t w, int32_t h, const GX2Color *c, uint32_t color_count
  * Destructor for the GuiImage class.
  */
 GuiImage::~GuiImage() {
-    if(colorVtxs) {
+    if (colorVtxs) {
         free(colorVtxs);
         colorVtxs = NULL;
     }
@@ -93,11 +93,11 @@ void GuiImage::internalInit(int32_t w, int32_t h) {
     colorIntensity = glm::vec4(1.0f);
 }
 
-void GuiImage::setImageData(GuiImageData * img) {
+void GuiImage::setImageData(GuiImageData *img) {
     imageData = img;
     width = 0;
     height = 0;
-    if(img && img->getTexture()) {
+    if (img && img->getTexture()) {
         width = img->getWidth();
         height = img->getHeight();
     }
@@ -105,46 +105,46 @@ void GuiImage::setImageData(GuiImageData * img) {
 }
 
 GX2Color GuiImage::getPixel(int32_t x, int32_t y) {
-    if(!imageData || this->getWidth() <= 0 || x < 0 || y < 0 || x >= this->getWidth() || y >= this->getHeight())
+    if (!imageData || this->getWidth() <= 0 || x < 0 || y < 0 || x >= this->getWidth() || y >= this->getHeight())
         return (GX2Color) {
-        0, 0, 0, 0
-    };
+                0, 0, 0, 0
+        };
 
     uint32_t pitch = imageData->getTexture()->surface.pitch;
-    uint32_t *imagePtr = (uint32_t*)imageData->getTexture()->surface.image;
+    uint32_t *imagePtr = (uint32_t *) imageData->getTexture()->surface.image;
 
     uint32_t color_u32 = imagePtr[y * pitch + x];
     GX2Color color;
     color.r = (color_u32 >> 24) & 0xFF;
     color.g = (color_u32 >> 16) & 0xFF;
-    color.b = (color_u32 >>  8) & 0xFF;
-    color.a = (color_u32 >>  0) & 0xFF;
+    color.b = (color_u32 >> 8) & 0xFF;
+    color.a = (color_u32 >> 0) & 0xFF;
     return color;
 }
 
-void GuiImage::setPixel(int32_t x, int32_t y, const GX2Color & color) {
-    if(!imageData || this->getWidth() <= 0 || x < 0 || y < 0 || x >= this->getWidth() || y >= this->getHeight())
+void GuiImage::setPixel(int32_t x, int32_t y, const GX2Color &color) {
+    if (!imageData || this->getWidth() <= 0 || x < 0 || y < 0 || x >= this->getWidth() || y >= this->getHeight())
         return;
 
 
     uint32_t pitch = imageData->getTexture()->surface.pitch;
-    uint32_t *imagePtr = (uint32_t*)imageData->getTexture()->surface.image;
-    imagePtr[y * pitch + x] = (color.r << 24) | (color.g << 16)  | (color.b << 8)  | (color.a << 0);
+    uint32_t *imagePtr = (uint32_t *) imageData->getTexture()->surface.image;
+    imagePtr[y * pitch + x] = (color.r << 24) | (color.g << 16) | (color.b << 8) | (color.a << 0);
 }
 
-void GuiImage::setImageColor(const GX2Color & c, int32_t idx) {
-    if(!colorVtxs) {
+void GuiImage::setImageColor(const GX2Color &c, int32_t idx) {
+    if (!colorVtxs) {
         return;
     }
 
-    if(idx >= 0 && idx < (int32_t)colorCount) {
+    if (idx >= 0 && idx < (int32_t) colorCount) {
         colorVtxs[(idx << 2) + 0] = c.r;
         colorVtxs[(idx << 2) + 1] = c.g;
         colorVtxs[(idx << 2) + 2] = c.b;
         colorVtxs[(idx << 2) + 3] = c.a;
         colorVtxsDirty = true;
-    } else if(colorVtxs) {
-        for(uint32_t i = 0; i < (ColorShader::cuColorVtxsSize / sizeof(uint8_t)); i += 4) {
+    } else if (colorVtxs) {
+        for (uint32_t i = 0; i < (ColorShader::cuColorVtxsSize / sizeof(uint8_t)); i += 4) {
             colorVtxs[i + 0] = c.r;
             colorVtxs[i + 1] = c.g;
             colorVtxs[i + 2] = c.b;
@@ -165,10 +165,10 @@ void GuiImage::setPrimitiveVertex(int32_t prim, const float *posVtx, const float
     posVtxs = posVtx;
     texCoords = texCoord;
 
-    if(imgType == IMAGE_COLOR) {
-        uint8_t * newColorVtxs = (uint8_t *) memalign(0x40, ColorShader::cuColorAttrSize * vtxCount);
+    if (imgType == IMAGE_COLOR) {
+        uint8_t *newColorVtxs = (uint8_t *) memalign(0x40, ColorShader::cuColorAttrSize * vtxCount);
 
-        for(uint32_t i = 0; i < vtxCount; i++) {
+        for (uint32_t i = 0; i < vtxCount; i++) {
             int32_t newColorIdx = (i << 2);
             int32_t colorIdx = (i < colorCount) ? (newColorIdx) : ((colorCount - 1) << 2);
 
@@ -186,7 +186,7 @@ void GuiImage::setPrimitiveVertex(int32_t prim, const float *posVtx, const float
 }
 
 void GuiImage::draw(CVideo *pVideo) {
-    if(!this->isVisible() || tileVertical == 0 || tileHorizontal == 0)
+    if (!this->isVisible() || tileVertical == 0 || tileHorizontal == 0)
         return;
 
     float currScaleX = getScaleX();
@@ -238,13 +238,13 @@ void GuiImage::draw(CVideo *pVideo) {
 //				Menu_DrawImgCut(image, width, height, format, currLeft, currTop+height*i, currZ, imageangle, currScaleX, currScaleY, currAlpha, cutBoundsRect.x1(), cutBoundsRect.x2(), cutBoundsRect.y1(), cutBoundsRect.y2());
 //		}
 //	}
-    if(colorVtxsDirty && colorVtxs) {
+    if (colorVtxsDirty && colorVtxs) {
         //! flush color vertex only on main GX2 thread
         GX2Invalidate(GX2_INVALIDATE_MODE_CPU_ATTRIBUTE_BUFFER, colorVtxs, colorCount * ColorShader::cuColorAttrSize);
         colorVtxsDirty = false;
     }
 
-    if(imgType == IMAGE_COLOR && colorVtxs) {
+    if (imgType == IMAGE_COLOR && colorVtxs) {
         ColorShader::instance()->setShaders();
         ColorShader::instance()->setAttributeBuffer(colorVtxs, posVtxs, vtxCount);
         ColorShader::instance()->setAngle(imageAngle);
@@ -252,7 +252,7 @@ void GuiImage::draw(CVideo *pVideo) {
         ColorShader::instance()->setScale(scaleFactor);
         ColorShader::instance()->setColorIntensity(colorIntensity);
         ColorShader::instance()->draw(primitive, vtxCount);
-    } else if(imageData) {
+    } else if (imageData) {
         Texture2DShader::instance()->setShaders();
         Texture2DShader::instance()->setAttributeBuffer(texCoords, posVtxs, vtxCount);
         Texture2DShader::instance()->setAngle(imageAngle);

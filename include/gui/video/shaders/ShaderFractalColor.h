@@ -20,12 +20,14 @@
 #include <gui/video/shaders/VertexShader.h>
 #include <gui/video/shaders/PixelShader.h>
 #include <gui/video/shaders/FetchShader.h>
+
 class ShaderFractalColor : public Shader {
 private:
     ShaderFractalColor();
+
     virtual ~ShaderFractalColor();
 
-    static ShaderFractalColor * shaderInstance;
+    static ShaderFractalColor *shaderInstance;
 
     static const unsigned char cuAttributeCount = 3;
     static const uint32_t ciPositionVtxsSize = 4 * cuVertexAttrSize;
@@ -53,13 +55,14 @@ private:
     uint32_t fractalLocation;
 public:
     static ShaderFractalColor *instance() {
-        if(!shaderInstance) {
+        if (!shaderInstance) {
             shaderInstance = new ShaderFractalColor();
         }
         return shaderInstance;
     }
+
     static void destroyInstance() {
-        if(shaderInstance) {
+        if (shaderInstance) {
             delete shaderInstance;
             shaderInstance = NULL;
         }
@@ -71,8 +74,8 @@ public:
         pixelShader.setShader();
     }
 
-    void setAttributeBuffer(const uint32_t & vtxCount = 0, const float * posVtxs_in = NULL, const float * texCoords_in = NULL, const uint8_t * colorVtxs_in = NULL) const {
-        if(posVtxs_in && texCoords_in && vtxCount) {
+    void setAttributeBuffer(const uint32_t &vtxCount = 0, const float *posVtxs_in = NULL, const float *texCoords_in = NULL, const uint8_t *colorVtxs_in = NULL) const {
+        if (posVtxs_in && texCoords_in && vtxCount) {
             VertexShader::setAttributeBuffer(0, vtxCount * cuVertexAttrSize, cuVertexAttrSize, posVtxs_in);
             VertexShader::setAttributeBuffer(1, vtxCount * cuTexCoordAttrSize, cuTexCoordAttrSize, texCoords_in);
             VertexShader::setAttributeBuffer(2, vtxCount * cuColorAttrSize, cuColorAttrSize, colorVtxs_in);
@@ -84,26 +87,31 @@ public:
         }
     }
 
-    void setProjectionMtx(const glm::mat4 & mtx) {
+    void setProjectionMtx(const glm::mat4 &mtx) {
         VertexShader::setUniformReg(projectionMatrixLocation, 16, &mtx[0][0]);
     }
-    void setViewMtx(const glm::mat4 & mtx) {
+
+    void setViewMtx(const glm::mat4 &mtx) {
         VertexShader::setUniformReg(viewMatrixLocation, 16, &mtx[0][0]);
     }
-    void setModelViewMtx(const glm::mat4 & mtx) {
+
+    void setModelViewMtx(const glm::mat4 &mtx) {
         VertexShader::setUniformReg(modelMatrixLocation, 16, &mtx[0][0]);
     }
 
-    void setBlurBorder(const float & blurBorderSize) {
+    void setBlurBorder(const float &blurBorderSize) {
         PixelShader::setUniformReg(blurLocation, 4, &blurBorderSize);
     }
-    void setColorIntensity(const glm::vec4 & vec) {
+
+    void setColorIntensity(const glm::vec4 &vec) {
         PixelShader::setUniformReg(colorIntensityLocation, 4, &vec[0]);
     }
-    void setAlphaFadeOut(const glm::vec4 & vec) {
+
+    void setAlphaFadeOut(const glm::vec4 &vec) {
         PixelShader::setUniformReg(fadeOutLocation, 4, &vec[0]);
     }
-    void setFractalColor(const int & fractalColorEnable) {
+
+    void setFractalColor(const int &fractalColorEnable) {
         PixelShader::setUniformReg(fractalLocation, 4, &fractalColorEnable);
     }
 };

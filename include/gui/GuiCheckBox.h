@@ -26,23 +26,23 @@ class GuiCheckBox : public GuiToggle {
 public:
     //!Constructor
     //!\param checked Checked
-    GuiCheckBox(GuiImage * background, bool checked, float width = 0.0f,float height= 0.0f);
+    GuiCheckBox(GuiImage *background, bool checked, float width = 0.0f, float height = 0.0f);
 
     //!Destructor
     virtual ~GuiCheckBox();
 
-    void setImageBackground(GuiImage* img);
+    void setImageBackground(GuiImage *img);
 
-    void setImageSelected(GuiImage* img);
+    void setImageSelected(GuiImage *img);
 
-    void setImageHighlighted(GuiImage* img);
+    void setImageHighlighted(GuiImage *img);
 
 protected:
-    GuiImage * backgroundImg = NULL;
-    GuiImage * selectedImg = NULL;
-    GuiImage * highlightedImg = NULL;
+    GuiImage *backgroundImg = NULL;
+    GuiImage *selectedImg = NULL;
+    GuiImage *highlightedImg = NULL;
 
-    void update(GuiController * c);
+    void update(GuiController *c);
 };
 
 #endif

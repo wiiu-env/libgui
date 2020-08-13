@@ -26,38 +26,48 @@ class GuiImageData : public GuiElement {
 public:
     //!Constructor
     GuiImageData();
+
     //!\param img Image data
     //!\param imgSize The image size
-    GuiImageData(const uint8_t * img, int32_t imgSize, GX2TexClampMode textureClamp = GX2_TEX_CLAMP_MODE_CLAMP, GX2SurfaceFormat textureFormat = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8);
+    GuiImageData(const uint8_t *img, int32_t imgSize, GX2TexClampMode textureClamp = GX2_TEX_CLAMP_MODE_CLAMP, GX2SurfaceFormat textureFormat = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8);
+
     //!Destructor
     virtual ~GuiImageData();
+
     //!Load image from buffer
     //!\param img Image data
     //!\param imgSize The image size
-    void loadImage(const uint8_t * img, int32_t imgSize, GX2TexClampMode textureClamp = GX2_TEX_CLAMP_MODE_CLAMP, GX2SurfaceFormat textureFormat = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8);
+    void loadImage(const uint8_t *img, int32_t imgSize, GX2TexClampMode textureClamp = GX2_TEX_CLAMP_MODE_CLAMP, GX2SurfaceFormat textureFormat = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8);
+
     //! getter functions
-    const GX2Texture * getTexture() const {
+    const GX2Texture *getTexture() const {
         return texture;
     };
-    const GX2Sampler * getSampler() const {
+
+    const GX2Sampler *getSampler() const {
         return sampler;
     };
+
     //!Gets the image width
     //!\return image width
     int32_t getWidth() const {
-        if(texture) return texture->surface.width;
+        if (texture) return texture->surface.width;
         else return 0;
     };
+
     //!Gets the image height
     //!\return image height
     int32_t getHeight() const {
-        if(texture) return texture->surface.height;
+        if (texture) return texture->surface.height;
         else return 0;
     };
+
     //! release memory of the image data
     void releaseData(void);
+
 private:
     void gdImageToUnormR8G8B8A8(gdImagePtr gdImg, uint32_t *imgBuffer, uint32_t width, uint32_t height, uint32_t pitch);
+
     void gdImageToUnormR5G6B5(gdImagePtr gdImg, uint16_t *imgBuffer, uint32_t width, uint32_t height, uint32_t pitch);
 
     GX2Texture *texture;

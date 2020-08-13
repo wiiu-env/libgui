@@ -30,8 +30,8 @@
 #include <gui/sounds/OggDecoder.hpp>
 #include "fs/CFile.hpp"
 
-static int ogg_read(void * punt, int bytes, int blocks, int *f) {
-    return ((CFile *) f)->read((uint8_t *) punt, bytes*blocks);
+static int ogg_read(void *punt, int bytes, int blocks, int *f) {
+    return ((CFile *) f)->read((uint8_t *) punt, bytes * blocks);
 }
 
 static int ogg_seek(int *f, ogg_int64_t offset, int mode) {
@@ -48,27 +48,27 @@ static long ogg_tell(int *f) {
 }
 
 static ov_callbacks callbacks = {
-    (size_t (*)(void *, size_t, size_t, void *))    ogg_read,
-    (int (*)(void *, ogg_int64_t, int))             ogg_seek,
-    (int (*)(void *))                               ogg_close,
-    (long (*)(void *))                              ogg_tell
+        (size_t (*)(void *, size_t, size_t, void *)) ogg_read,
+        (int (*)(void *, ogg_int64_t, int)) ogg_seek,
+        (int (*)(void *)) ogg_close,
+        (long (*)(void *)) ogg_tell
 };
 
-OggDecoder::OggDecoder(const char * filepath)
-    : SoundDecoder(filepath) {
+OggDecoder::OggDecoder(const char *filepath)
+        : SoundDecoder(filepath) {
     SoundType = SOUND_OGG;
 
-    if(!file_fd)
+    if (!file_fd)
         return;
 
     OpenFile();
 }
 
-OggDecoder::OggDecoder(const uint8_t * snd, int32_t len)
-    : SoundDecoder(snd, len) {
+OggDecoder::OggDecoder(const uint8_t *snd, int32_t len)
+        : SoundDecoder(snd, len) {
     SoundType = SOUND_OGG;
 
-    if(!file_fd)
+    if (!file_fd)
         return;
 
     OpenFile();
@@ -76,10 +76,10 @@ OggDecoder::OggDecoder(const uint8_t * snd, int32_t len)
 
 OggDecoder::~OggDecoder() {
     ExitRequested = true;
-    while(Decoding)
+    while (Decoding)
         OSSleepTicks(OSMicrosecondsToTicks(100));
 
-    if(file_fd)
+    if (file_fd)
         ov_clear(&ogg_file);
 }
 
@@ -91,7 +91,7 @@ void OggDecoder::OpenFile() {
     }
 
     ogg_info = ov_info(&ogg_file, -1);
-    if(!ogg_info) {
+    if (!ogg_info) {
         ov_clear(&ogg_file);
         delete file_fd;
         file_fd = NULL;
@@ -103,7 +103,7 @@ void OggDecoder::OpenFile() {
 }
 
 int32_t OggDecoder::Rewind() {
-    if(!file_fd)
+    if (!file_fd)
         return -1;
 
     int32_t ret = ov_time_seek(&ogg_file, 0);
@@ -113,15 +113,15 @@ int32_t OggDecoder::Rewind() {
     return ret;
 }
 
-int32_t OggDecoder::Read(uint8_t * buffer, int32_t buffer_size, int32_t pos) {
-    if(!file_fd)
+int32_t OggDecoder::Read(uint8_t *buffer, int32_t buffer_size, int32_t pos) {
+    if (!file_fd)
         return -1;
 
     int32_t bitstream = 0;
 
-    int32_t read = (int32_t) ov_read(&ogg_file, (char *) buffer, (int) buffer_size, (int *)&bitstream);
+    int32_t read = (int32_t) ov_read(&ogg_file, (char *) buffer, (int) buffer_size, (int *) &bitstream);
 
-    if(read > 0)
+    if (read > 0)
         CurPos += read;
 
     return read;

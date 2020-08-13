@@ -15,15 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include <gui/GuiToggle.h>
+
 /**
  * Constructor for the GuiToggle class.
  */
 
-GuiToggle::GuiToggle(bool checked,float width,float height)
-    : GuiButton(width,height) {
+GuiToggle::GuiToggle(bool checked, float width, float height)
+        : GuiButton(width, height) {
     bChanged = false;
     selected = checked;
-    clicked.connect(this,&GuiToggle::OnToggleClick);
+    clicked.connect(this, &GuiToggle::OnToggleClick);
 }
 
 /**
@@ -35,8 +36,8 @@ GuiToggle::~GuiToggle() {
 }
 
 void GuiToggle::OnToggleClick(GuiButton *button, const GuiController *controller, GuiTrigger *trigger) {
-    if(!isStateSet(STATE_DISABLED | STATE_HIDDEN | STATE_DISABLE_INPUT)) {
-        if(selected) {
+    if (!isStateSet(STATE_DISABLED | STATE_HIDDEN | STATE_DISABLE_INPUT)) {
+        if (selected) {
             setUnchecked();
         } else {
             setChecked();
@@ -44,7 +45,7 @@ void GuiToggle::OnToggleClick(GuiButton *button, const GuiController *controller
     }
 }
 
-void GuiToggle::update(GuiController * c) {
+void GuiToggle::update(GuiController *c) {
     GuiButton::update(c);
 }
 

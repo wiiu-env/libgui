@@ -17,14 +17,16 @@
 #include <gui/GuiSwitch.h>
 #include <gui/GuiImage.h>
 #include <gui/GuiImageData.h>
+
 /**
  * Constructor for the GuiSwitch class.
  */
 
-GuiSwitch::GuiSwitch(GuiImage * background,bool checked,float w, float h)
-    : GuiToggle(checked,w,h) {
+GuiSwitch::GuiSwitch(GuiImage *background, bool checked, float w, float h)
+        : GuiToggle(checked, w, h) {
     setImageBackground(background);
 }
+
 /**
  * Destructor for the GuiSwitch class.
  */
@@ -32,43 +34,43 @@ GuiSwitch::~GuiSwitch() {
 
 }
 
-void GuiSwitch::setImageBackground(GuiImage* img) {
+void GuiSwitch::setImageBackground(GuiImage *img) {
     backgroundImg = img;
-    if(img) {
+    if (img) {
         img->setParent(this);
     }
     setImage(img);
 }
 
-void GuiSwitch::setImageOn(GuiImage* img) {
+void GuiSwitch::setImageOn(GuiImage *img) {
     onImg = img;
-    if(img) {
+    if (img) {
         img->setParent(this);
         img->setAlignment(ALIGN_RIGHT);
     }
 }
 
-void GuiSwitch::setImageOff(GuiImage* img) {
+void GuiSwitch::setImageOff(GuiImage *img) {
     offImg = img;
-    if(img) {
+    if (img) {
         img->setParent(this);
         img->setAlignment(ALIGN_LEFT);
     }
 }
 
-void GuiSwitch::setImageHighlighted(GuiImage* img) {
+void GuiSwitch::setImageHighlighted(GuiImage *img) {
     highlightedImg = img;
     setIconOver(img);
 }
 
 void GuiSwitch::draw(CVideo *v) {
     GuiToggle::draw(v);
-    if(getValue()) {
-        if(onImg != NULL) {
+    if (getValue()) {
+        if (onImg != NULL) {
             onImg->draw(v);
         }
     } else {
-        if(offImg != NULL) {
+        if (offImg != NULL) {
             offImg->draw(v);
         }
     }

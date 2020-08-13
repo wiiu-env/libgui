@@ -24,13 +24,14 @@
 class FXAAShader : public Shader {
 public:
     static FXAAShader *instance() {
-        if(!shaderInstance) {
+        if (!shaderInstance) {
             shaderInstance = new FXAAShader();
         }
         return shaderInstance;
     }
+
     static void destroyInstance() {
-        if(shaderInstance) {
+        if (shaderInstance) {
             delete shaderInstance;
             shaderInstance = NULL;
         }
@@ -47,17 +48,18 @@ public:
         VertexShader::setAttributeBuffer(1, ciTexCoordsVtxsSize, cuTexCoordAttrSize, texCoords);
     }
 
-    void setResolution(const glm::vec2 & vec) {
+    void setResolution(const glm::vec2 &vec) {
         PixelShader::setUniformReg(resolutionLocation, 4, &vec[0]);
     }
 
     void setTextureAndSampler(const GX2Texture *texture, const GX2Sampler *sampler) const {
-        GX2SetPixelTexture((GX2Texture*)texture, samplerLocation);
-        GX2SetPixelSampler((GX2Sampler*)sampler, samplerLocation);
+        GX2SetPixelTexture((GX2Texture *) texture, samplerLocation);
+        GX2SetPixelSampler((GX2Sampler *) sampler, samplerLocation);
     }
 
 private:
     FXAAShader();
+
     virtual ~FXAAShader();
 
     static const uint32_t cuAttributeCount = 2;

@@ -2,8 +2,8 @@
 #include <gui/video/CVideo.h>
 #include <gui/video/shaders/Shader3D.h>
 
-GameBgImage::GameBgImage(const std::string & filename, GuiImageData *preloadImage)
-    : GuiImageAsync(filename, preloadImage) {
+GameBgImage::GameBgImage(const std::string &filename, GuiImageData *preloadImage)
+        : GuiImageAsync(filename, preloadImage) {
     identity = glm::mat4(1.0f);
     alphaFadeOut = glm::vec4(1.0f, 0.075f, 5.305f, 2.0f);
 }
@@ -12,18 +12,18 @@ GameBgImage::~GameBgImage() {
 }
 
 void GameBgImage::draw(CVideo *pVideo) {
-    if(!getImageData() || !getImageData()->getTexture())
+    if (!getImageData() || !getImageData()->getTexture())
         return;
 
     //! first setup 2D GUI positions
     float currPosX = getCenterX();
     float currPosY = getCenterY();
     float currPosZ = getDepth();
-    float currScaleX = getScaleX() * (float)getWidth() * pVideo->getWidthScaleFactor();
-    float currScaleY = getScaleY() * (float)getHeight() * pVideo->getHeightScaleFactor();
-    float currScaleZ = getScaleZ() * (float)getWidth() * pVideo->getDepthScaleFactor();
+    float currScaleX = getScaleX() * (float) getWidth() * pVideo->getWidthScaleFactor();
+    float currScaleY = getScaleY() * (float) getHeight() * pVideo->getHeightScaleFactor();
+    float currScaleZ = getScaleZ() * (float) getWidth() * pVideo->getDepthScaleFactor();
 
-    glm::mat4 m_modelView = glm::translate(identity, glm::vec3(currPosX,currPosY, currPosZ));
+    glm::mat4 m_modelView = glm::translate(identity, glm::vec3(currPosX, currPosY, currPosZ));
     m_modelView = glm::scale(m_modelView, glm::vec3(currScaleX, currScaleY, currScaleZ));
 
     Shader3D::instance()->setShaders();

@@ -33,11 +33,11 @@
 #include <gui/sounds/Voice.h>
 #include <sndcore2/voice.h>
 
-#define MAX_DECODERS	16  // can be increased up to 96
+#define MAX_DECODERS    16  // can be increased up to 96
 
 class SoundHandler : public CThread {
 public:
-    static SoundHandler * instance() {
+    static SoundHandler *instance() {
         if (!handlerInstance)
             handlerInstance = new SoundHandler();
         return handlerInstance;
@@ -48,42 +48,49 @@ public:
         handlerInstance = NULL;
     }
 
-    void AddDecoder(int32_t voice, const char * filepath);
-    void AddDecoder(int32_t voice, const uint8_t * snd, int32_t len);
+    void AddDecoder(int32_t voice, const char *filepath);
+
+    void AddDecoder(int32_t voice, const uint8_t *snd, int32_t len);
+
     void RemoveDecoder(int32_t voice);
 
-    SoundDecoder * getDecoder(int32_t i) {
+    SoundDecoder *getDecoder(int32_t i) {
         return ((i < 0 || i >= MAX_DECODERS) ? NULL : DecoderList[i]);
     };
-    Voice * getVoice(int32_t i) {
+
+    Voice *getVoice(int32_t i) {
         return ((i < 0 || i >= MAX_DECODERS) ? NULL : voiceList[i]);
     };
 
     void ThreadSignal() {
         resumeThread();
     };
+
     bool IsDecoding() {
         return Decoding;
     };
 protected:
     SoundHandler();
+
     ~SoundHandler();
 
     static void axFrameCallback(void);
 
     void executeThread(void);
+
     void ClearDecoderList();
 
-    SoundDecoder * GetSoundDecoder(const char * filepath);
-    SoundDecoder * GetSoundDecoder(const uint8_t * sound, int32_t length);
+    SoundDecoder *GetSoundDecoder(const char *filepath);
 
-    static SoundHandler * handlerInstance;
+    SoundDecoder *GetSoundDecoder(const uint8_t *sound, int32_t length);
+
+    static SoundHandler *handlerInstance;
 
     bool Decoding;
     bool ExitRequested;
 
-    Voice * voiceList[MAX_DECODERS];
-    SoundDecoder * DecoderList[MAX_DECODERS];
+    Voice *voiceList[MAX_DECODERS];
+    SoundDecoder *DecoderList[MAX_DECODERS];
 };
 
 #endif

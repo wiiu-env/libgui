@@ -6,3 +6,5 @@ lib/
 libgui.layout
 obj/
 CMakeLists.txt
+cmake-build-debug/
+.idea/

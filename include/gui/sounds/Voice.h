@@ -36,12 +36,12 @@ public:
     };
 
     Voice(int32_t prio)
-        : state(STATE_STOPPED) {
+            : state(STATE_STOPPED) {
         lastLoopCounter = 0;
         nextBufferSize = 0;
 
         voice = AXAcquireVoice(prio, 0, 0);
-        if(voice) {
+        if (voice) {
             AXVoiceBegin(voice);
             AXSetVoiceType(voice, 0);
             setVolume(0x80000000);
@@ -62,13 +62,13 @@ public:
     }
 
     ~Voice() {
-        if(voice) {
+        if (voice) {
             AXFreeVoice(voice);
         }
     }
 
     void play(const uint8_t *buffer, uint32_t bufferSize, const uint8_t *nextBuffer, uint32_t nextBufSize, uint16_t format, uint32_t sampleRate) {
-        if(!voice)
+        if (!voice)
             return;
 
         memset(&voiceBuffer, 0, sizeof(voiceBuffer));
@@ -86,7 +86,7 @@ public:
         uint32_t samplesPerSec = AXGetInputSamplesPerSec();
 
         memset(&ratioBits, 0, sizeof(ratioBits));
-        ratioBits.ratio = (uint32_t)(0x00010000 * ((float)sampleRate / (float)samplesPerSec));
+        ratioBits.ratio = (uint32_t) (0x00010000 * ((float) sampleRate / (float) samplesPerSec));
 
         AXSetVoiceOffsets(voice, &voiceBuffer);
         AXSetVoiceSrc(voice, &ratioBits);
@@ -95,12 +95,12 @@ public:
     }
 
     void stop() {
-        if(voice)
+        if (voice)
             AXSetVoiceState(voice, 0);
     }
 
     void setVolume(uint32_t vol) {
-        if(voice) {
+        if (voice) {
             AXVoiceVeData data;
             data.volume = vol >> 16;
             data.delta = vol & 0xFFFF;
@@ -110,7 +110,7 @@ public:
 
 
     void setNextBuffer(const uint8_t *buffer, uint32_t bufferSize) {
-        voiceBuffer.loopOffset = ((buffer - (const uint8_t*)voiceBuffer.data) >> 1);
+        voiceBuffer.loopOffset = ((buffer - (const uint8_t *) voiceBuffer.data) >> 1);
         nextBufferSize = bufferSize;
 
         AXSetVoiceLoopOffset(voice, voiceBuffer.loopOffset);
@@ -118,27 +118,29 @@ public:
 
     bool isBufferSwitched() {
         uint32_t loopCounter = AXGetVoiceLoopCount(voice);
-        if(lastLoopCounter != loopCounter) {
+        if (lastLoopCounter != loopCounter) {
             lastLoopCounter = loopCounter;
-            AXSetVoiceEndOffset(voice, voiceBuffer.loopOffset  + (nextBufferSize >> 1) - 1);
+            AXSetVoiceEndOffset(voice, voiceBuffer.loopOffset + (nextBufferSize >> 1) - 1);
             return true;
         }
         return false;
     }
 
     uint32_t getInternState() const {
-        if(voice)
-            return ((uint32_t *)voice)[1];
+        if (voice)
+            return ((uint32_t *) voice)[1];
         return 0;
     }
+
     uint32_t getState() const {
         return state;
     }
+
     void setState(uint32_t s) {
         state = s;
     }
 
-    void * getVoice() const {
+    void *getVoice() const {
         return voice;
     }
 

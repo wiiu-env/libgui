@@ -57,7 +57,7 @@ typedef struct ftgxCharData_ {
     int16_t renderOffsetMax; /**< Texture Y axis bearing maximum value. */
     int16_t renderOffsetMin; /**< Texture Y axis bearing minimum value. */
 
-    GX2Texture * texture;
+    GX2Texture *texture;
 } ftgxCharData;
 
 /*! \struct ftgxDataOffset_
@@ -75,28 +75,28 @@ typedef struct ftgxCharData_ ftgxCharData;
 typedef struct ftgxDataOffset_ ftgxDataOffset;
 #define _TEXT(t) L ## t /**< Unicode helper macro. */
 
-#define FTGX_NULL			   0x0000
-#define FTGX_JUSTIFY_LEFT	   0x0001
-#define FTGX_JUSTIFY_CENTER	 0x0002
-#define FTGX_JUSTIFY_RIGHT	  0x0004
-#define FTGX_JUSTIFY_MASK	   0x000f
+#define FTGX_NULL               0x0000
+#define FTGX_JUSTIFY_LEFT       0x0001
+#define FTGX_JUSTIFY_CENTER     0x0002
+#define FTGX_JUSTIFY_RIGHT      0x0004
+#define FTGX_JUSTIFY_MASK       0x000f
 
-#define FTGX_ALIGN_TOP		  0x0010
-#define FTGX_ALIGN_MIDDLE	   0x0020
-#define FTGX_ALIGN_BOTTOM	   0x0040
-#define FTGX_ALIGN_BASELINE	 0x0080
-#define FTGX_ALIGN_GLYPH_TOP	0x0100
+#define FTGX_ALIGN_TOP          0x0010
+#define FTGX_ALIGN_MIDDLE       0x0020
+#define FTGX_ALIGN_BOTTOM       0x0040
+#define FTGX_ALIGN_BASELINE     0x0080
+#define FTGX_ALIGN_GLYPH_TOP    0x0100
 #define FTGX_ALIGN_GLYPH_MIDDLE 0x0200
 #define FTGX_ALIGN_GLYPH_BOTTOM 0x0400
-#define FTGX_ALIGN_MASK		 0x0ff0
+#define FTGX_ALIGN_MASK         0x0ff0
 
-#define FTGX_STYLE_UNDERLINE	0x1000
-#define FTGX_STYLE_STRIKE	   0x2000
-#define FTGX_STYLE_MASK		 0xf000
+#define FTGX_STYLE_UNDERLINE    0x1000
+#define FTGX_STYLE_STRIKE       0x2000
+#define FTGX_STYLE_MASK         0xf000
 
 /**< Constant color value used only to sanitize Doxygen documentation. */
 static const GX2ColorF32 ftgxWhite = (GX2ColorF32) {
-    1.0f, 1.0f, 1.0f, 1.0f
+        1.0f, 1.0f, 1.0f, 1.0f
 };
 
 
@@ -129,29 +129,39 @@ private:
     std::map<int16_t, ftGX2Data> fontData; /**< Map which holds the glyph data structures for the corresponding characters in one size. */
 
     int16_t getStyleOffsetWidth(uint16_t width, uint16_t format);
+
     int16_t getStyleOffsetHeight(int16_t format, uint16_t pixelSize);
 
     void unloadFont();
+
     ftgxCharData *cacheGlyphData(wchar_t charCode, int16_t pixelSize);
+
     uint16_t cacheGlyphDataComplete(int16_t pixelSize);
+
     void loadGlyphData(FT_Bitmap *bmp, ftgxCharData *charData);
 
-    void copyTextureToFramebuffer(CVideo * pVideo, GX2Texture *tex, int16_t screenX, int16_t screenY, int16_t screenZ, const glm::vec4 & color, const float &textBlur, const float &colorBlurIntensity, const glm::vec4 & blurColor, const float & internalRenderingScale);
+    void copyTextureToFramebuffer(CVideo *pVideo, GX2Texture *tex, int16_t screenX, int16_t screenY, int16_t screenZ, const glm::vec4 &color, const float &textBlur, const float &colorBlurIntensity, const glm::vec4 &blurColor,
+                                  const float &internalRenderingScale);
 
 public:
-    FreeTypeGX(const uint8_t* fontBuffer, FT_Long bufferSize, bool lastFace = false);
+    FreeTypeGX(const uint8_t *fontBuffer, FT_Long bufferSize, bool lastFace = false);
+
     ~FreeTypeGX();
 
-    uint16_t drawText(CVideo * pVideo, int16_t x, int16_t y, int16_t z, const wchar_t *text, int16_t pixelSize, const glm::vec4 & color,
-                      uint16_t textStyling, uint16_t textWidth, const float &textBlur, const float &colorBlurIntensity, const glm::vec4 & blurColor, const float & internalRenderingScale);
+    uint16_t drawText(CVideo *pVideo, int16_t x, int16_t y, int16_t z, const wchar_t *text, int16_t pixelSize, const glm::vec4 &color,
+                      uint16_t textStyling, uint16_t textWidth, const float &textBlur, const float &colorBlurIntensity, const glm::vec4 &blurColor, const float &internalRenderingScale);
 
     uint16_t getWidth(const wchar_t *text, int16_t pixelSize);
+
     uint16_t getCharWidth(const wchar_t wChar, int16_t pixelSize, const wchar_t prevChar = 0x0000);
+
     uint16_t getHeight(const wchar_t *text, int16_t pixelSize);
+
     void getOffset(const wchar_t *text, int16_t pixelSize, uint16_t widthLimit = 0);
 
-    static wchar_t* charToWideChar(const char* p);
-    static char* wideCharToUTF8(const wchar_t* strChar);
+    static wchar_t *charToWideChar(const char *p);
+
+    static char *wideCharToUTF8(const wchar_t *strChar);
 };
 
 #endif /* FREETYPEGX_H_ */

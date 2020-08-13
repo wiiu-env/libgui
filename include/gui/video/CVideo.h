@@ -33,6 +33,7 @@
 class CVideo {
 public:
     CVideo(int32_t forceTvScanMode = -1, int32_t forceDrcScanMode = -1);
+
     virtual ~CVideo();
 
     void prepareTvRendering(void) {
@@ -64,7 +65,7 @@ public:
     }
 
     void setStencilRender(bool bEnable) {
-        if(bEnable) {
+        if (bEnable) {
             GX2SetStencilMask(0xff, 0xff, 0x01, 0xff, 0xff, 0x01);
             GX2SetDepthStencilControl(GX2_DISABLE, GX2_DISABLE, GX2_COMPARE_FUNC_LEQUAL, GX2_ENABLE, GX2_ENABLE, GX2_COMPARE_FUNC_ALWAYS, GX2_STENCIL_FUNCTION_KEEP, GX2_STENCIL_FUNCTION_KEEP, GX2_STENCIL_FUNCTION_REPLACE,
                                       GX2_COMPARE_FUNC_ALWAYS, GX2_STENCIL_FUNCTION_KEEP, GX2_STENCIL_FUNCTION_KEEP, GX2_STENCIL_FUNCTION_REPLACE);
@@ -94,13 +95,14 @@ public:
     }
 
     void tvEnable(bool bEnable) {
-        if(tvEnabled != bEnable) {
+        if (tvEnabled != bEnable) {
             GX2SetTVEnable(bEnable ? GX2_ENABLE : GX2_DISABLE);
             tvEnabled = bEnable;
         }
     }
+
     void drcEnable(bool bEnable) {
-        if(drcEnabled != bEnable) {
+        if (drcEnabled != bEnable) {
             GX2SetDRCEnable(bEnable ? GX2_ENABLE : GX2_DISABLE);
             drcEnabled = bEnable;
         }
@@ -113,6 +115,7 @@ public:
     uint32_t getTvWidth(void) const {
         return tvColorBuffer.surface.width;
     }
+
     uint32_t getTvHeight(void) const {
         return tvColorBuffer.surface.height;
     }
@@ -120,28 +123,32 @@ public:
     uint32_t getDrcWidth(void) const {
         return drcColorBuffer.surface.width;
     }
+
     uint32_t getDrcHeight(void) const {
         return drcColorBuffer.surface.height;
     }
 
-    const glm::mat4 & getProjectionMtx(void) const {
+    const glm::mat4 &getProjectionMtx(void) const {
         return projectionMtx;
     }
-    const glm::mat4 & getViewMtx(void) const {
+
+    const glm::mat4 &getViewMtx(void) const {
         return viewMtx;
     }
 
     float getWidthScaleFactor(void) const {
         return widthScaleFactor;
     }
+
     float getHeightScaleFactor(void) const {
         return heightScaleFactor;
     }
+
     float getDepthScaleFactor(void) const {
         return depthScaleFactor;
     }
 
-    void screenPosToWorldRay(float posX, float posY, glm::vec3 & rayOrigin, glm::vec3 & rayDirection) {
+    void screenPosToWorldRay(float posX, float posY, glm::vec3 &rayOrigin, glm::vec3 &rayDirection) {
         //! normalize positions
         posX = 2.0f * posX * getWidthScaleFactor();
         posY = 2.0f * posY * getHeightScaleFactor();
@@ -162,11 +169,13 @@ public:
         rayOrigin = glm::vec3(rayStartWorld);
         rayDirection = glm::normalize(rayDirectionWorld);
     }
+
 private:
     static void *GX2RAlloc(uint32_t flags, uint32_t size, uint32_t align);
-    static void GX2RFree(uint32_t flags, void* p);
 
-    void renderFXAA(const GX2Texture * texture, const GX2Sampler *sampler);
+    static void GX2RFree(uint32_t flags, void *p);
+
+    void renderFXAA(const GX2Texture *texture, const GX2Sampler *sampler);
 
     void *gx2CommandBuffer;
 

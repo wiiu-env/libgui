@@ -19,34 +19,27 @@
 #include "../fs/CFile.hpp"
 
 std::vector<GuiImageAsync *> GuiImageAsync::imageQueue;
-CThread * GuiImageAsync::pThread = NULL;
-std::recursive_mutex * GuiImageAsync::pMutex = NULL;
+CThread *GuiImageAsync::pThread = NULL;
+std::recursive_mutex *GuiImageAsync::pMutex = NULL;
 uint32_t GuiImageAsync::threadRefCounter = 0;
 bool GuiImageAsync::bExitRequested = false;
-GuiImageAsync * GuiImageAsync::pInUse = NULL;
+GuiImageAsync *GuiImageAsync::pInUse = NULL;
 
-GuiImageAsync::GuiImageAsync(const uint8_t *imageBuffer, const uint32_t & imageBufferSize, GuiImageData * preloadImg)
-    : GuiImage(preloadImg)
-    , imgData(NULL)
-    , imgBuffer(imageBuffer)
-    , imgBufferSize(imageBufferSize) {
+GuiImageAsync::GuiImageAsync(const uint8_t *imageBuffer, const uint32_t &imageBufferSize, GuiImageData *preloadImg)
+        : GuiImage(preloadImg), imgData(NULL), imgBuffer(imageBuffer), imgBufferSize(imageBufferSize) {
     threadInit();
     threadAddImage(this);
 }
 
-GuiImageAsync::GuiImageAsync(const std::string & file, GuiImageData * preloadImg)
-    : GuiImage(preloadImg)
-    , imgData(NULL)
-    , filename(file)
-    , imgBuffer(NULL)
-    , imgBufferSize(0) {
+GuiImageAsync::GuiImageAsync(const std::string &file, GuiImageData *preloadImg)
+        : GuiImage(preloadImg), imgData(NULL), filename(file), imgBuffer(NULL), imgBufferSize(0) {
     threadInit();
     threadAddImage(this);
 }
 
 GuiImageAsync::~GuiImageAsync() {
     threadRemoveImage(this);
-    while(pInUse == this)
+    while (pInUse == this)
         OSSleepTicks(OSMicrosecondsToTicks(1000));
 
     if (imgData)
@@ -64,8 +57,8 @@ void GuiImageAsync::threadAddImage(GuiImageAsync *Image) {
 
 void GuiImageAsync::threadRemoveImage(GuiImageAsync *image) {
     pMutex->lock();
-    for(uint32_t i = 0; i < imageQueue.size(); ++i) {
-        if(imageQueue[i] == image) {
+    for (uint32_t i = 0; i < imageQueue.size(); ++i) {
+        if (imageQueue[i] == image) {
             imageQueue.erase(imageQueue.begin() + i);
             break;
         }
@@ -80,11 +73,11 @@ void GuiImageAsync::clearQueue() {
 }
 
 void GuiImageAsync::guiImageAsyncThread(CThread *thread, void *arg) {
-    while(!bExitRequested) {
-        if(imageQueue.empty() && !bExitRequested)
+    while (!bExitRequested) {
+        if (imageQueue.empty() && !bExitRequested)
             pThread->suspendThread();
 
-        if(!imageQueue.empty() && !bExitRequested) {
+        if (!imageQueue.empty() && !bExitRequested) {
             pMutex->lock();
             pInUse = imageQueue.front();
             imageQueue.erase(imageQueue.begin());
@@ -94,39 +87,39 @@ void GuiImageAsync::guiImageAsyncThread(CThread *thread, void *arg) {
                 continue;
 
 
-            if(pInUse->imgBuffer && pInUse->imgBufferSize) {
+            if (pInUse->imgBuffer && pInUse->imgBufferSize) {
                 pInUse->imgData = new GuiImageData(pInUse->imgBuffer, pInUse->imgBufferSize);
             } else {
                 uint8_t *buffer = NULL;
                 uint64_t bufferSize = 0;
 
                 CFile file(pInUse->filename, CFile::ReadOnly);
-                if(file.isOpen()) {
+                if (file.isOpen()) {
                     uint64_t filesize = file.size();
                     buffer = (uint8_t *) malloc(filesize);
                     if (buffer != NULL) {
                         uint32_t blocksize = 0x4000;
                         uint32_t done = 0;
                         int32_t readBytes = 0;
-                        while(done < filesize) {
-                            if(done + blocksize > filesize) {
+                        while (done < filesize) {
+                            if (done + blocksize > filesize) {
                                 blocksize = filesize - done;
                             }
                             readBytes = file.read(buffer + done, blocksize);
-                            if(readBytes <= 0)
+                            if (readBytes <= 0)
                                 break;
                             done += readBytes;
                         }
-                        if(done == filesize){
+                        if (done == filesize) {
                             bufferSize = filesize;
-                        }else{
+                        } else {
                             free(buffer);
                         }
                     }
                     file.close();
                 }
 
-                if(buffer != NULL && bufferSize > 0) {
+                if (buffer != NULL && bufferSize > 0) {
                     pInUse->imgData = new GuiImageData(buffer, bufferSize, GX2_TEX_CLAMP_MODE_MIRROR);
 
                     //! free original image buffer which is converted to texture now and not needed anymore
@@ -134,8 +127,8 @@ void GuiImageAsync::guiImageAsyncThread(CThread *thread, void *arg) {
                 }
             }
 
-            if(pInUse->imgData) {
-                if(pInUse->imgData->getTexture()) {
+            if (pInUse->imgData) {
+                if (pInUse->imgData->getTexture()) {
                     pInUse->width = pInUse->imgData->getWidth();
                     pInUse->height = pInUse->imgData->getHeight();
                     pInUse->imageData = pInUse->imgData;
@@ -162,11 +155,11 @@ void GuiImageAsync::threadInit() {
 }
 
 void GuiImageAsync::threadExit() {
-    if(threadRefCounter) {
+    if (threadRefCounter) {
         --threadRefCounter;
     }
 
-    if(/*(threadRefCounter == 0) &&*/ (pThread != NULL)) {
+    if (/*(threadRefCounter == 0) &&*/ (pThread != NULL)) {
         bExitRequested = true;
         delete pThread;
         delete pMutex;

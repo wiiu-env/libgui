@@ -7,7 +7,7 @@ static const float bgRepeat = 1000.0f;
 static const float bgTexRotate = 39.0f;
 
 GridBackground::GridBackground(GuiImageData *img)
-    : GuiImage(img) {
+        : GuiImage(img) {
     colorIntensity = glm::vec4(1.0f, 1.0f, 1.0f, 0.9f);
     alphaFadeOut = glm::vec4(0.0f);
     distanceFadeOut = 0.15f;
@@ -15,18 +15,18 @@ GridBackground::GridBackground(GuiImageData *img)
     vtxCount = 4;
 
     //! texture and vertex coordinates
-    float *m_posVtxs = (float*)memalign(GX2_VERTEX_BUFFER_ALIGNMENT, vtxCount * Shader3D::cuVertexAttrSize);
-    float *m_texCoords = (float*)memalign(GX2_VERTEX_BUFFER_ALIGNMENT, vtxCount * Shader3D::cuTexCoordAttrSize);
+    float *m_posVtxs = (float *) memalign(GX2_VERTEX_BUFFER_ALIGNMENT, vtxCount * Shader3D::cuVertexAttrSize);
+    float *m_texCoords = (float *) memalign(GX2_VERTEX_BUFFER_ALIGNMENT, vtxCount * Shader3D::cuTexCoordAttrSize);
 
-    if(m_posVtxs) {
+    if (m_posVtxs) {
         int32_t i = 0;
         m_posVtxs[i++] = -1.0f;
         m_posVtxs[i++] = 0.0f;
         m_posVtxs[i++] = 1.0f;
-        m_posVtxs[i++] =  1.0f;
+        m_posVtxs[i++] = 1.0f;
         m_posVtxs[i++] = 0.0f;
         m_posVtxs[i++] = 1.0f;
-        m_posVtxs[i++] =  1.0f;
+        m_posVtxs[i++] = 1.0f;
         m_posVtxs[i++] = 0.0f;
         m_posVtxs[i++] = -1.0f;
         m_posVtxs[i++] = -1.0f;
@@ -35,7 +35,7 @@ GridBackground::GridBackground(GuiImageData *img)
         GX2Invalidate(GX2_INVALIDATE_MODE_CPU_ATTRIBUTE_BUFFER, m_posVtxs, vtxCount * Shader3D::cuVertexAttrSize);
     }
 
-    if(m_texCoords) {
+    if (m_texCoords) {
         glm::vec2 texCoordVec[4];
         texCoordVec[0][0] = -0.5f * bgRepeat;
         texCoordVec[0][1] = 0.5f * bgRepeat;
@@ -50,14 +50,14 @@ GridBackground::GridBackground(GuiImageData *img)
         const float sinRot = sinf(DegToRad(bgTexRotate));
 
         glm::mat2 texRotateMtx({
-            cosRot, -sinRot,
-            sinRot, cosRot
-        });
+                                       cosRot, -sinRot,
+                                       sinRot, cosRot
+                               });
 
-        for(int32_t i = 0; i < 4; i++)  {
+        for (int32_t i = 0; i < 4; i++) {
             texCoordVec[i] = texRotateMtx * texCoordVec[i];
-            m_texCoords[i*2 + 0] = texCoordVec[i][0];
-            m_texCoords[i*2 + 1] = texCoordVec[i][1];
+            m_texCoords[i * 2 + 0] = texCoordVec[i][0];
+            m_texCoords[i * 2 + 1] = texCoordVec[i][1];
         }
 
         GX2Invalidate(GX2_INVALIDATE_MODE_CPU_ATTRIBUTE_BUFFER, m_texCoords, vtxCount * Shader3D::cuTexCoordAttrSize);
@@ -73,21 +73,21 @@ GridBackground::~GridBackground() {
     imageData = NULL;
 
     //! main image vertexes
-    if(posVtxs) {
-        free((void*)posVtxs);
+    if (posVtxs) {
+        free((void *) posVtxs);
         posVtxs = NULL;
     }
-    if(texCoords) {
-        free((void*)texCoords);
+    if (texCoords) {
+        free((void *) texCoords);
         texCoords = NULL;
     }
 }
 
-void GridBackground::draw(CVideo *pVideo, const glm::mat4 & modelView) {
+void GridBackground::draw(CVideo *pVideo, const glm::mat4 &modelView) {
     //! first setup 2D GUI positions
-    float currScaleX = bgRepeat * scaleX * (float)getWidth() * pVideo->getWidthScaleFactor();
+    float currScaleX = bgRepeat * scaleX * (float) getWidth() * pVideo->getWidthScaleFactor();
     float currScaleY = 1.0f;
-    float currScaleZ = bgRepeat * scaleZ * (float)getHeight() * pVideo->getDepthScaleFactor();
+    float currScaleZ = bgRepeat * scaleZ * (float) getHeight() * pVideo->getDepthScaleFactor();
 
     m_modelView = glm::scale(modelView, glm::vec3(currScaleX, currScaleY, currScaleZ));
 

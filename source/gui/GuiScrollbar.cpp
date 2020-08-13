@@ -25,8 +25,7 @@
 #include "utils/utils.h"
 
 GuiScrollbar::GuiScrollbar(int32_t h)
-    : touchTrigger(GuiTrigger::CHANNEL_1, GuiTrigger::VPAD_TOUCH)
-    , wpadTouchTrigger(GuiTrigger::CHANNEL_2 | GuiTrigger::CHANNEL_3 | GuiTrigger::CHANNEL_4 | GuiTrigger::CHANNEL_5, GuiTrigger::BUTTON_A) {
+        : touchTrigger(GuiTrigger::CHANNEL_1, GuiTrigger::VPAD_TOUCH), wpadTouchTrigger(GuiTrigger::CHANNEL_2 | GuiTrigger::CHANNEL_3 | GuiTrigger::CHANNEL_4 | GuiTrigger::CHANNEL_5, GuiTrigger::BUTTON_A) {
     SelItem = 0;
     SelInd = 0;
     PageSize = 0;
@@ -74,17 +73,17 @@ GuiScrollbar::~GuiScrollbar() {
 }
 
 void GuiScrollbar::ScrollOneUp() {
-    if(SelItem == 0 && SelInd > 0) {
+    if (SelItem == 0 && SelInd > 0) {
         // move list up by 1
         --SelInd;
-    } else if(SelInd+SelItem > 0) {
+    } else if (SelInd + SelItem > 0) {
         --SelItem;
     }
 }
 
 void GuiScrollbar::ScrollOneDown() {
-    if(SelInd+SelItem + 1 < EntrieCount) {
-        if(SelItem == PageSize-1) {
+    if (SelInd + SelItem + 1 < EntrieCount) {
+        if (SelItem == PageSize - 1) {
             // move list down by 1
             SelInd++;
         } else {
@@ -94,7 +93,7 @@ void GuiScrollbar::ScrollOneDown() {
 }
 
 void GuiScrollbar::OnUpButtonClick(GuiButton *button, const GuiController *controller, GuiTrigger *trigger) {
-    if(ScrollState < ScrollSpeed)
+    if (ScrollState < ScrollSpeed)
         return;
 
     ScrollOneUp();
@@ -104,7 +103,7 @@ void GuiScrollbar::OnUpButtonClick(GuiButton *button, const GuiController *contr
 }
 
 void GuiScrollbar::OnDownButtonClick(GuiButton *button, const GuiController *controller, GuiTrigger *trigger) {
-    if(ScrollState < ScrollSpeed)
+    if (ScrollState < ScrollSpeed)
         return;
 
     ScrollOneDown();
@@ -114,11 +113,11 @@ void GuiScrollbar::OnDownButtonClick(GuiButton *button, const GuiController *con
 }
 
 void GuiScrollbar::OnBoxButtonHold(GuiButton *button, const GuiController *controller, GuiTrigger *trigger) {
-    if(EntrieCount == 0) {
+    if (EntrieCount == 0) {
         return;
     }
 
-    if(!controller->data.validPointer) {
+    if (!controller->data.validPointer) {
         return;
     }
 
@@ -126,22 +125,22 @@ void GuiScrollbar::OnBoxButtonHold(GuiButton *button, const GuiController *contr
 
     int32_t positionWiimote = LIMIT(y - MinHeight, 0, MaxHeight - MinHeight);
 
-    int32_t newSelected = (EntrieCount - 1) - (int32_t) ((float) positionWiimote / (float) (MaxHeight-MinHeight) * (float) (EntrieCount-1));
+    int32_t newSelected = (EntrieCount - 1) - (int32_t) ((float) positionWiimote / (float) (MaxHeight - MinHeight) * (float) (EntrieCount - 1));
 
-    int32_t diff = newSelected-SelInd-SelItem;
+    int32_t diff = newSelected - SelInd - SelItem;
 
-    if(newSelected <= 0) {
+    if (newSelected <= 0) {
         SelItem = 0;
         SelInd = 0;
-    } else if(newSelected >= EntrieCount-1) {
-        SelItem = (PageSize-1 < EntrieCount-1) ? PageSize-1 : EntrieCount-1;
-        SelInd = EntrieCount-PageSize;
-    } else if(newSelected < PageSize && SelInd == 0 && diff < 0) {
-        SelItem = std::max(SelItem+diff, (int32_t)0);
-    } else if(EntrieCount-newSelected < PageSize && SelInd == EntrieCount-PageSize && diff > 0) {
-        SelItem = std::min(SelItem+diff, PageSize-1);
+    } else if (newSelected >= EntrieCount - 1) {
+        SelItem = (PageSize - 1 < EntrieCount - 1) ? PageSize - 1 : EntrieCount - 1;
+        SelInd = EntrieCount - PageSize;
+    } else if (newSelected < PageSize && SelInd == 0 && diff < 0) {
+        SelItem = std::max(SelItem + diff, (int32_t) 0);
+    } else if (EntrieCount - newSelected < PageSize && SelInd == EntrieCount - PageSize && diff > 0) {
+        SelItem = std::min(SelItem + diff, PageSize - 1);
     } else {
-        SelInd = LIMIT(SelInd+diff, 0, ((EntrieCount-PageSize < 0) ? 0 : EntrieCount-PageSize));
+        SelInd = LIMIT(SelInd + diff, 0, ((EntrieCount - PageSize < 0) ? 0 : EntrieCount - PageSize));
     }
 
     ScrollState = 0;
@@ -149,7 +148,7 @@ void GuiScrollbar::OnBoxButtonHold(GuiButton *button, const GuiController *contr
 }
 
 void GuiScrollbar::SetPageSize(int32_t size) {
-    if(PageSize == size)
+    if (PageSize == size)
         return;
 
     PageSize = size;
@@ -157,15 +156,15 @@ void GuiScrollbar::SetPageSize(int32_t size) {
 }
 
 void GuiScrollbar::SetSelectedItem(int32_t pos) {
-    if(SelItem == pos)
+    if (SelItem == pos)
         return;
 
-    SelItem = LIMIT(pos, 0, EntrieCount-1);
+    SelItem = LIMIT(pos, 0, EntrieCount - 1);
     listChanged(SelItem, SelInd);
 }
 
 void GuiScrollbar::SetSelectedIndex(int32_t pos) {
-    if(SelInd == pos)
+    if (SelInd == pos)
         return;
 
     SelInd = pos;
@@ -173,7 +172,7 @@ void GuiScrollbar::SetSelectedIndex(int32_t pos) {
 }
 
 void GuiScrollbar::SetEntrieCount(int32_t cnt) {
-    if(EntrieCount == cnt)
+    if (EntrieCount == cnt)
         return;
 
     EntrieCount = cnt;
@@ -181,18 +180,18 @@ void GuiScrollbar::SetEntrieCount(int32_t cnt) {
 }
 
 void GuiScrollbar::setScrollboxPosition(int32_t SelItem, int32_t SelInd) {
-    int32_t position = MaxHeight-(MaxHeight-MinHeight)*(SelInd+SelItem)/(EntrieCount-1);
+    int32_t position = MaxHeight - (MaxHeight - MinHeight) * (SelInd + SelItem) / (EntrieCount - 1);
 
-    if(position < MinHeight || (SelInd+SelItem >= EntrieCount-1))
+    if (position < MinHeight || (SelInd + SelItem >= EntrieCount - 1))
         position = MinHeight;
-    else if(position > MaxHeight || (SelInd+SelItem) == 0)
+    else if (position > MaxHeight || (SelInd + SelItem) == 0)
         position = MaxHeight;
 
     scrollbarBoxBtn->setPosition(0, position);
 }
 
-void GuiScrollbar::draw(CVideo * video) {
-    if(scrollbarLineImage) {
+void GuiScrollbar::draw(CVideo *video) {
+    if (scrollbarLineImage) {
         scrollbarLineImage->draw(video);
     }
     arrowUpBtn->draw(video);
@@ -202,8 +201,8 @@ void GuiScrollbar::draw(CVideo * video) {
     updateEffects();
 }
 
-void GuiScrollbar::update(GuiController * t) {
-    if(this->isStateSet(STATE_DISABLED))
+void GuiScrollbar::update(GuiController *t) {
+    if (this->isStateSet(STATE_DISABLED))
         return;
 
     arrowUpBtn->update(t);

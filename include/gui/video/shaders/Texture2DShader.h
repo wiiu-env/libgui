@@ -25,6 +25,7 @@
 class Texture2DShader : public Shader {
 private:
     Texture2DShader();
+
     virtual ~Texture2DShader();
 
     static const uint32_t cuAttributeCount = 2;
@@ -50,13 +51,14 @@ private:
     uint32_t texCoordLocation;
 public:
     static Texture2DShader *instance() {
-        if(!shaderInstance) {
+        if (!shaderInstance) {
             shaderInstance = new Texture2DShader();
         }
         return shaderInstance;
     }
+
     static void destroyInstance() {
-        if(shaderInstance) {
+        if (shaderInstance) {
             delete shaderInstance;
             shaderInstance = NULL;
         }
@@ -68,8 +70,8 @@ public:
         pixelShader.setShader();
     }
 
-    void setAttributeBuffer(const float * texCoords_in = NULL, const float * posVtxs_in = NULL, const uint32_t & vtxCount = 0) const {
-        if(posVtxs_in && texCoords_in && vtxCount) {
+    void setAttributeBuffer(const float *texCoords_in = NULL, const float *posVtxs_in = NULL, const uint32_t &vtxCount = 0) const {
+        if (posVtxs_in && texCoords_in && vtxCount) {
             VertexShader::setAttributeBuffer(0, vtxCount * cuVertexAttrSize, cuVertexAttrSize, posVtxs_in);
             VertexShader::setAttributeBuffer(1, vtxCount * cuTexCoordAttrSize, cuTexCoordAttrSize, texCoords_in);
         } else {
@@ -78,25 +80,29 @@ public:
         }
     }
 
-    void setAngle(const float & val) {
+    void setAngle(const float &val) {
         VertexShader::setUniformReg(angleLocation, 4, &val);
     }
-    void setOffset(const glm::vec3 & vec) {
+
+    void setOffset(const glm::vec3 &vec) {
         VertexShader::setUniformReg(offsetLocation, 4, &vec[0]);
     }
-    void setScale(const glm::vec3 & vec) {
+
+    void setScale(const glm::vec3 &vec) {
         VertexShader::setUniformReg(scaleLocation, 4, &vec[0]);
     }
-    void setColorIntensity(const glm::vec4 & vec) {
+
+    void setColorIntensity(const glm::vec4 &vec) {
         PixelShader::setUniformReg(colorIntensityLocation, 4, &vec[0]);
     }
-    void setBlurring(const glm::vec3 & vec) {
+
+    void setBlurring(const glm::vec3 &vec) {
         PixelShader::setUniformReg(blurLocation, 4, &vec[0]);
     }
 
     void setTextureAndSampler(const GX2Texture *texture, const GX2Sampler *sampler) const {
-        GX2SetPixelTexture((GX2Texture*)texture, samplerLocation);
-        GX2SetPixelSampler((GX2Sampler*)sampler, samplerLocation);
+        GX2SetPixelTexture((GX2Texture *) texture, samplerLocation);
+        GX2SetPixelSampler((GX2Sampler *) sampler, samplerLocation);
     }
 };
 

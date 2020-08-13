@@ -22,9 +22,11 @@
 class GuiParticleImage : public GuiImage, public sigslot::has_slots<> {
 public:
     GuiParticleImage(int32_t w, int32_t h, uint32_t particleCount, float minRadius, float maxRadius, float minSpeed, float maxSpeed);
+
     virtual ~GuiParticleImage();
 
     void draw(CVideo *pVideo);
+
 private:
     float *posVertexs;
     uint8_t *colorVertexs;

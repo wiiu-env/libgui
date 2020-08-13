@@ -22,7 +22,7 @@ GuiFrame::GuiFrame(GuiFrame *p) {
     height = 0;
     dim = false;
 
-    if(parent)
+    if (parent)
         parent->append(this);
 }
 
@@ -32,18 +32,18 @@ GuiFrame::GuiFrame(float w, float h, GuiFrame *p) {
     height = h;
     dim = false;
 
-    if(parent)
+    if (parent)
         parent->append(this);
 }
 
 GuiFrame::~GuiFrame() {
     closing(this);
 
-    if(parent)
+    if (parent)
         parent->remove(this);
 }
 
-void GuiFrame::append(GuiElement* e) {
+void GuiFrame::append(GuiElement *e) {
     if (e == NULL)
         return;
 
@@ -52,22 +52,22 @@ void GuiFrame::append(GuiElement* e) {
     e->setParent(this);
 }
 
-void GuiFrame::insert(GuiElement* e, uint32_t index) {
+void GuiFrame::insert(GuiElement *e, uint32_t index) {
     if (e == NULL || (index >= elements.size()))
         return;
 
     remove(e);
-    elements.insert(elements.begin()+index, e);
+    elements.insert(elements.begin() + index, e);
     e->setParent(this);
 }
 
-void GuiFrame::remove(GuiElement* e) {
+void GuiFrame::remove(GuiElement *e) {
     if (e == NULL)
         return;
 
     for (uint32_t i = 0; i < elements.size(); ++i) {
-        if(e == elements[i]) {
-            elements.erase(elements.begin()+i);
+        if (e == elements[i]) {
+            elements.erase(elements.begin() + i);
             break;
         }
     }
@@ -85,7 +85,7 @@ void GuiFrame::dimBackground(bool d) {
     dim = d;
 }
 
-GuiElement* GuiFrame::getGuiElementAt(uint32_t index) const {
+GuiElement *GuiFrame::getGuiElementAt(uint32_t index) const {
     if (index >= elements.size())
         return NULL;
     return elements[index];
@@ -131,7 +131,7 @@ int32_t GuiFrame::getSelected() {
     // find selected element
     int32_t found = -1;
     for (uint32_t i = 0; i < elements.size(); ++i) {
-        if(elements[i]->isStateSet(STATE_SELECTED | STATE_OVER)) {
+        if (elements[i]->isStateSet(STATE_SELECTED | STATE_OVER)) {
             found = i;
             break;
         }
@@ -139,11 +139,11 @@ int32_t GuiFrame::getSelected() {
     return found;
 }
 
-void GuiFrame::draw(CVideo * v) {
-    if(!this->isVisible() && parentElement)
+void GuiFrame::draw(CVideo *v) {
+    if (!this->isVisible() && parentElement)
         return;
 
-    if(parentElement && dim == true) {
+    if (parentElement && dim == true) {
         //GXColor dimColor = (GXColor){0, 0, 0, 0x70};
         //Menu_DrawRectangle(0, 0, GetZPosition(), screenwidth,screenheight, &dimColor, false, true);
     }
@@ -157,7 +157,7 @@ void GuiFrame::draw(CVideo * v) {
 }
 
 void GuiFrame::updateEffects() {
-    if(!this->isVisible() && parentElement)
+    if (!this->isVisible() && parentElement)
         return;
 
     GuiElement::updateEffects();
@@ -171,7 +171,7 @@ void GuiFrame::updateEffects() {
 }
 
 void GuiFrame::process() {
-    if(!this->isVisible() && parentElement)
+    if (!this->isVisible() && parentElement)
         return;
 
     GuiElement::process();
@@ -184,8 +184,8 @@ void GuiFrame::process() {
     }
 }
 
-void GuiFrame::update(GuiController * c) {
-    if(isStateSet(STATE_DISABLED) && parentElement)
+void GuiFrame::update(GuiController *c) {
+    if (isStateSet(STATE_DISABLED) && parentElement)
         return;
 
     //! update appended items next frame

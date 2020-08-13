@@ -24,6 +24,7 @@
 class ColorShader : public Shader {
 private:
     ColorShader();
+
     virtual ~ColorShader();
 
     static const uint32_t cuAttributeCount = 2;
@@ -47,13 +48,14 @@ public:
     static const uint32_t cuColorVtxsSize = 4 * cuColorAttrSize;
 
     static ColorShader *instance() {
-        if(!shaderInstance) {
+        if (!shaderInstance) {
             shaderInstance = new ColorShader();
         }
         return shaderInstance;
     }
+
     static void destroyInstance() {
-        if(shaderInstance) {
+        if (shaderInstance) {
             delete shaderInstance;
             shaderInstance = NULL;
         }
@@ -65,8 +67,8 @@ public:
         pixelShader.setShader();
     }
 
-    void setAttributeBuffer(const uint8_t * colorAttr, const float * posVtxs_in = NULL, const uint32_t & vtxCount = 0) const {
-        if(posVtxs_in && vtxCount) {
+    void setAttributeBuffer(const uint8_t *colorAttr, const float *posVtxs_in = NULL, const uint32_t &vtxCount = 0) const {
+        if (posVtxs_in && vtxCount) {
             VertexShader::setAttributeBuffer(0, vtxCount * cuVertexAttrSize, cuVertexAttrSize, posVtxs_in);
             VertexShader::setAttributeBuffer(1, vtxCount * cuColorAttrSize, cuColorAttrSize, colorAttr);
         } else {
@@ -75,16 +77,19 @@ public:
         }
     }
 
-    void setAngle(const float & val) {
+    void setAngle(const float &val) {
         VertexShader::setUniformReg(angleLocation, 4, &val);
     }
-    void setOffset(const glm::vec3 & vec) {
+
+    void setOffset(const glm::vec3 &vec) {
         VertexShader::setUniformReg(offsetLocation, 4, &vec[0]);
     }
-    void setScale(const glm::vec3 & vec) {
+
+    void setScale(const glm::vec3 &vec) {
         VertexShader::setUniformReg(scaleLocation, 4, &vec[0]);
     }
-    void setColorIntensity(const glm::vec4 & vec) {
+
+    void setColorIntensity(const glm::vec4 &vec) {
         PixelShader::setUniformReg(colorIntensityLocation, 4, &vec[0]);
     }
 };

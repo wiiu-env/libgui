@@ -30,7 +30,7 @@ static inline float getRandMinusOneToOneF32() {
 }
 
 GuiParticleImage::GuiParticleImage(int32_t w, int32_t h, uint32_t particleCount, float minRadius, float maxRadius, float minSpeed, float maxSpeed)
-    : GuiImage(NULL) {
+        : GuiImage(NULL) {
     width = w;
     height = h;
     imgType = IMAGE_COLOR;
@@ -42,7 +42,7 @@ GuiParticleImage::GuiParticleImage(int32_t w, int32_t h, uint32_t particleCount,
     posVertexs = (float *) memalign(GX2_VERTEX_BUFFER_ALIGNMENT, ColorShader::cuVertexAttrSize * CIRCLE_VERTEX_COUNT);
     colorVertexs = (uint8_t *) memalign(GX2_VERTEX_BUFFER_ALIGNMENT, ColorShader::cuColorAttrSize * CIRCLE_VERTEX_COUNT);
 
-    for(uint32_t i = 0; i < CIRCLE_VERTEX_COUNT; i++) {
+    for (uint32_t i = 0; i < CIRCLE_VERTEX_COUNT; i++) {
         posVertexs[i * 3 + 0] = cosf(DegToRad(i * 360.0f / CIRCLE_VERTEX_COUNT));
         posVertexs[i * 3 + 1] = sinf(DegToRad(i * 360.0f / CIRCLE_VERTEX_COUNT));
         posVertexs[i * 3 + 2] = 0.0f;
@@ -57,7 +57,7 @@ GuiParticleImage::GuiParticleImage(int32_t w, int32_t h, uint32_t particleCount,
 
     particles.resize(particleCount);
 
-    for(uint32_t i = 0; i < particleCount; i++) {
+    for (uint32_t i = 0; i < particleCount; i++) {
         particles[i].position.x = getRandMinusOneToOneF32() * getWidth() * 0.5f;
         particles[i].position.y = getRandMinusOneToOneF32() * getHeight() * 0.5f;
         particles[i].position.z = 0.0f;
@@ -74,7 +74,7 @@ GuiParticleImage::~GuiParticleImage() {
 }
 
 void GuiParticleImage::draw(CVideo *pVideo) {
-    if(!this->isVisible())
+    if (!this->isVisible())
         return;
 
 
@@ -88,8 +88,8 @@ void GuiParticleImage::draw(CVideo *pVideo) {
     //! add other colors intensities parameters
     colorIntensity[3] = getAlpha();
 
-    for(uint32_t i = 0; i < particles.size(); ++i) {
-        if(particles[i].position.y > (getHeight() * 0.5f + 30.0f)) {
+    for (uint32_t i = 0; i < particles.size(); ++i) {
+        if (particles[i].position.y > (getHeight() * 0.5f + 30.0f)) {
             particles[i].position.x = getRandMinusOneToOneF32() * getWidth() * 0.5f;
             particles[i].position.y = -getHeight() * 0.5f - 30.0f;
             particles[i].colors = glm::vec4(1.0f, 1.0f, 1.0f, (getRandZeroToOneF32() * 0.6f) + 0.05f);
@@ -97,7 +97,7 @@ void GuiParticleImage::draw(CVideo *pVideo) {
             particles[i].speed = (getRandZeroToOneF32() * (maxSpeed - minSpeed)) + minSpeed;
             particles[i].direction = getRandMinusOneToOneF32();
         }
-        if(particles[i].position.x < (-getWidth() * 0.5f - 50.0f)) {
+        if (particles[i].position.x < (-getWidth() * 0.5f - 50.0f)) {
             particles[i].position.x = -particles[i].position.x;
         }
 

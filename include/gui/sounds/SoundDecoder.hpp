@@ -35,61 +35,83 @@ class CFile;
 class SoundDecoder {
 public:
     SoundDecoder();
-    SoundDecoder(const std::string & filepath);
-    SoundDecoder(const uint8_t * buffer, int32_t size);
+
+    SoundDecoder(const std::string &filepath);
+
+    SoundDecoder(const uint8_t *buffer, int32_t size);
+
     virtual ~SoundDecoder();
+
     virtual void Lock() {
         mutex.lock();
     }
+
     virtual void Unlock() {
         mutex.unlock();
     }
-    virtual int32_t Read(uint8_t * buffer, int32_t buffer_size, int32_t pos);
+
+    virtual int32_t Read(uint8_t *buffer, int32_t buffer_size, int32_t pos);
+
     virtual int32_t Tell() {
         return CurPos;
     }
+
     virtual int32_t Seek(int32_t pos);
 
     virtual int32_t Rewind();
+
     virtual uint16_t GetFormat() {
         return Format;
     }
+
     virtual uint16_t GetSampleRate() {
         return SampleRate;
     }
+
     virtual void Decode();
+
     virtual bool IsBufferReady() {
         return SoundBuffer.IsBufferReady();
     }
-    virtual uint8_t * GetBuffer() {
+
+    virtual uint8_t *GetBuffer() {
         return SoundBuffer.GetBuffer();
     }
+
     virtual uint32_t GetBufferSize() {
         return SoundBuffer.GetBufferSize();
     }
+
     virtual void LoadNext() {
         SoundBuffer.LoadNext();
     }
+
     virtual bool IsEOF() {
         return EndOfFile;
     }
+
     virtual void SetLoop(bool l) {
         Loop = l;
         EndOfFile = false;
     }
+
     virtual uint8_t GetSoundType() {
         return SoundType;
     }
+
     virtual void ClearBuffer() {
         SoundBuffer.ClearBuffer();
         whichLoad = 0;
     }
+
     virtual bool IsStereo() {
         return (GetFormat() & CHANNELS_STEREO) != 0;
     }
+
     virtual bool Is16Bit() {
         return ((GetFormat() & 0xFF) == FORMAT_PCM_16_BIT);
     }
+
     virtual bool IsDecoding() {
         return Decoding;
     }
@@ -113,9 +135,10 @@ public:
     };
 protected:
     void Init();
+
     void Upsample(int16_t *src, int16_t *dst, uint32_t nr_src_samples, uint32_t nr_dst_samples);
 
-    CFile * file_fd;
+    CFile *file_fd;
     BufferCircle SoundBuffer;
     uint8_t SoundType;
     uint16_t whichLoad;

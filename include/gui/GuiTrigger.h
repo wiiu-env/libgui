@@ -68,19 +68,24 @@ public:
 
     //!Constructor
     GuiTrigger();
+
     //!Constructor
     GuiTrigger(uint32_t ch, uint32_t btns, bool clickEverywhere = false, bool holdEverywhere = false, bool selectionClickEverywhere = false);
+
     //!Destructor
     virtual ~GuiTrigger();
+
     //!Sets a simple trigger. Requires: element is selected, and trigger button is pressed
     void setTrigger(uint32_t ch, uint32_t btns);
 
     void setClickEverywhere(bool b) {
         bClickEverywhere = b;
     }
+
     void setHoldOnly(bool b) {
         bHoldEverywhere = b;
     }
+
     void setSelectionClickEverywhere(bool b) {
         bSelectionClickEverywhere = b;
     }
@@ -88,20 +93,29 @@ public:
     bool isClickEverywhere() const {
         return bClickEverywhere;
     }
+
     bool isHoldEverywhere() const {
         return bHoldEverywhere;
     }
+
     bool isSelectionClickEverywhere() const {
         return bSelectionClickEverywhere;
     }
 
     bool left(const GuiController *controller) const;
+
     bool right(const GuiController *controller) const;
+
     bool up(const GuiController *controller) const;
+
     bool down(const GuiController *controller) const;
+
     int32_t clicked(const GuiController *controller) const;
+
     bool held(const GuiController *controller) const;
+
     bool released(const GuiController *controller) const;
+
 private:
     uint32_t chan;
     uint32_t btns;

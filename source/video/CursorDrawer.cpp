@@ -38,41 +38,41 @@ CursorDrawer::~CursorDrawer() {
     Shader3D::destroyInstance();
     ShaderFractalColor::destroyInstance();
     Texture2DShader::destroyInstance();
-    if(this->colorVtxs) {
+    if (this->colorVtxs) {
         free(this->colorVtxs);
         this->colorVtxs = NULL;
     }
 }
 
 void CursorDrawer::init_colorVtxs() {
-    if(!this->colorVtxs) {
-        this->colorVtxs = (uint8_t*)memalign(0x40, sizeof(uint8_t) * 16);
-        if(this->colorVtxs == NULL) return;
+    if (!this->colorVtxs) {
+        this->colorVtxs = (uint8_t *) memalign(0x40, sizeof(uint8_t) * 16);
+        if (this->colorVtxs == NULL) return;
 
     }
-    memset(this->colorVtxs,0xFF,16*sizeof(uint8_t));
+    memset(this->colorVtxs, 0xFF, 16 * sizeof(uint8_t));
 
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU_ATTRIBUTE_BUFFER, this->colorVtxs, 16 * sizeof(uint8_t));
 }
 
 // Could be improved. It be more generic.
-void CursorDrawer::draw_Cursor(float x,float y) {
-    if(this->colorVtxs == NULL) {
+void CursorDrawer::draw_Cursor(float x, float y) {
+    if (this->colorVtxs == NULL) {
         init_colorVtxs();
         return;
     }
 
-    float widthScaleFactor = 1.0f / (float)1280;
-    float heightScaleFactor = 1.0f / (float)720;
+    float widthScaleFactor = 1.0f / (float) 1280;
+    float heightScaleFactor = 1.0f / (float) 720;
 
     int32_t width = 20;
 
     glm::vec3 positionOffsets = glm::vec3(0.0f);
 
-    positionOffsets[0] = (x-((1280)/2)+(width/2)) * widthScaleFactor * 2.0f;
-    positionOffsets[1] = -(y-((720)/2)+(width/2)) * heightScaleFactor * 2.0f;
+    positionOffsets[0] = (x - ((1280) / 2) + (width / 2)) * widthScaleFactor * 2.0f;
+    positionOffsets[1] = -(y - ((720) / 2) + (width / 2)) * heightScaleFactor * 2.0f;
 
-    glm::vec3 scale(width*widthScaleFactor,width*heightScaleFactor,1.0f);
+    glm::vec3 scale(width * widthScaleFactor, width * heightScaleFactor, 1.0f);
 
     ColorShader::instance()->setShaders();
     ColorShader::instance()->setAttributeBuffer(this->colorVtxs, NULL, 4);
