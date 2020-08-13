@@ -20,9 +20,7 @@
  * along with FreeTypeGX.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FREETYPEGX_H_
-#define FREETYPEGX_H_
-
+#pragma once
 
 #include <string>
 #include <ft2build.h>
@@ -163,5 +161,3 @@ public:
 
     static char *wideCharToUTF8(const wchar_t *strChar);
 };
-
-#endif /* FREETYPEGX_H_ */
