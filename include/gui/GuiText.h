@@ -103,14 +103,14 @@ public:
         return maxWidth;
     }
 
-    //!Get fontsize
 
     void setSSAA(int32_t ssaa) {
         this->internalSSAA = ssaa;
     };
 
+    //!Get fontsize
     int32_t getFontSize() {
-        return size;
+        return currentSize;
     };
 
     //!Set max lines to draw

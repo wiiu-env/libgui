@@ -37,8 +37,7 @@ GX2ColorF32 GuiText::presetColor = (GX2ColorF32) {
 
 GuiText::GuiText() {
     text = NULL;
-    size = presetSize;
-    currentSize = size;
+    currentSize = presetSize;
     color = glm::vec4(presetColor.r, presetColor.g, presetColor.b, presetColor.a);
     alpha = presetColor.a;
     alignment = presetAlignment;
@@ -58,8 +57,7 @@ GuiText::GuiText() {
 
 GuiText::GuiText(const char *t, int32_t s, const glm::vec4 &c) {
     text = NULL;
-    size = s;
-    currentSize = size;
+    currentSize = s;
     color = c;
     alpha = c[3];
     alignment = ALIGN_CENTER | ALIGN_MIDDLE;
@@ -86,8 +84,7 @@ GuiText::GuiText(const char *t, int32_t s, const glm::vec4 &c) {
 
 GuiText::GuiText(const wchar_t *t, int32_t s, const glm::vec4 &c) {
     text = NULL;
-    size = s;
-    currentSize = size;
+    currentSize = s;
     color = c;
     alpha = c[3];
     alignment = ALIGN_CENTER | ALIGN_MIDDLE;
@@ -119,8 +116,7 @@ GuiText::GuiText(const wchar_t *t, int32_t s, const glm::vec4 &c) {
  */
 GuiText::GuiText(const char *t) {
     text = NULL;
-    size = presetSize;
-    currentSize = size;
+    currentSize = presetSize;
     color = glm::vec4(presetColor.r, presetColor.g, presetColor.b, presetColor.a);
     alpha = presetColor.a;
     alignment = presetAlignment;
@@ -243,7 +239,7 @@ void GuiText::setPresetFont(FreeTypeGX *f) {
 }
 
 void GuiText::setFontSize(int32_t s) {
-    size = s;
+    currentSize = s;
 }
 
 void GuiText::setMaxWidth(int32_t width, int32_t w) {
