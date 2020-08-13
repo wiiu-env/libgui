@@ -442,8 +442,24 @@ uint16_t FreeTypeGX::getCharWidth(const wchar_t wChar, int16_t pixelSize, const 
  * @return The height of the text string in pixels.
  */
 uint16_t FreeTypeGX::getHeight(const wchar_t *text, int16_t pixelSize) {
-    getOffset(text, pixelSize);
-    return fontData[pixelSize].ftgxAlign.max - fontData[pixelSize].ftgxAlign.min;
+    if (text == NULL) {
+        return 0;
+    }
+
+    int16_t strMax = 0, strMin = 0;
+    int32_t i = 0;
+    while (text[i]) {
+        ftgxCharData *glyphData = cacheGlyphData(text[i], pixelSize);
+
+        if (glyphData != NULL) {
+            strMax = glyphData->renderOffsetMax > strMax ? glyphData->renderOffsetMax : strMax;
+            strMin = glyphData->renderOffsetMin > strMin ? glyphData->renderOffsetMin : strMin;
+        }
+
+        ++i;
+    }
+
+    return strMax + strMin;
 }
 
 /**
