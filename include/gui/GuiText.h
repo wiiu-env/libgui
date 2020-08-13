@@ -104,6 +104,7 @@ public:
         return maxWidth;
     }
 
+    float getTextHeight();
 
     void setSSAA(int32_t ssaa) {
         this->internalSSAA = ssaa;

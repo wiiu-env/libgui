@@ -292,6 +292,18 @@ int32_t GuiText::getTextWidth() {
     res = res > maxWidth && maxWidth > 0 ? maxWidth : res;
     textMutex.unlock();
     return res;
+}
+
+float GuiText::getTextHeight() {
+    textMutex.lock();
+    if (wrapMode == GuiText::WRAP && textDyn.empty()) {
+        if (maxWidth > 0 && font->getWidth(text, currentSize)) {
+            wrapText();
+        }
+    }
+
+    auto res = textDyn.empty() ? getLineHeight() : getLineHeight() * textDyn.size();
+    textMutex.unlock();
     return res;
 }
 
