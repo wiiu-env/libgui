@@ -173,7 +173,6 @@ void FreeTypeGX::unloadFont() {
 ftgxCharData *FreeTypeGX::cacheGlyphData(wchar_t charCode, int16_t pixelSize) {
     fontDataMutex.lock();
     auto itr = fontData.find(pixelSize);
-    bool updateAlign = false;
     if (itr != fontData.end()) {
         auto itr2 = itr->second.ftgxCharMap.find(charCode);
         if (itr2 != itr->second.ftgxCharMap.end()) {
@@ -181,20 +180,16 @@ ftgxCharData *FreeTypeGX::cacheGlyphData(wchar_t charCode, int16_t pixelSize) {
             fontDataMutex.unlock();
             return &itr2->second;
         }
-    } else {
-        updateAlign = true;
     }
 
     ftGX2Data *ftData = &fontData[pixelSize];
 
     faceMutex.lock();
 
-    if (updateAlign) {
-        FT_Set_Pixel_Sizes(ftFace, 0, pixelSize);
+    FT_Set_Pixel_Sizes(ftFace, 0, pixelSize);
 
-        ftData->ftgxAlign.ascender = (int16_t) ftFace->size->metrics.ascender >> 6;
-        ftData->ftgxAlign.descender = (int16_t) ftFace->size->metrics.descender >> 6;
-    }
+    ftData->ftgxAlign.ascender = (int16_t) ftFace->size->metrics.ascender >> 6;
+    ftData->ftgxAlign.descender = (int16_t) ftFace->size->metrics.descender >> 6;
 
     FT_UInt gIndex;
     uint16_t textureWidth = 0, textureHeight = 0;
