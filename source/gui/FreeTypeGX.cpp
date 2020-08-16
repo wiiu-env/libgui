@@ -36,7 +36,9 @@ FreeTypeGX::FreeTypeGX(const uint8_t *fontBuffer, FT_Long bufferSize, bool lastF
     GX2InitSampler(&ftSampler, GX2_TEX_CLAMP_MODE_CLAMP_BORDER, GX2_TEX_XY_FILTER_MODE_LINEAR);
 
     FT_Init_FreeType(&ftLibrary);
+    faceMutex.lock();
     if (lastFace) {
+
         FT_New_Memory_Face(ftLibrary, (FT_Byte *) fontBuffer, bufferSize, -1, &ftFace);
         faceIndex = ftFace->num_faces - 1; // Use the last face
         FT_Done_Face(ftFace);
@@ -45,6 +47,7 @@ FreeTypeGX::FreeTypeGX(const uint8_t *fontBuffer, FT_Long bufferSize, bool lastF
     FT_New_Memory_Face(ftLibrary, (FT_Byte *) fontBuffer, bufferSize, faceIndex, &ftFace);
 
     ftKerningEnabled = FT_HAS_KERNING(ftFace);
+    faceMutex.unlock();
 }
 
 /**
@@ -52,7 +55,10 @@ FreeTypeGX::FreeTypeGX(const uint8_t *fontBuffer, FT_Long bufferSize, bool lastF
  */
 FreeTypeGX::~FreeTypeGX() {
     unloadFont();
+
+    faceMutex.lock();
     FT_Done_Face(ftFace);
+    faceMutex.unlock();
     FT_Done_FreeType(ftLibrary);
 }
 
@@ -225,9 +231,17 @@ ftgxCharData *FreeTypeGX::cacheGlyphData(wchar_t charCode, int16_t pixelSize) {
 
             //! Initialize texture
             charData->texture = new GX2Texture;
-            GX2InitTexture(charData->texture, textureWidth, textureHeight, 1, 0, GX2_SURFACE_FORMAT_UNORM_R5_G5_B5_A1, GX2_SURFACE_DIM_TEXTURE_2D, GX2_TILE_MODE_LINEAR_ALIGNED);
+            if (charData->texture) {
+                GX2InitTexture(charData->texture, textureWidth, textureHeight, 1, 0, GX2_SURFACE_FORMAT_UNORM_R5_G5_B5_A1, GX2_SURFACE_DIM_TEXTURE_2D, GX2_TILE_MODE_LINEAR_ALIGNED);
 
-            loadGlyphData(glyphBitmap, charData);
+                if (!loadGlyphData(glyphBitmap, charData)) {
+                    delete charData->texture;
+                    ftData->ftgxCharMap.erase(charCode);
+                    charData = NULL;
+                }
+            } else {
+                charData = NULL;
+            }
             faceMutex.unlock();
             fontDataMutex.unlock();
             return charData;
@@ -268,10 +282,10 @@ uint16_t FreeTypeGX::cacheGlyphDataComplete(int16_t pixelSize) {
  * @param charData  A pointer to an allocated ftgxCharData structure whose data represent that of the last rendered glyph.
  */
 
-void FreeTypeGX::loadGlyphData(FT_Bitmap *bmp, ftgxCharData *charData) {
+bool FreeTypeGX::loadGlyphData(FT_Bitmap *bmp, ftgxCharData *charData) {
     charData->texture->surface.image = (uint8_t *) memalign(charData->texture->surface.alignment, charData->texture->surface.imageSize);
     if (!charData->texture->surface.image) {
-        return;
+        return false;
     }
 
     memset(charData->texture->surface.image, 0x00, charData->texture->surface.imageSize);
@@ -287,6 +301,7 @@ void FreeTypeGX::loadGlyphData(FT_Bitmap *bmp, ftgxCharData *charData) {
         }
     }
     GX2Invalidate(GX2_INVALIDATE_MODE_CPU_TEXTURE, charData->texture->surface.image, charData->texture->surface.imageSize);
+    return true;
 }
 
 /**
@@ -387,9 +402,12 @@ uint16_t FreeTypeGX::drawText(CVideo *video, int16_t x, int16_t y, int16_t z, co
 
         if (glyphData != NULL) {
             if (ftKerningEnabled && i > 0) {
+                fontDataMutex.lock();
+                faceMutex.lock();
                 FT_Get_Kerning(ftFace, fontData[pixelSize].ftgxCharMap[text[i - 1]].glyphIndex, glyphData->glyphIndex, FT_KERNING_DEFAULT, &pairDelta);
+                faceMutex.unlock();
+                fontDataMutex.unlock();
                 x_pos += (pairDelta.x >> 6);
-
             }
             copyTextureToFramebuffer(video, glyphData->texture, x_pos + glyphData->renderOffsetX + x_offset, y + glyphData->renderOffsetY - y_offset, z, color, textBlur, colorBlurIntensity, blurColor, superSamplingScale);
 

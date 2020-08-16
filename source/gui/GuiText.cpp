@@ -190,7 +190,7 @@ void GuiText::setTextf(const char *format, ...) {
     }
 
     int32_t max_len = strlen(format) + 8192;
-    char *tmp = new char[max_len];
+    char *tmp = new(std::nothrow) char[max_len];
     va_list va;
     va_start(va, format);
     if ((vsnprintf(tmp, max_len, format, va) >= 0) && tmp) {
@@ -476,7 +476,7 @@ void GuiText::scrollText(uint32_t frameCount) {
 
 void GuiText::wrapText() {
     textMutex.lock();
-    if (textDyn.size() > 0) {
+    if (!text || textDyn.size() > 0) {
         textMutex.unlock();
         return;
     }

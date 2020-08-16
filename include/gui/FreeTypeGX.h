@@ -138,7 +138,7 @@ private:
 
     uint16_t cacheGlyphDataComplete(int16_t pixelSize);
 
-    void loadGlyphData(FT_Bitmap *bmp, ftgxCharData *charData);
+    bool loadGlyphData(FT_Bitmap *bmp, ftgxCharData *charData);
 
     void copyTextureToFramebuffer(CVideo *pVideo, GX2Texture *tex, int16_t screenX, int16_t screenY, int16_t screenZ, const glm::vec4 &color, const float &textBlur, const float &colorBlurIntensity, const glm::vec4 &blurColor,
                                   const float &superSamplingScale);
