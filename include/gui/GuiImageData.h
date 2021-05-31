@@ -26,11 +26,16 @@ class GuiImageData : public GuiElement {
 public:
     //!Constructor
     GuiImageData();
+    //!\param path Image path
+    GuiImageData(const char *path, GX2TexClampMode textureClamp, GX2SurfaceFormat textureFormat);
     //!\param img Image data
     //!\param imgSize The image size
     GuiImageData(const uint8_t * img, int32_t imgSize, GX2TexClampMode textureClamp = GX2_TEX_CLAMP_MODE_CLAMP, GX2SurfaceFormat textureFormat = GX2_SURFACE_FORMAT_UNORM_R8_G8_B8_A8);
     //!Destructor
     virtual ~GuiImageData();
+    //!Load image from file
+    //!\param path Image path
+    void loadImageFromFile(const char *path, GX2TexClampMode textureClamp, GX2SurfaceFormat textureFormat);
     //!Load image from buffer
     //!\param img Image data
     //!\param imgSize The image size
