@@ -17,6 +17,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <gui/GuiImageData.h>
 #include <gui/memory.h>
 /**
@@ -26,6 +27,15 @@ GuiImageData::GuiImageData() {
     texture = NULL;
     sampler = NULL;
     memoryType = eMemTypeMEM2;
+}
+
+/**
+ * Constructor for the GuiImageData class.
+ */
+GuiImageData::GuiImageData(const char *path, GX2TexClampMode textureClamp, GX2SurfaceFormat textureFormat) {
+    texture = NULL;
+    sampler = NULL;
+    loadImageFromFile(path, textureClamp, textureFormat);
 }
 
 /**
@@ -66,6 +76,27 @@ void GuiImageData::releaseData(void) {
     if(sampler) {
         delete sampler;
         sampler = NULL;
+    }
+}
+
+void GuiImageData::loadImageFromFile(const char *path, GX2TexClampMode textureClamp, GX2SurfaceFormat textureFormat) {
+    FILE *file = fopen(path, "rb");
+    if(file) {
+        off_t i = ftello(file);
+        if(fseek(file, 0, SEEK_END) == 0)
+        {
+            off_t fileSize = ftello(file);
+            if(fileSize > 8)
+            {
+                fseeko(file, i, SEEK_SET);
+                uint8_t buffer[fileSize];
+                if(fread(buffer, 1, fileSize, file) == fileSize)
+                {
+                    loadImage(buffer, fileSize, textureClamp, textureFormat);
+                }
+            }
+        }
+        fclose(file);
     }
 }
 
